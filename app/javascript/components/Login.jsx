@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import api from "../helpers/api";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const inputRef = useRef();

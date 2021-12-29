@@ -6,23 +6,25 @@ class ApplicationController < ActionController::Base
   def login 
     if params[:password] == "nipples"
       session[:logged_in] = true
-      render json: { logged_in: true }
+      cookies[:kangaroo_token] = session.id
+      render json: { logged_in: true}
     else
       session[:logged_in] = false
-      render json: { logged_in: false }
+      render json: { logged_in: false}
     end
   end
-
-  def desktop
-    render layout: "application"
-  end 
 
   def upload
     s3_client.put_object(bucket: 'kangarooo', key: 'test.txt', body: 'Hello World!') 
     render :layout => false
   end
 
-  def download
+  def authorized
+    if params[:token] == session.id.to_s
+      render json: { authorized: true }
+    else
+      render json: { authorized: false }
+    end
   end
 
   private 
