@@ -1,5 +1,4 @@
-import React, { useRef, useState } from "react";
-import api from "../helpers/api";
+import React from "react";
 import Desktop from "./Desktop";
 import Login from "./Login";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";

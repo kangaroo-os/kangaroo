@@ -1,8 +1,5 @@
 class ApplicationController < ActionController::Base
 
-  before_action :authorized_user
-  skip_before_action :authorized_user, only: [:login, :index]
-
   def login 
     if params[:password] == "nipples"
       session[:logged_in] = true
@@ -15,8 +12,14 @@ class ApplicationController < ActionController::Base
   end
 
   def upload
-    s3_client.put_object(bucket: 'kangarooo', key: 'test.txt', body: 'Hello World!') 
-    render :layout => false
+    params.require(:file)
+    if bearer_token == session.id.to_s
+      s3_client.put_object(bucket: 'kangarooo', key: "#{params[:file].original_filename}_#{DateTime.now.to_i}", body: params[:file].tempfile) 
+      file = 
+      render :layout => false
+    else
+      redirect_to '/'
+    end
   end
 
   def authorized
@@ -29,11 +32,10 @@ class ApplicationController < ActionController::Base
 
   private 
   
-  def authorized_user
-    unless session[:logged_in]
-      redirect_to("/")
-      return false
-    end
+  def bearer_token 
+    pattern = /^Bearer /
+    header  = request.headers['Authorization']
+    token = header.gsub(pattern, '') if header && header.match(pattern)
   end
 
   def s3_client
