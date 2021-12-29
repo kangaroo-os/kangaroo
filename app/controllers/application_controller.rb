@@ -17,6 +17,14 @@ class ApplicationController < ActionController::Base
     render layout: "application"
   end 
 
+  def upload
+    s3_client.put_object(bucket: 'kangarooo', key: 'test.txt', body: 'Hello World!') 
+    render :layout => false
+  end
+
+  def download
+  end
+
   private 
   
   def authorized_user
@@ -24,6 +32,14 @@ class ApplicationController < ActionController::Base
       redirect_to("/")
       return false
     end
+  end
+
+  def s3_client
+    s3_client ||= Aws::S3::Client.new(
+      region: ENV['AWS_REGION'],
+      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
+    )
   end
 
 end
