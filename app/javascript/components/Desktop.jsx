@@ -1,37 +1,46 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import api from "../helpers/api";
 import Cookies from "js-cookie";
 import FileIcon from "../components/shared/FileIcon";
 
 const Desktop = () => {
-  const [token, setToken] = useState(Cookies.get("kangaroo_token"));
+  const [initialMount, setInitialMount] = useState(true);
   const [fileList, setFileList] = useState();
   const [authorized, setAuthorized] = useState(false);
   const [file, setFile] = useState();
   const inputRef = useRef();
+
+  const token = Cookies.get("kangaroo_token");
+
+  useEffect(() => {
+    if (initialMount) {
+      if (!token) {
+        window.location.href = "/";
+      } else {
+        api.post("/authorized", { token: token }).then((res) => {
+          if (!res.data.authorized) {
+            window.location.href = "/";
+            return null;
+          } else {
+            getFiles();
+          }
+        });
+      }
+    }
+    setInitialMount(false);
+  }, []);
+
+  function getFiles() {
+    api.get("/files", { headers: { Authorization: `Bearer ${token}` } }).then((res) => {
+      setFileList(res.data.files);
+    });
+  }
 
   function uploadFile() {
     let formData = new FormData();
     formData.append("file", file);
     api.post("/upload", formData, { headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` } }).then((res) => {
       console.log(res);
-    });
-  }
-
-  if (!token && !authorized) {
-    window.location.href = "/";
-    return null;
-  } else {
-    api.post("/authorized", { token }).then((res) => {
-      if (!res.data.authorized) {
-        window.location.href = "/";
-        return null;
-      } else {
-        setAuthorized(true);
-        api.get("/files", { headers: { Authorization: `Bearer ${token}` } }).then((res) => {
-          setFileList(res.data.files);
-        });
-      }
     });
   }
 
