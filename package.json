@@ -1,0 +1,16 @@
+{
+  "name": "kangaroo",
+  "private": true,
+  "dependencies": {
+    "@rails/actioncable": "^6.0.0-alpha",
+    "@rails/activestorage": "^6.0.0-alpha",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "turbolinks": "^5.2.0"
+  },
+  "version": "0.1.0",
+  "devDependencies": {
+    "vite": "^2.7.7",
+    "vite-plugin-ruby": "^3.0.5"
+  }
+}
