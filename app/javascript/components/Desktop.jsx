@@ -2,11 +2,11 @@ import React, { useRef, useState, useEffect } from "react";
 import api from "../helpers/api";
 import Cookies from "js-cookie";
 import FileIcon from "../components/shared/FileIcon";
+import DragAndDropUpload from "../components/shared/DragAndDropUpload";
 
 const Desktop = () => {
   const [initialMount, setInitialMount] = useState(true);
   const [fileList, setFileList] = useState();
-  const [authorized, setAuthorized] = useState(false);
   const [file, setFile] = useState();
   const inputRef = useRef();
 
@@ -36,7 +36,7 @@ const Desktop = () => {
     });
   }
 
-  function uploadFile() {
+  function uploadFile(file) {
     let formData = new FormData();
     formData.append("file", file);
     api.post("/upload", formData, { headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` } }).then((res) => {
@@ -53,10 +53,11 @@ const Desktop = () => {
   return (
     <div className="p-5">
       <input className="block m-auto mt-5" ref={inputRef} type="file" onChange={(e) => setFile(e.target.files[0])} />
-      <button className="block m-auto bg-orange-200 p-1 rounded my-5" onClick={uploadFile}>
+      <button className="block m-auto bg-orange-200 p-1 rounded my-5" onClick={() => uploadFile(file)}>
         Upload
       </button>
       {fileList && renderFileList(fileList)}
+      <DragAndDropUpload uploadCallback={uploadFile}/>
     </div>
   );
 };
