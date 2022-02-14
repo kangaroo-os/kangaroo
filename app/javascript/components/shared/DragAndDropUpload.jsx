@@ -1,39 +1,19 @@
-import React, { useState } from "react";
+import React, { useCallback } from "react";
+import { useDropzone } from "react-dropzone";
 
 const DragAndDropUpload = ({ uploadCallback }) => {
-  const [dragOver, setDragOver] = useState(false);
-
-  function onDrop(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragOver(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      uploadCallback(e.dataTransfer.files[0]);
+  const onDrop = useCallback((acceptedFiles) => {
+    for (let file of acceptedFiles) {
+      uploadCallback(file);
     }
-    uploadCallback();
-    console.log("DROPPED");
-  }
+  }, []);
 
-  function onDragOver(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!dragOver) {
-      setDragOver(true);
-    }
-    console.log("DRAGGED OVER");
-  }
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  function onDragLeave(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (dragOver) {
-      setDragOver(false);
-    }
-    console.log("DRAGGED LEAVE");
-  }
   return (
-    <div className={`${!dragOver ? "" : "bg-blue-100"} h-48 border-2 border-dashed rounded-lg p-5`} onDrop={onDrop} onDragOver={onDragOver} onDragLeave={onDragLeave}>
-      <p className="text-center">Drag and drop files here</p>
+    <div {...getRootProps()}>
+      <input {...getInputProps()} />
+      {isDragActive ? <div className="w-full h-10 border-blue-500">Drop the files here...</div> : <div className="w-full h-10 bg-blue-300">Drop your files here</div>}
     </div>
   );
 };
