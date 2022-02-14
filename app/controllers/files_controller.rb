@@ -7,7 +7,7 @@ class FilesController < ApplicationController
   end
 
   def get_files
-    render json: { files: s3_client.list_objects(bucket: 'kangarooo').contents.map { |f| f.key } }
+    render json: { files: s3_client.list_objects_v2(bucket: 'kangarooo').contents.map { |file| file.key } }
   end
 
   private
