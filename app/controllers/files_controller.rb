@@ -10,6 +10,14 @@ class FilesController < ApplicationController
     render json: { files: s3_client.list_objects_v2(bucket: 'kangarooo').contents.map { |file| file.key } }
   end
 
+  def get_object
+    params.require(:key)
+    name = params[:key]
+    signer = Aws::S3::Presigner.new
+    url = signer.presigned_url(:get_object, bucket: "kangarooo", key: key, 
+    render json: {url: url}
+  end
+
   private
 
   def require_login
