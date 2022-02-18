@@ -47,7 +47,6 @@ ActiveRecord::Schema.define(version: 2021_12_29_064914) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-<<<<<<< HEAD
   create_table "files", force: :cascade do |t|
     t.string "name"
     t.string "type"
@@ -69,8 +68,4 @@ ActiveRecord::Schema.define(version: 2021_12_29_064914) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-=======
->>>>>>> parent of ef834bb (add user and file models)
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
 end
