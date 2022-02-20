@@ -7,8 +7,6 @@ import DragAndDropUpload from '../components/shared/DragAndDropUpload'
 const Desktop = () => {
   const [initialMount, setInitialMount] = useState(true)
   const [fileList, setFileList] = useState()
-  const [file, setFile] = useState()
-  const inputRef = useRef()
 
   const token = Cookies.get('kangaroo_token')
 
@@ -61,12 +59,8 @@ const Desktop = () => {
 
   return (
     <div className="p-5">
-      <input className="block m-auto mt-5" ref={inputRef} type="file" onChange={(e) => setFile(e.target.files[0])} />
-      <button className="block m-auto bg-orange-200 p-1 rounded my-5" onClick={() => uploadFile(file)}>
-        Upload
-      </button>
       {fileList && renderFileList(fileList)}
-      <DragAndDropUpload uploadCallback={uploadFile} />
+      <DragAndDropUpload className="w-full h-[400px] rounded-lg p-10" uploadCallback={uploadFile} />
     </div>
   )
 }

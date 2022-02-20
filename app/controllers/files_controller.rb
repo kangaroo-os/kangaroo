@@ -12,9 +12,9 @@ class FilesController < ApplicationController
 
   def get_object
     params.require(:key)
-    name = params[:key]
+    key = params[:key]
     signer = Aws::S3::Presigner.new
-    url = signer.presigned_url(:get_object, bucket: "kangarooo", key: key, 
+    url = signer.presigned_url(:get_object, bucket: "kangarooo", key: key)
     render json: {url: url}
   end
 
