@@ -47,8 +47,13 @@ const Desktop = () => {
   }
 
   async function getFile(name) {
-    const result = await api.get(`/get_object?key=${name}`, { headers: { Authorization: `Bearer ${token}` } })
-    console.log(result)
+    try {
+      const result = await api.get(`/get_object?key=${name}`, { headers: { Authorization: `Bearer ${token}` } })
+      const { url } = result.data
+      window.open(url)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const renderFileList = (files) => {
