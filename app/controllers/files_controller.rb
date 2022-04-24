@@ -2,6 +2,9 @@
 
 class FilesController < ApplicationController
   before_action :require_login
+  
+  # TODO: uncomment this when we set up the proper current_user stuff
+  # before_action :authenticate_user!
 
   def upload
     params.require(:file)

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 
-export const ContextMenu = ({ elements }: { elements: ReactNode }) => {
+export const ContextMenu = ({ children }) => {
   document.onclick = hideMenu
   document.oncontextmenu = rightClick
 
@@ -20,7 +20,7 @@ export const ContextMenu = ({ elements }: { elements: ReactNode }) => {
 
   return (
     <div id="contextMenu" className="context-menu absolute z-50 bg-gray-100 p-2 rounded" style={{ display: 'none' }}>
-      <ul className="space-y-2">{elements}</ul>
+      <ul className="space-y-2">{children}</ul>
     </div>
   )
 }

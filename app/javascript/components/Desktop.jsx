@@ -81,7 +81,7 @@ const Desktop = () => {
 
   const renderFileList = (files) => {
     return files.map((file) => {
-      return <FileIcon name={file} getFileCallback={fileCallback} />
+      return <FileIcon key={file} name={file} getFileCallback={fileCallback} />
     })
   }
 
@@ -89,7 +89,9 @@ const Desktop = () => {
     <div className="p-5">
       {fileList && renderFileList(fileList)}
       <DragAndDropUpload className="w-full h-[400px] rounded-lg p-10" uploadCallback={uploadFile} />
-      <ContextMenu elements={FileList()} />
+      <ContextMenu>
+        <FileList />
+      </ContextMenu>
     </div>
   )
 }
