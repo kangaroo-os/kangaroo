@@ -11,19 +11,16 @@ export const ContextMenu = ({ elements }: { elements: ReactNode }) => {
   function rightClick(e) {
     e.preventDefault()
 
-    if (document.getElementById('contextMenu').style.display == 'block') hideMenu()
-    else {
-      var menu = document.getElementById('contextMenu')
+    var menu = document.getElementById('contextMenu')
 
-      menu.style.display = 'block'
-      menu.style.left = e.pageX + 'px'
-      menu.style.top = e.pageY + 'px'
-    }
+    menu.style.display = 'block'
+    menu.style.left = e.pageX + 'px'
+    menu.style.top = e.pageY + 'px'
   }
 
   return (
-    <div id="contextMenu" className="context-menu absolute" style={{ display: 'none' }}>
-      <ul>{elements}</ul>
+    <div id="contextMenu" className="context-menu absolute z-50 bg-gray-100 p-2 rounded" style={{ display: 'none' }}>
+      <ul className="space-y-2">{elements}</ul>
     </div>
   )
 }

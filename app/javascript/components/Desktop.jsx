@@ -2,16 +2,9 @@ import React, { useRef, useState, useEffect } from 'react'
 import api from '../helpers/api'
 import Cookies from 'js-cookie'
 import FileIcon from '../components/shared/FileIcon'
-import DragAndDropUpload from '../components/shared/DragAndDropUpload'
-import ContextMenu from '../components/shared/ContextMenu'
-
-const ContextMenuElements = () => (
-  <>
-    <li>Delete</li>
-    <li>Copy</li>
-    <li>Rename</li>
-  </>
-)
+import DragAndDropUpload from './shared/DragAndDropUpload'
+import ContextMenu from './shared/context_menus/ContextMenu'
+import FileList from './shared/context_menus/FileList'
 
 const Desktop = () => {
   const [initialMount, setInitialMount] = useState(true)
@@ -96,7 +89,7 @@ const Desktop = () => {
     <div className="p-5">
       {fileList && renderFileList(fileList)}
       <DragAndDropUpload className="w-full h-[400px] rounded-lg p-10" uploadCallback={uploadFile} />
-      <ContextMenu elements={ContextMenuElements()} />
+      <ContextMenu elements={FileList()} />
     </div>
   )
 }
