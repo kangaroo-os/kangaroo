@@ -3,6 +3,35 @@ import api from '../helpers/api'
 import Cookies from 'js-cookie'
 import FileIcon from '../components/shared/FileIcon'
 import DragAndDropUpload from '../components/shared/DragAndDropUpload'
+import ContextMenu from '../components/shared/ContextMenu'
+
+document.onclick = hideMenu
+document.oncontextmenu = rightClick
+
+function hideMenu() {
+  document.getElementById('contextMenu').style.display = 'none'
+}
+
+function rightClick(e) {
+  e.preventDefault()
+
+  if (document.getElementById('contextMenu').style.display == 'block') hideMenu()
+  else {
+    var menu = document.getElementById('contextMenu')
+
+    menu.style.display = 'block'
+    menu.style.left = e.pageX + 'px'
+    menu.style.top = e.pageY + 'px'
+  }
+}
+
+const ContextMenuElements = () => (
+  <>
+    <li>Delete</li>
+    <li>Copy</li>
+    <li>Rename</li>
+  </>
+)
 
 const Desktop = () => {
   const [initialMount, setInitialMount] = useState(true)
@@ -87,6 +116,7 @@ const Desktop = () => {
     <div className="p-5">
       {fileList && renderFileList(fileList)}
       <DragAndDropUpload className="w-full h-[400px] rounded-lg p-10" uploadCallback={uploadFile} />
+      <ContextMenu elements={ContextMenuElements()} />
     </div>
   )
 }
