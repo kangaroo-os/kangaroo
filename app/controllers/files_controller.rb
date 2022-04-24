@@ -26,6 +26,13 @@ class FilesController < ApplicationController
     render json: { url: url }
   end
 
+  def delete_object
+    params.require(:key)
+    key = params[:key]
+    s3_client.delete_object(bucket: 'kangarooo', key: key)
+    render body: nil, status: :no_content
+  end
+  
   private
 
   def require_login

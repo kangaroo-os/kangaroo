@@ -46,7 +46,7 @@ const Desktop = () => {
       })
   }
 
-  async function getFile(name) {
+  async function downloadFile(name) {
     try {
       const result = await api.get(`/get_object?key=${name}`, { headers: { Authorization: `Bearer ${token}` } })
       const { url } = result.data
@@ -56,9 +56,30 @@ const Desktop = () => {
     }
   }
 
+  async function deleteFile(name) {
+    try {
+      await api.get(`/delete_object?key=${name}`, { headers: { Authorization: `Bearer ${token}` } })
+      setFileList(fileList.filter((file) => file !== name))
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  function fileCallback(type, name) {
+    switch (type) {
+      case 'download':
+        downloadFile(name)
+        break
+      case 'delete':
+        deleteFile(name)
+        break
+      default:
+        break
+    }
+  }
+
   const renderFileList = (files) => {
     return files.map((file) => {
-      return <FileIcon name={file} getFileCallback={getFile} />
+      return <FileIcon name={file} getFileCallback={fileCallback} />
     })
   }
 
