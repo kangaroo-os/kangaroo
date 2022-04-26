@@ -10,28 +10,23 @@ const Desktop = () => {
   const [initialMount, setInitialMount] = useState(true)
   const [fileList, setFileList] = useState()
 
-  const token = Cookies.get('kangaroo_token')
-
   useEffect(() => {
     if (initialMount) {
-      if (!token) {
-        window.location.href = '/'
-      } else {
-        api.post('/authorized', { token: token }).then((res) => {
-          if (!res.data.authorized) {
-            window.location.href = '/'
-            return null
-          } else {
-            getFiles()
-          }
-        })
-      }
+      api.post('/authorized').then((res) => {
+        if (!res.data.authorized) {
+          window.location.href = '/users/sign_in'
+          return null
+        } else {
+          getFiles()
+          return null
+        }
+      })
     }
     setInitialMount(false)
   }, [])
 
   function getFiles() {
-    api.get('/files', { headers: { Authorization: `Bearer ${token}` } }).then((res) => {
+    api.get(`/files`).then((res) => {
       setFileList(res.data.files)
     })
   }

@@ -13,17 +13,17 @@ class ApplicationController < ActionController::Base
 
   def upload
     params.require(:file)
-    if bearer_token == session.id.to_s
+    if current_user
       s3_client.put_object(bucket: 'kangarooo', key: "#{params[:file].original_filename}_#{DateTime.now.to_i}", body: params[:file].tempfile) 
       file = 
       render :layout => false
     else
-      redirect_to '/'
+      redirect_to '/users/sign_in'
     end
   end
 
   def authorized
-    if params[:token] == session.id.to_s
+    if current_user || params[:token] == session.id
       render json: { authorized: true }
     else
       render json: { authorized: false }
@@ -32,12 +32,6 @@ class ApplicationController < ActionController::Base
 
   private 
   
-  def bearer_token 
-    pattern = /^Bearer /
-    header  = request.headers['Authorization']
-    token = header.gsub(pattern, '') if header && header.match(pattern)
-  end
-
   def s3_client
     s3_client ||= Aws::S3::Client.new(
       region: ENV['AWS_REGION'],

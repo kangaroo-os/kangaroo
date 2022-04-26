@@ -1,10 +1,5 @@
-# frozen_string_literal: true
-
 class FilesController < ApplicationController
-  before_action :require_login
-  
-  # TODO: uncomment this when we set up the proper current_user stuff
-  # before_action :authenticate_user!
+  before_action :authenticate_user!
 
   def upload
     params.require(:file)
@@ -39,6 +34,6 @@ class FilesController < ApplicationController
   private
 
   def require_login
-    redirect_to '/' if bearer_token != session.id.to_s
+    redirect_to '/users/sign_in' if !current_user
   end
 end
