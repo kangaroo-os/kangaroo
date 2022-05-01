@@ -3,7 +3,7 @@ class FilesController < ApplicationController
 
   def upload
     params.require(:file)
-    s3_client.put_object(
+    S3.client.put_object(
       bucket: 'kangarooo',
       key: params[:file].original_filename.to_s,
       body: params[:file].tempfile,
@@ -13,21 +13,21 @@ class FilesController < ApplicationController
   end
 
   def get_files
-    render json: { files: s3_client.list_objects_v2(bucket: 'kangarooo').contents.map(&:key) }
+    render json: { files: S3.client.list_objects_v2(bucket: ENV["S3_MAIN_BUCKET"]).contents.map(&:key) }
   end
 
   def get_object
     params.require(:key)
     key = params[:key]
     signer = Aws::S3::Presigner.new
-    url = signer.presigned_url(:get_object, bucket: 'kangarooo', key: key)
+    url = signer.presigned_url(:get_object, bucket: ENV["S3_MAIN_BUCKET"], key: key)
     render json: { url: url }
   end
 
   def delete_object
     params.require(:key)
     key = params[:key]
-    s3_client.delete_object(bucket: 'kangarooo', key: key)
+    S3.client.delete_object(bucket: ENV["S3_MAIN_BUCKET"], key: key)
     render body: nil, status: :no_content
   end
   

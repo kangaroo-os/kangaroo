@@ -11,12 +11,7 @@ const Desktop = () => {
   const user = useSelector((state) => state.user.value)
 
   useEffect(() => {
-    console.log(user)
-    if (user.email) {
-      getFiles()
-    } else {
-      // window.location.href = '/'
-    }
+    getFiles()
   }, [])
 
   function getFiles() {

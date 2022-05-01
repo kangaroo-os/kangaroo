@@ -8,12 +8,13 @@ gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'
 gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.7'
-gem 'aws-sdk-s3', '~> 1'
+gem "aws-sdk-s3"
 gem 'bcrypt', '~> 3.1.7'
 gem 'devise'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'vite_rails'
 gem 'rack-cors'
+gem "image_processing", ">= 1.2"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
