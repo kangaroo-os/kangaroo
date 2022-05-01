@@ -8,9 +8,9 @@ class CloudFilesController < ApplicationController
     invalid_path_names = CloudFile.where(user_id: current_user.id).pluck(:path)
     path = "users/#{current_user.id}/#{name}.#{extension}"
     if invalid_path_names.include?(path)
-      name = name + create_unique_path(path).sub(path, "").to_s + "." + extension
-      path = "users/#{current_user.id}/#{name}"
-      params[:file].original_filename = name
+      name = name + create_unique_path(path).sub(path, "").to_s
+      path = "users/#{current_user.id}/#{name}.#{extension}"
+      params[:file].original_filename = name + "." + extension
     end
     file = CloudFile.create({path: path, name: name, file_type: params[:file].content_type, user_id: current_user.id})
     
