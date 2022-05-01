@@ -11,7 +11,6 @@ const Desktop = () => {
   const [fileList, setFileList] = useState()
   const [windowList, setWindowList] = useState()
   const [fileUploading, setFileUploading] = useState(false)
-  const user = useSelector((state) => state.user.value)
 
   useEffect(() => {
     getFiles()
@@ -19,7 +18,7 @@ const Desktop = () => {
 
   function getFiles() {
     api.get(`/files`).then((res) => {
-      setFileList(res.data.files.map((file) => file.replace(`users/${user.id}/`, '')))
+      setFileList(res.data.files)
     })
   }
 
@@ -47,10 +46,10 @@ const Desktop = () => {
     }
   }
 
-  async function deleteFile(name) {
+  async function deleteFile(id) {
     try {
-      await api.get(`/delete_object?key=${name}`)
-      setFileList(fileList.filter((file) => file !== name))
+      await api.delete(`/files/${id}`)
+      setFileList(fileList.filter((file) => file.id !== id))
     } catch (e) {
       console.error(e)
     }
@@ -85,7 +84,7 @@ const Desktop = () => {
       return <div>No files found</div>
     }
     return files.map((file) => {
-      return <FileIcon key={file} name={file} getFileCallback={fileCallback} />
+      return <FileIcon key={file} file={file} getFileCallback={fileCallback} />
     })
   }
 

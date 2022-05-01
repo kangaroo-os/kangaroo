@@ -1,9 +1,9 @@
 import React from 'react'
 import Draggable from 'react-draggable'
 
-export const FileIcon = ({ name, getFileCallback }) => {
+export const FileIcon = ({ file, getFileCallback }) => {
   const fileCallbackType = () => {
-    if (name.slice(-1) == '/') {
+    if (file.name.slice(-1) == '/') {
       return 'openFolder'
     } else {
       return 'download'
@@ -13,7 +13,7 @@ export const FileIcon = ({ name, getFileCallback }) => {
     <Draggable>
       <div>
         <button
-          onClick={() => getFileCallback('delete', name)}
+          onClick={() => getFileCallback('delete', file.id)}
           className="hover:cursor-pointer rounded-full bg-gray-400 w-[20px] h-[20px]"
         >
           x
@@ -22,14 +22,14 @@ export const FileIcon = ({ name, getFileCallback }) => {
           onContextMenu={(e) => {
             console.log(e)
           }}
-          onDoubleClick={() => getFileCallback(fileCallbackType(), name)}
+          onDoubleClick={() => getFileCallback(fileCallbackType(), file.path + file.name)}
         >
           <img
             draggable={false}
             src="https://kangarooo.s3.amazonaws.com/kangaroo/fileicon.png"
             className="rounded max-h-[50px]"
           />
-          <p>{name}</p>
+          <p>{file.name}</p>
         </div>
       </div>
     </Draggable>

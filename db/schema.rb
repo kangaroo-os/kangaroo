@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_01_050815) do
+ActiveRecord::Schema.define(version: 2022_05_01_102217) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "cloud_files", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "name"
+    t.string "path"
+    t.string "file_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_cloud_files_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -28,4 +38,5 @@ ActiveRecord::Schema.define(version: 2022_05_01_050815) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "cloud_files", "users"
 end
