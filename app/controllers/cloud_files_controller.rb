@@ -48,11 +48,12 @@ class CloudFilesController < ApplicationController
 
   def destroy 
     params.require(:id)
-    if CloudFile.find(params[:id]).destroy
-      S3.client.delete_object(bucket: ENV["S3_MAIN_BUCKET"], key: params[:id])
+    path = CloudFile.find(params[:id]).path
+    begin CloudFile.find(params[:id]).destroy
+      S3.client.delete_object(bucket: ENV["S3_MAIN_BUCKET"], key: path)
       render body: nil, status: :no_content
-    else 
-      render json: { error: "File not deleted"}, status: :unprocessable_entity
+    rescue StandardError => e 
+      render json: { error: "File not deleted: #{e}}"}, status: :unprocessable_entity
     end
   end
   
@@ -76,7 +77,7 @@ class CloudFilesController < ApplicationController
 
   def user_authorized?
     if params.has_key?(:id)
-      if current_user.cloud_file_ids.includes(params[:id])
+      if current_user.cloud_file_ids.include?(params[:id].to_i)
         return true
       else
         render json: { error: "You are not authorized to access this file."}, status: :unauthorized
