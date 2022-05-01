@@ -5,11 +5,13 @@ import DragAndDropUpload from './shared/DragAndDropUpload'
 import ContextMenu from './shared/context_menus/ContextMenu'
 import FileList from './shared/context_menus/FileList'
 import { Window } from './shared/Window'
+import { useSelector } from 'react-redux'
 
 const Desktop = () => {
   const [fileList, setFileList] = useState()
   const [windowList, setWindowList] = useState()
   const [fileUploading, setFileUploading] = useState(false)
+  const user = useSelector((state) => state.user.value)
 
   useEffect(() => {
     getFiles()
@@ -17,7 +19,7 @@ const Desktop = () => {
 
   function getFiles() {
     api.get(`/files`).then((res) => {
-      setFileList(res.data.files)
+      setFileList(res.data.files.map((file) => file.replace(`users/${user.id}/`, '')))
     })
   }
 

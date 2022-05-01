@@ -1,7 +1,5 @@
 import React from 'react'
 import api from '../helpers/api'
-import { useDispatch } from 'react-redux'
-import { setCurrentUser } from '../reducers/user/userSlice'
 
 export default function Header({ children }) {
   function logout() {
@@ -9,7 +7,7 @@ export default function Header({ children }) {
       console.log(e)
     })
   }
-  
+
   return (
     <div>
       <div className="space-x-5">

@@ -9,6 +9,7 @@
     "axios": "^0.24.0",
     "install": "^0.13.0",
     "js-cookie": "^3.0.1",
+    "localforage": "^1.10.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-draggable": "^4.4.4",
