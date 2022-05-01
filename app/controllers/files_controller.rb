@@ -16,6 +16,11 @@ class FilesController < ApplicationController
     render json: { files:  S3.client.list_objects_v2(bucket: ENV["S3_MAIN_BUCKET"], prefix: "users/#{current_user.id}/").contents.map(&:key) }
   end
 
+  def get_folder_files
+    params.require(:key)
+    render json: { files:  S3.client.list_objects_v2(bucket: ENV["S3_MAIN_BUCKET"], prefix: "#{params[:key]}").contents.map(&:key) }
+  end
+
   def get_object
     params.require(:key)
     key = params[:key]

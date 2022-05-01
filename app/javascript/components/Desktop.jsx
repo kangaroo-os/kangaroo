@@ -4,12 +4,12 @@ import FileIcon from '../components/shared/FileIcon'
 import DragAndDropUpload from './shared/DragAndDropUpload'
 import ContextMenu from './shared/context_menus/ContextMenu'
 import FileList from './shared/context_menus/FileList'
-import { useSelector } from 'react-redux'
+import { Window } from './shared/Window'
 
 const Desktop = () => {
   const [fileList, setFileList] = useState()
+  const [windowList, setWindowList] = useState()
   const [fileUploading, setFileUploading] = useState(false)
-  const user = useSelector((state) => state.user.value)
 
   useEffect(() => {
     getFiles()
@@ -53,6 +53,15 @@ const Desktop = () => {
       console.error(e)
     }
   }
+
+  async function openFolder(name) {
+    try {
+      await api.get(`/get_folder_files?key=${name}`)
+      setWindowList(fileList.filter((file) => file !== name))
+    } catch (e) {
+      console.error(e)
+    }
+  }
   function fileCallback(type, name) {
     switch (type) {
       case 'download':
@@ -61,12 +70,24 @@ const Desktop = () => {
       case 'delete':
         deleteFile(name)
         break
+      case 'openFolder':
+        openFolder(name)
+        break
       default:
         break
     }
   }
 
   const renderFileList = (files) => {
+    if (files.length === 0) {
+      return <div>No files found</div>
+    }
+    return files.map((file) => {
+      return <FileIcon key={file} name={file} getFileCallback={fileCallback} />
+    })
+  }
+
+  const renderWindowList = (files) => {
     if (files.length === 0) {
       return <div>No files found</div>
     }
@@ -83,6 +104,7 @@ const Desktop = () => {
       <ContextMenu>
         <FileList />
       </ContextMenu>
+      <Window>{windowList && renderWindowList(windowList)}</Window>
     </div>
   )
 }

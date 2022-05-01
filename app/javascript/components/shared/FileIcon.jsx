@@ -2,6 +2,13 @@ import React from 'react'
 import Draggable from 'react-draggable'
 
 export const FileIcon = ({ name, getFileCallback }) => {
+  const fileCallbackType = () => {
+    if (name.slice(-1) == '/') {
+      return 'openFolder'
+    } else {
+      return 'download'
+    }
+  }
   return (
     <Draggable>
       <div>
@@ -15,7 +22,7 @@ export const FileIcon = ({ name, getFileCallback }) => {
           onContextMenu={(e) => {
             console.log(e)
           }}
-          onDoubleClick={() => getFileCallback('download', name)}
+          onDoubleClick={() => getFileCallback(fileCallbackType(), name)}
         >
           <img
             draggable={false}
