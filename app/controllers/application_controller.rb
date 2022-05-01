@@ -23,10 +23,10 @@ class ApplicationController < ActionController::Base
   end
 
   def authorized
-    if current_user || params[:token] == session.id
-      render json: { authorized: true }
+    if current_user 
+      render json: { user: current_user }
     else
-      render json: { authorized: false }
+      render json: { user: nil }
     end
   end
 

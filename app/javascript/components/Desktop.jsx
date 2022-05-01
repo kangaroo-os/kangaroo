@@ -1,28 +1,22 @@
 import React, { useRef, useState, useEffect } from 'react'
 import api from '../helpers/api'
-import Cookies from 'js-cookie'
 import FileIcon from '../components/shared/FileIcon'
 import DragAndDropUpload from './shared/DragAndDropUpload'
 import ContextMenu from './shared/context_menus/ContextMenu'
 import FileList from './shared/context_menus/FileList'
+import { useSelector } from 'react-redux'
 
 const Desktop = () => {
-  const [initialMount, setInitialMount] = useState(true)
   const [fileList, setFileList] = useState()
+  const user = useSelector((state) => state.user.value)
 
   useEffect(() => {
-    if (initialMount) {
-      api.post('/authorized').then((res) => {
-        if (!res.data.authorized) {
-          window.location.href = '/users/sign_in'
-          return null
-        } else {
-          getFiles()
-          return null
-        }
-      })
+    console.log(user)
+    if (user.email) {
+      getFiles()
+    } else {
+      // window.location.href = '/'
     }
-    setInitialMount(false)
   }, [])
 
   function getFiles() {
