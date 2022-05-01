@@ -142,6 +142,8 @@ GEM
     puma (3.12.6)
     racc (1.6.0)
     rack (2.2.3)
+    rack-cors (1.1.1)
+      rack (>= 2.0.0)
     rack-proxy (0.7.0)
       rack
     rack-test (1.1.0)
@@ -247,6 +249,7 @@ DEPENDENCIES
   pg (>= 0.18, < 2.0)
   pry
   puma (~> 3.11)
+  rack-cors
   rails (~> 6.0.0)
   selenium-webdriver
   spring
