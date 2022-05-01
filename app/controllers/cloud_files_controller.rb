@@ -4,13 +4,13 @@ class CloudFilesController < ApplicationController
 
   def upload
     params.require(:file)
-    name, extension = params[:file].original_filename.to_s.split(".", 2)
+    name = params[:file].original_filename.to_s
     invalid_path_names = CloudFile.where(user_id: current_user.id).pluck(:path)
-    path = "users/#{current_user.id}/#{name}.#{extension}"
+    path = "users/#{current_user.id}/#{name}"
     if invalid_path_names.include?(path)
-      name = name + create_unique_path(path).sub(path, "").to_s
-      path = "users/#{current_user.id}/#{name}.#{extension}"
-      params[:file].original_filename = name + "." + extension
+      name = create_unique_name(path, name) 
+      path = "users/#{current_user.id}/#{name}"
+      params[:file].original_filename = name
     end
     file = CloudFile.create({path: path, name: name, file_type: params[:file].content_type, user_id: current_user.id})
     
@@ -63,15 +63,16 @@ class CloudFilesController < ApplicationController
     redirect_to '/users/sign_in' if !current_user
   end
 
-  def create_unique_path(path)
+  def create_unique_name(path, filename)
+    name, extension = filename.split(".", 2)
     if CloudFile.where(path: path).exists?
       suffix = 1
       until CloudFile.where(path: path + suffix.to_s).blank?
         suffix += 1
       end
-      path + suffix.to_s
+      name + suffix.to_s + "." + extension
     else
-      path
+      filename
     end
   end
 
