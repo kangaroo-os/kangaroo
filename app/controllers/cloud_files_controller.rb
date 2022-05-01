@@ -1,10 +1,17 @@
 class CloudFilesController < ApplicationController
   before_action :authenticate_user!
+  before_action :user_authorized?, only: [:show, :destroy]
 
   def upload
     params.require(:file)
-    name = params[:file].original_filename.to_s
-    path = "users/#{current_user.id}/#{name}"
+    name, extension = params[:file].original_filename.to_s.split(".", 2)
+    invalid_path_names = CloudFile.where(user_id: current_user.id).pluck(:path)
+    path = "users/#{current_user.id}/#{name}.#{extension}"
+    if invalid_path_names.include?(path)
+      name = name + create_unique_path(path).sub(path, "").to_s + "." + extension
+      path = "users/#{current_user.id}/#{name}"
+      params[:file].original_filename = name
+    end
     file = CloudFile.create({path: path, name: name, file_type: params[:file].content_type, user_id: current_user.id})
     
     if file 
@@ -53,5 +60,27 @@ class CloudFilesController < ApplicationController
 
   def require_login
     redirect_to '/users/sign_in' if !current_user
+  end
+
+  def create_unique_path(path)
+    if CloudFile.where(path: path).exists?
+      suffix = 1
+      until CloudFile.where(path: path + suffix.to_s).blank?
+        suffix += 1
+      end
+      path + suffix.to_s
+    else
+      path
+    end
+  end
+
+  def user_authorized?
+    if params.has_key?(:id)
+      if current_user.cloud_file_ids.includes(params[:id])
+        return true
+      else
+        render json: { error: "You are not authorized to access this file."}, status: :unauthorized
+      end
+    end
   end
 end
