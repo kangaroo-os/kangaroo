@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 
 const Desktop = () => {
   const [fileList, setFileList] = useState()
+  const [fileUploading, setFileUploading] = useState(false)
   const user = useSelector((state) => state.user.value)
 
   useEffect(() => {
@@ -23,18 +24,20 @@ const Desktop = () => {
   function uploadFile(file) {
     let formData = new FormData()
     formData.append('file', file)
+    setFileUploading(true)
     api
       .post('/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then((res) => {
         console.log(res)
+        setFileUploading(false)
       })
   }
 
   async function downloadFile(name) {
     try {
-      const result = await api.get(`/get_object?key=${name}`, { headers: { Authorization: `Bearer ${token}` } })
+      const result = await api.get(`/get_object?key=${name}`)
       const { url } = result.data
       window.open(url)
     } catch (e) {
@@ -44,7 +47,7 @@ const Desktop = () => {
 
   async function deleteFile(name) {
     try {
-      await api.get(`/delete_object?key=${name}`, { headers: { Authorization: `Bearer ${token}` } })
+      await api.get(`/delete_object?key=${name}`)
       setFileList(fileList.filter((file) => file !== name))
     } catch (e) {
       console.error(e)
@@ -64,6 +67,9 @@ const Desktop = () => {
   }
 
   const renderFileList = (files) => {
+    if (files.length === 0) {
+      return <div>No files found</div>
+    }
     return files.map((file) => {
       return <FileIcon key={file} name={file} getFileCallback={fileCallback} />
     })
@@ -72,6 +78,7 @@ const Desktop = () => {
   return (
     <div className="p-5">
       {fileList && renderFileList(fileList)}
+      {fileUploading && <div>Uploading...</div>}
       <DragAndDropUpload className="w-full h-[400px] rounded-lg p-10" uploadCallback={uploadFile} />
       <ContextMenu>
         <FileList />

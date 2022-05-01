@@ -5,7 +5,7 @@ class FilesController < ApplicationController
     params.require(:file)
     S3.client.put_object(
       bucket: 'kangarooo',
-      key: params[:file].original_filename.to_s,
+      key:  "users/#{current_user.id}/" + params[:file].original_filename.to_s,
       body: params[:file].tempfile,
       content_disposition: 'inline',
       content_type: params[:file].content_type
@@ -13,7 +13,7 @@ class FilesController < ApplicationController
   end
 
   def get_files
-    render json: { files: S3.client.list_objects_v2(bucket: ENV["S3_MAIN_BUCKET"]).contents.map(&:key) }
+    render json: { files:  S3.client.list_objects_v2(bucket: ENV["S3_MAIN_BUCKET"], prefix: "users/#{current_user.id}/").contents.map(&:key) }
   end
 
   def get_object
