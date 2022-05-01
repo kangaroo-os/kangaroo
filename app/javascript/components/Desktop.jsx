@@ -17,7 +17,7 @@ const Desktop = () => {
   }, [])
 
   function getFiles() {
-    api.get(`/files`).then((res) => {
+    api.get(`/cloud_files`).then((res) => {
       setFileList(res.data.files)
     })
   }
@@ -27,7 +27,7 @@ const Desktop = () => {
     formData.append('file', file)
     setFileUploading(true)
     api
-      .post('/upload', formData, {
+      .post('/cloud_files/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then((res) => {
@@ -36,9 +36,9 @@ const Desktop = () => {
       })
   }
 
-  async function downloadFile(name) {
+  async function downloadFile(id) {
     try {
-      const result = await api.get(`/get_object?key=${name}`)
+      const result = await api.get(`/cloud_files/${id}`)
       const { url } = result.data
       window.open(url)
     } catch (e) {
@@ -48,7 +48,7 @@ const Desktop = () => {
 
   async function deleteFile(id) {
     try {
-      await api.delete(`/files/${id}`)
+      await api.delete(`/cloud_files/${id}`)
       setFileList(fileList.filter((file) => file.id !== id))
     } catch (e) {
       console.error(e)
@@ -63,16 +63,16 @@ const Desktop = () => {
       console.error(e)
     }
   }
-  function fileCallback(type, name) {
+  function fileCallback(type, id) {
     switch (type) {
       case 'download':
-        downloadFile(name)
+        downloadFile(id)
         break
       case 'delete':
-        deleteFile(name)
+        deleteFile(id)
         break
       case 'openFolder':
-        openFolder(name)
+        openFolder(id)
         break
       default:
         break
