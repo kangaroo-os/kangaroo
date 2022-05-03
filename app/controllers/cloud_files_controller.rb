@@ -40,16 +40,14 @@ class CloudFilesController < ApplicationController
   end
 
   def show
-    params.require(:id)
     signer = Aws::S3::Presigner.new
-    url = signer.presigned_url(:get_object, bucket: ENV["S3_MAIN_BUCKET"], key: params[:id])
+    url = signer.presigned_url(:get_object, bucket: ENV["S3_MAIN_BUCKET"], key: CloudFile.find(params[:id]).path)
     render json: { url: url }
   end
 
   def destroy 
-    params.require(:id)
-    path = CloudFile.find(params[:id]).path
-    begin CloudFile.find(params[:id]).destroy
+    path = CloudFile.find(params[:file_name]).path
+    begin CloudFile.find(params[:file_name]).destroy
       S3.client.delete_object(bucket: ENV["S3_MAIN_BUCKET"], key: path)
       render body: nil, status: :no_content
     rescue StandardError => e 

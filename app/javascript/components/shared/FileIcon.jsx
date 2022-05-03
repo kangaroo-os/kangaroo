@@ -22,7 +22,7 @@ export const FileIcon = ({ file, getFileCallback }) => {
           onContextMenu={(e) => {
             console.log(e)
           }}
-          onDoubleClick={() => getFileCallback(fileCallbackType(), file.path + file.name)}
+          onDoubleClick={() => getFileCallback(fileCallbackType(), file.id)}
         >
           <img
             draggable={false}

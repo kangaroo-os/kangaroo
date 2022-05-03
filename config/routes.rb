@@ -7,10 +7,9 @@ Rails.application.routes.draw do
   get '/get_folder_files', to: 'files#get_folder_files', format: false
 
   # cloud files
-  
-  get '/cloud_files', to: 'cloud_files#index', defaults: {format: :json}
-  get '/cloud_files/:id', to: 'cloud_files#show', format: false
+  get '/cloud_files/:id', to: 'cloud_files#show'
   delete '/cloud_files/:id', to: 'cloud_files#destroy'
+  get '/cloud_files', to: 'cloud_files#index', defaults: {format: :json}
   post '/cloud_files/upload', to: 'cloud_files#upload'
   
   get '*path', to: 'application#index'
