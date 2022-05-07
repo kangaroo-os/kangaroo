@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
-  devise_for :users, controllers: { sessions: 'sessions' }
+  
+  #Setup API routes for devise endpoints
+  devise_for :users, skip: :all
+  devise_scope :user do
+    post   '/login',       to: 'sessions#create'
+    delete '/logout',      to: 'sessions#destroy'
+    post   '/sign_up',       to: 'registrations#create'
+  end
 
   root 'application#index'
   post '/login', to: 'application#login'

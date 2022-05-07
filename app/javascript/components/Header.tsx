@@ -4,7 +4,7 @@ import api from '../helpers/api'
 
 export default function Header({ children }) {
   function logout() {
-    api.delete('/users/sign_out').then((e) => {
+    api.delete('/logout').then((e) => {
       console.log(e)
     })
     Cookies.remove('kangaroo_session_id')

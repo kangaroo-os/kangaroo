@@ -2,6 +2,7 @@ class CloudFilesController < ApplicationController
   before_action :authenticate_user_from_token
   before_action :user_authorized?, only: [:show, :destroy]
 
+  # POST /cloud_files/upload
   def upload
     params.require(:file)
     name = params[:file].original_filename.to_s
@@ -28,23 +29,26 @@ class CloudFilesController < ApplicationController
     end
 
   end
-
+  
   def get_folder_files
     params.require(:key)
     render json: { files:  S3.client.list_objects_v2(bucket: ENV["S3_MAIN_BUCKET"], prefix: "#{params[:key]}").contents.map(&:key) }
   end
 
+  # GET /cloud_files
   def index 
     # TODO:// need to build something to make sure we don't create random orphaned files. We need to check to see if the s3 bucket and the database are in sync.
     render json: { files: current_user.cloud_files }, status: :ok
   end
 
+  # GET /cloud_files/:id
   def show
     signer = Aws::S3::Presigner.new
     url = signer.presigned_url(:get_object, bucket: ENV["S3_MAIN_BUCKET"], key: CloudFile.find(params[:id]).path)
     render json: { url: url }
   end
 
+  # DELETE /cloud_files/:id
   def destroy 
     path = CloudFile.find(params[:file_name]).path
     begin CloudFile.find(params[:file_name]).destroy
