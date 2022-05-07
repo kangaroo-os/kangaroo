@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie'
 import React from 'react'
 import api from '../helpers/api'
 
@@ -6,6 +7,7 @@ export default function Header({ children }) {
     api.delete('/users/sign_out').then((e) => {
       console.log(e)
     })
+    Cookies.remove('kangaroo_session_id')
   }
 
   return (

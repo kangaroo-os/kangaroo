@@ -8,8 +8,9 @@ const Login = () => {
   console.log(user)
 
   return (
-    <div>
+    <div className="center">
       <h1 className="text-5xl text-center w-full">Root Page</h1>
+      <a href="/desktop" className="text-5xl text-center w-full">Desktop</a>
     </div>
   )
 }
