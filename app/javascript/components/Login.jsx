@@ -4,7 +4,6 @@ import csrfToken from '../helpers/csrf'
 
 export default function Login() {
   const [signup, setSignup] = useState(false)
-  const csrf = csrfToken()
 
   function handleSubmit(e) {
     e.preventDefault()
