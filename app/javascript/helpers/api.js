@@ -1,13 +1,10 @@
 import axios from 'axios'
-
-function getCSRFToken() {
-  return document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-}
+import getCsrf from './csrf'
 
 const api = axios.create({
   xsrfHeaderName: 'X-CSRFToken',
   headers: {
-    common: { 'X-CSRF-TOKEN': getCSRFToken() },
+    common: { 'X-CSRF-TOKEN': getCsrf() },
   },
 })
 

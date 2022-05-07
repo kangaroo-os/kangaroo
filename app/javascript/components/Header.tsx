@@ -4,7 +4,7 @@ import api from '../helpers/api'
 
 export default function Header({ children }) {
   function logout() {
-    api.delete('/logout').then((e) => {
+    api.delete('/users/sign_out').then((e) => {
       console.log(e)
     })
     Cookies.remove('kangaroo_session_id')
@@ -13,7 +13,7 @@ export default function Header({ children }) {
   return (
     <div>
       <div className="space-x-5">
-        <a href="/users/sign_in">Login</a>
+        <a href="/login">Login</a>
         <a href="/users/sign_up">Signup</a>
         <a className="cursor-pointer" onClick={logout}>
           Logout
