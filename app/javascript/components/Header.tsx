@@ -54,7 +54,7 @@ export default function Header({ children }) {
           </Link>
         </div>
       </div>
-      {children}
+      <div className="mt-24">{children}</div>
     </div>
   )
 }
