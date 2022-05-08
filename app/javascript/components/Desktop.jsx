@@ -107,8 +107,10 @@ const Desktop = () => {
 
   return (
     <div className="p-10">
-      {fileList && renderFileList(fileList)}
-      {fileUploading && <div>Uploading...</div>}
+      <div>
+        {fileList && renderFileList(fileList)}
+        {fileUploading && <div>Uploading...</div>}
+      </div>
       <DragAndDropUpload className="w-full h-[400px] rounded-lg p-10" uploadCallback={uploadFile} />
       <ContextMenu>
         <FileList />

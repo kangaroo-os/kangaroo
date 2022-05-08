@@ -28,7 +28,6 @@ const App = () => {
 
   return (
     <Header>
-      <h1>THIS IS THE MIAN PAGE</h1>
       <Outlet />
     </Header>
   )

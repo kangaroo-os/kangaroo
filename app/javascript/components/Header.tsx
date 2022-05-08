@@ -16,6 +16,7 @@ export default function Header({ children }) {
     api.delete('/logout').then((e) => {
       Cookies.remove('kangaroo_session_id')
     })
+    sessionStorage.setItem('user', JSON.stringify({}))
     dispatch(setCurrentUser({}))
     navigate('/login')
     return false
@@ -32,7 +33,7 @@ export default function Header({ children }) {
   return (
     <div className="">
       <div className=" space-x-4 fixed shadow-lg bg-gray-100 w-full p-5 flex flex-initial flex-row-reverse items-center">
-        {user.email ? (
+        {true ? (
           <Dropdown menuButtonText={'Profile'} menuItems={menuItems} />
         ) : (
           <div className="space-x-5">
@@ -40,15 +41,19 @@ export default function Header({ children }) {
               Login
             </Link>
             <div className="border-2 border-orange-500 inline-block rounded p-2 bg-orange-100">
-              <Link to="/login" className="text-gray-700">
+              <Link to="/signup" className="text-gray-700">
                 Sign Up
               </Link>
             </div>
           </div>
         )}
         <div className="flex-grow flex items-center space-x-4">
-          <div className="bg-gray-200 h-[45px] w-[45px] rounded-full inline-block"></div>
-          <h1 className="inline-block text-2xl font-medium">Kangaroo</h1>
+          <Link to="/">
+            <div className="bg-gray-200 h-[45px] w-[45px] rounded-full inline-block"></div>
+          </Link>
+          <Link to="/" className="inline-block text-2xl font-medium">
+            Kangaroo
+          </Link>
         </div>
       </div>
       {children}
