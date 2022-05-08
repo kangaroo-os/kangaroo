@@ -10,12 +10,18 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Dropdown({ menuButtonText, menuItems, ...props }: 
-  {menuButtonText: string, menuItems: DropdownMenuItem[] }) {
+export default function Dropdown({
+  menuButtonText,
+  menuItems,
+  ...props
+}: {
+  menuButtonText: string
+  menuItems: DropdownMenuItem[]
+}) {
   function renderMenuItems() {
     return menuItems.map((item, idx) => {
       return (
-        <Menu.Item key={idx} >
+        <Menu.Item key={idx}>
           {({ active }) => (
             <Link
               onClick={item.action}
