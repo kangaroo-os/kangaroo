@@ -11,7 +11,7 @@ export const FileIcon = ({ file, getFileCallback }) => {
   }
   return (
     <Draggable>
-      <div>
+      <div className="max-w-max">
         <button
           onClick={() => getFileCallback('delete', file.id)}
           className="hover:cursor-pointer rounded-full bg-gray-400 w-[20px] h-[20px]"
