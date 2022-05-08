@@ -2,7 +2,7 @@ import React from 'react'
 
 export const Landing = () => {
   return (
-    <div className="lg:flex lg:flex-row-reverse max-w-[95rem] m-auto pt-24 space-y-[3rem] items-center p-10">
+    <div className="lg:flex lg:flex-row-reverse max-w-[95rem] m-auto space-y-[3rem] items-center px-10 py-24 lg:py-[13rem]">
       <img
         src="https://kangarooo.s3.amazonaws.com/kangaroo/Browser.png"
         className="w-full md:max-w-[40rem] m-auto"
