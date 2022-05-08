@@ -43,7 +43,7 @@ const Desktop = () => {
 
   async function downloadFile(id) {
     try {
-      const result = await getFileLink(user, id) 
+      const result = await getFileLink(user, id)
       const { url } = result.data
       window.open(url)
     } catch (e) {
@@ -53,7 +53,7 @@ const Desktop = () => {
 
   async function deleteUserFile(id) {
     try {
-      await deleteFile(user, id) 
+      await deleteFile(user, id)
       setFileList(fileList.filter((file) => file.id !== id))
     } catch (e) {
       console.error(e)
@@ -103,17 +103,23 @@ const Desktop = () => {
   }
 
   return (
-    <div className="p-10">
-      <div>
-        {fileList && renderFileList(fileList)}
-        {fileUploading && <div>Uploading...</div>}
+    <>
+      <DragAndDropUpload
+        className="w-full h-full rounded-lg p-10 absolute"
+        onClick={(event) => event.stopPropagation()}
+        uploadCallback={uploadFile}
+      />
+      <div className="p-10">
+        <div>
+          {fileList && renderFileList(fileList)}
+          {fileUploading && <div>Uploading...</div>}
+        </div>
+        <ContextMenu>
+          <FileList />
+        </ContextMenu>
+        <Window>{windowList && renderWindowList(windowList)}</Window>
       </div>
-      <DragAndDropUpload className="w-full h-[400px] rounded-lg p-10" uploadCallback={uploadFile} />
-      <ContextMenu>
-        <FileList />
-      </ContextMenu>
-      <Window>{windowList && renderWindowList(windowList)}</Window>
-    </div>
+    </>
   )
 }
 

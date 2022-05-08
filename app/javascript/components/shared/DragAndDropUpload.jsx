@@ -14,11 +14,9 @@ const DragAndDropUpload = ({ uploadCallback, ...props }) => {
     <div {...getRootProps()}>
       <input {...getInputProps()} />
       {isDragActive ? (
-        <div {...{ ...props, className: `${props.className} bg-blue-100` }}>Drop the files here...</div>
+        <div {...{ ...props, className: `${props.className} bg-blue-100` }} />
       ) : (
-        <div {...{ ...props, className: `${props.className} border-2 border-dashed border-blue-100` }}>
-          Drop your files here
-        </div>
+        <div {...{ ...props, className: `${props.className}` }} />
       )}
     </div>
   )
