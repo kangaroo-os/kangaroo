@@ -10,7 +10,7 @@ import { useAppSelector } from '../hooks'
 import { addFile, getAllFiles, getFileLink, deleteFile } from '../api/cloud_files'
 
 const Desktop = () => {
-  const [fileList, setFileList] = useState()
+  const [fileList, setFileList] = useState([])
   const [windowList, setWindowList] = useState()
   const [fileUploading, setFileUploading] = useState(false)
   const navigate = useNavigate()

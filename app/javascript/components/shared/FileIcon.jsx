@@ -1,5 +1,6 @@
 import React from 'react'
 import Draggable from 'react-draggable'
+import { truncateText } from '../../helpers/utils'
 
 export const FileIcon = ({ file, getFileCallback }) => {
   const fileCallbackType = () => {
@@ -11,7 +12,7 @@ export const FileIcon = ({ file, getFileCallback }) => {
   }
   return (
     <Draggable>
-      <div className="max-w-max">
+      <div className="w-[100px] h-[130px] inline-block">
         <button
           onClick={() => getFileCallback('delete', file.id)}
           className="hover:cursor-pointer rounded-full bg-gray-400 w-[20px] h-[20px]"
@@ -27,9 +28,9 @@ export const FileIcon = ({ file, getFileCallback }) => {
           <img
             draggable={false}
             src="https://kangarooo.s3.amazonaws.com/kangaroo/fileicon.png"
-            className="rounded max-h-[50px]"
+            className="rounded max-h-[50px] ml-3"
           />
-          <p>{file.name}</p>
+          <p className="text-sm break-words">{truncateText(file.name, 18)}</p>
         </div>
       </div>
     </Draggable>

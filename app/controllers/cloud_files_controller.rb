@@ -5,15 +5,25 @@ class CloudFilesController < ApplicationController
   # POST /cloud_files/upload
   def upload
     params.require(:file)
+   
+    # If the user has reached their storage limit forbid upload
+    if is_over_gb_limit?(current_user.gb_limit, params[:file].size)
+      render json: {error: "Storage GB limit reached"}, status: :method_not_allowed
+      return
+    end
+    
     name = params[:file].original_filename.to_s
     invalid_path_names = CloudFile.where(user_id: current_user.id).pluck(:path)
     path = "users/#{current_user.id}/#{name}"
+
+    # If the file already exists, append a number to the end of the file name
     if invalid_path_names.include?(path)
       name = create_unique_name(path, name) 
       path = "users/#{current_user.id}/#{name}"
       params[:file].original_filename = name
     end
-    file = CloudFile.create({path: path, name: name, file_type: params[:file].content_type, user_id: current_user.id})
+    
+    file = CloudFile.create({path: path, name: name, file_type: params[:file].content_type, user_id: current_user.id, size: params[:file].size})
     
     if file 
       S3.client.put_object(
@@ -87,4 +97,12 @@ class CloudFilesController < ApplicationController
       end
     end
   end
+
+
+  # Check if user has passed the file limit or not and return a boolean. Default 5GB 
+  # Optional ability to add a file to see if adding the file will exceed the limit.
+  def is_over_gb_limit?(limit=5e+9, file_size=0)
+    current_user.cloud_files.sum(:size) + file_size > limit 
+  end
+
 end
