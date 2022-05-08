@@ -5,7 +5,10 @@ export const ContextMenu = ({ children }) => {
   document.oncontextmenu = rightClick
 
   function hideMenu() {
-    document.getElementById('contextMenu').style.display = 'none'
+    const menu = document.getElementById('contextMenu')
+    if (menu) {
+      menu.style.display = 'none'
+    }
   }
 
   function rightClick(e) {
