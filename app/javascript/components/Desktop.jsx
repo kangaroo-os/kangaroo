@@ -6,6 +6,7 @@ import ContextMenu from './shared/context_menus/ContextMenu'
 import FileList from './shared/context_menus/FileList'
 import { Window } from './shared/Window'
 import { useNavigate } from 'react-router-dom'
+import { useAppSelector } from '../hooks'
 
 const Desktop = () => {
   const [fileList, setFileList] = useState()
@@ -13,13 +14,23 @@ const Desktop = () => {
   const [fileUploading, setFileUploading] = useState(false)
   const navigate = useNavigate()
 
+  const user = useAppSelector((state) => state.user.value)
+
   useEffect(() => {
     getFiles()
   }, [])
 
   function getFiles() {
     api
-      .get(`/cloud_files`)
+      .get(`/cloud_files`, {
+        headers: {
+          'access-token': user.accessToken,
+          'token-type': 'Bearer',
+          client: user.client,
+          expiry: user.tokenExpiresAt,
+          uid: user.email,
+        },
+      })
       .then((res) => {
         setFileList(res.data.files)
       })

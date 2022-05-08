@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import Dropdown from './shared/Dropdown'
 import { useAppSelector, useAppDispatch } from '../hooks'
 import { setCurrentUser } from '../reducers/user/userSlice'
+import { logout as logoutUser } from '../api/auth'
 
 export default function Header({ children }) {
   let navigate = useNavigate()
@@ -12,10 +13,9 @@ export default function Header({ children }) {
   const user = useAppSelector((state) => state.user.value)
   const dispatch = useAppDispatch()
 
-  function logout() {
-    api.delete('/logout').then((e) => {
-      Cookies.remove('kangaroo_session_id')
-    })
+  async function logout() {
+    await logoutUser(user)
+    Cookies.remove('kangaroo_session_id')
     sessionStorage.setItem('user', JSON.stringify({}))
     dispatch(setCurrentUser({}))
     navigate('/login')

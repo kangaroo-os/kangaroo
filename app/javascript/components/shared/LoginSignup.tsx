@@ -1,40 +1,47 @@
 import React, { useState } from 'react'
-import api from '../..//helpers/api'
-import csrfToken from '../../helpers/csrf'
+import api from '../../helpers/api'
 import { useNavigate } from 'react-router-dom'
+import { AxiosResponse } from 'axios'
+import { login, signup as signupUser } from '../../api/auth'
 
 export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
   let navigate = useNavigate()
   const [signup, setSignup] = useState(isSignup)
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
+
+    // Sign up user
     if (signup) {
-      api.post('/signup', {
-        authenticity_token: csrfToken(),
-        user: {
-          full_name: e.target.full_name.value,
-          email: e.target.email.value,
-          password: e.target.password.value,
-        },
-      })
-    } else {
-      api
-        .post('/login', {
-          authenticity_token: csrfToken(),
-          user: {
-            email: e.target.email.value,
-            password: e.target.password.value,
-            remember_me: 1,
-          },
-        })
-        .then((res) => {
-          if (res.status == 200) {
-            sessionStorage.setItem('user', JSON.stringify(res.data.user))
-            navigate('/desktop')
-          }
-        })
+      
+      const res = await signupUser(e.target.full_name.value, e.target.email.value, e.target.password.value)
+
+      if (res.status === 200) {
+        storeSessionFromAuth(res)
+      }
     }
+
+    // Login user
+    else {
+      const res = await login(e.target.email.value, e.target.password.value)
+
+      if (res.status == 200) {
+        storeSessionFromAuth(res)
+        navigate('/desktop')
+      }
+    }
+  }
+
+  function storeSessionFromAuth(res: AxiosResponse<any, any>) {
+    const user = {
+      id: res.data.data.id,
+      email: res.data.data.email,
+      fullName: res.data.data.full_name,
+      client: res.headers.client,
+      accessToken: res.headers['access-token'],
+      tokenExpiresAt: res.headers['expiry'],
+    }
+    sessionStorage.setItem('user', JSON.stringify(user))
   }
 
   return (
