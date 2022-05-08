@@ -36,8 +36,9 @@ const Desktop = () => {
     let formData = new FormData()
     formData.append('file', file)
     setFileUploading(true)
-    await addFile(user, formData)
+    const res = await addFile(user, formData)
     setFileUploading(false)
+    setFileList((prev) => [...prev, res.data.file])
   }
 
   async function downloadFile(id) {
@@ -88,7 +89,7 @@ const Desktop = () => {
       return <div>No files found</div>
     }
     return files.map((file) => {
-      return <FileIcon key={file} file={file} getFileCallback={fileCallback} />
+      return <FileIcon key={file.name} file={file} getFileCallback={fileCallback} />
     })
   }
 

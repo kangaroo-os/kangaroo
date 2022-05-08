@@ -28,8 +28,6 @@ export default function Header({ children }) {
     { label: 'Logout', action: logout, href: '#' },
   ]
 
-  console.log(user)
-
   return (
     <div className="">
       <div className=" space-x-4 fixed top-0 shadow-lg bg-gray-100 w-full p-5 flex flex-initial flex-row-reverse items-center">

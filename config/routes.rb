@@ -13,7 +13,6 @@ Rails.application.routes.draw do
 
   root 'application#index'
   post '/login', to: 'application#login'
-  post '/authorized', to: 'application#authorized'
   get '/get_folder_files', to: 'files#get_folder_files', format: false
 
   # cloud files

@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import csrfToken from '../../helpers/csrf'
 import User from '../../models/User'
 
 const user: User | undefined = JSON.parse(
@@ -24,7 +23,6 @@ export const userSlice = createSlice({
   reducers: {
     setCurrentUser: (state, action) => {
       state.value = action.payload
-      console.log('SETTING:', state.value)
     },
   },
 })

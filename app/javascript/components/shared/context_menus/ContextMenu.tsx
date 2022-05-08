@@ -4,6 +4,7 @@ export const ContextMenu = ({ children }) => {
   document.onclick = hideMenu
   document.oncontextmenu = rightClick
 
+  // ToDo:// REMOVE THE CONTEXT MENU WHEN YOU'RE ON A DIFFERENT PAGE
   function hideMenu() {
     const menu = document.getElementById('contextMenu')
     if (menu) {
