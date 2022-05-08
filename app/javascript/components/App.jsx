@@ -2,12 +2,12 @@ import React, { useEffect } from 'react'
 import { Outlet, Link } from 'react-router-dom'
 import Header from './Header'
 import api from '../helpers/api'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '../hooks'
 import { setCurrentUser } from '../reducers/user/userSlice'
 import NotFound from './404'
 
 const App = () => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (!sessionStorage.getItem('user')) {
@@ -20,7 +20,7 @@ const App = () => {
           }
           dispatch(setCurrentUser(user))
         } else {
-          window.location.href = '/users/sign_in'
+          // window.location.href = '/login'
         }
       })
     }

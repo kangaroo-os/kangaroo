@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import api from '../helpers/api'
 import csrfToken from '../helpers/csrf'
+import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
+  let navigate = useNavigate()
   const [signup, setSignup] = useState(false)
 
   function handleSubmit(e) {
@@ -14,18 +16,23 @@ export default function Login() {
           full_name: e.target.full_name.value,
           email: e.target.email.value,
           password: e.target.password.value,
-        }
-      })
-    } 
-    else {
-      api.post('/login', {
-        authenticity_token: csrfToken(),
-        user: {
-          email: e.target.email.value,
-          password: e.target.password.value,
-          remember_me: 1,
         },
       })
+    } else {
+      api
+        .post('/login', {
+          authenticity_token: csrfToken(),
+          user: {
+            email: e.target.email.value,
+            password: e.target.password.value,
+            remember_me: 1,
+          },
+        })
+        .then((res) => {
+          if (res.status == 200) {
+            navigate('/desktop')
+          }
+        })
     }
   }
 

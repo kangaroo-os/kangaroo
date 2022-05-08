@@ -1,25 +1,29 @@
 import Cookies from 'js-cookie'
 import React from 'react'
 import api from '../helpers/api'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function Header({ children }) {
+
+  let navigate = useNavigate()
   function logout() {
     api.delete('/logout').then((e) => {
-      console.log(e)
+      Cookies.remove('kangaroo_session_id')
+      navigate('/login')
     })
-    Cookies.remove('kangaroo_session_id')
   }
 
   return (
-    <div>
-      <div className="space-x-5">
-        <a href="/login">Login</a>
+    <div className="">
+      <div className="space-x-5 fixed shadow-lg bg-gray-100 w-full p-5 flex flex-initial flex-row-reverse">
+        <Link to="/">Profile</Link>
+        <Link to="/">Logout</Link>
         <a href="/users/sign_up">Signup</a>
         <a className="cursor-pointer" onClick={logout}>
           Logout
         </a>
-        {children}
       </div>
+      {children}
     </div>
   )
 }

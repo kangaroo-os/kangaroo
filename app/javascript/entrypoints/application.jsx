@@ -2,11 +2,11 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import store from '../store'
-import App from '../components/App'
-import Desktop from '../components/Desktop'
-import Login from '../components/Login'
-import NotFound from '../components/404'
+import store from '@store'
+import App from '@components/App'
+import Desktop from '@components/Desktop'
+import Login from '@components/Login'
+import NotFound from '@components/404'
 
 ReactDOM.render(
   <React.StrictMode>

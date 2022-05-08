@@ -5,7 +5,6 @@ import DragAndDropUpload from './shared/DragAndDropUpload'
 import ContextMenu from './shared/context_menus/ContextMenu'
 import FileList from './shared/context_menus/FileList'
 import { Window } from './shared/Window'
-import { useSelector } from 'react-redux'
 
 const Desktop = () => {
   const [fileList, setFileList] = useState()
