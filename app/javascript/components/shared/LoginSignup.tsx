@@ -13,23 +13,19 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
   async function handleSubmit(e) {
     e.preventDefault()
 
+    let res: AxiosResponse
     // Sign up user
     if (signup) {
-      const res = await signupUser(e.target.full_name.value, e.target.email.value, e.target.password.value)
-
-      if (res.status === 200) {
-        storeSessionFromAuth(res)
-      }
+      res = await signupUser(e.target.full_name.value, e.target.email.value, e.target.password.value)
     }
 
     // Login user
     else {
-      const res = await login(e.target.email.value, e.target.password.value)
-
-      if (res.status == 200) {
-        storeSessionFromAuth(res)
-        navigate('/desktop')
-      }
+      res = await login(e.target.email.value, e.target.password.value)
+    }
+    if (res.status === 200) {
+      storeSessionFromAuth(res)
+      navigate('/desktop')
     }
   }
 
