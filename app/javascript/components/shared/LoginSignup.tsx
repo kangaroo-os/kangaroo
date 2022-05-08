@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
-import api from '../../helpers/api'
 import { useNavigate } from 'react-router-dom'
 import { AxiosResponse } from 'axios'
 import { login, signup as signupUser } from '../../api/auth'
+import { useAppDispatch } from '../../hooks'
+import { setCurrentUser } from '../../reducers/user/userSlice'
 
 export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
   let navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const [signup, setSignup] = useState(isSignup)
 
   async function handleSubmit(e) {
@@ -13,7 +15,6 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
 
     // Sign up user
     if (signup) {
-      
       const res = await signupUser(e.target.full_name.value, e.target.email.value, e.target.password.value)
 
       if (res.status === 200) {
@@ -41,6 +42,7 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
       accessToken: res.headers['access-token'],
       tokenExpiresAt: res.headers['expiry'],
     }
+    dispatch(setCurrentUser(user))
     sessionStorage.setItem('user', JSON.stringify(user))
   }
 
