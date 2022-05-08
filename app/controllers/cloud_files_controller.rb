@@ -50,8 +50,8 @@ class CloudFilesController < ApplicationController
 
   # DELETE /cloud_files/:id
   def destroy 
-    path = CloudFile.find(params[:file_name]).path
-    begin CloudFile.find(params[:file_name]).destroy
+    path = CloudFile.find(params[:id]).path
+    begin CloudFile.find(params[:id]).destroy
       S3.client.delete_object(bucket: ENV["S3_MAIN_BUCKET"], key: path)
       render body: nil, status: :no_content
     rescue StandardError => e 
@@ -62,7 +62,7 @@ class CloudFilesController < ApplicationController
   private
 
   def require_login
-    redirect_to '/users/sign_in' if !current_user
+    redirect_to '/login' if !current_user
   end
 
   def create_unique_name(path, filename)

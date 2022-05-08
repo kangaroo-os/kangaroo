@@ -97,7 +97,7 @@ const Desktop = () => {
   }
 
   return (
-    <div className="p-5">
+    <div className="p-10">
       {fileList && renderFileList(fileList)}
       {fileUploading && <div>Uploading...</div>}
       <DragAndDropUpload className="w-full h-[400px] rounded-lg p-10" uploadCallback={uploadFile} />
