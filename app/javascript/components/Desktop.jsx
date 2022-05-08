@@ -7,6 +7,7 @@ import FileList from './shared/context_menus/FileList'
 import { Window } from './shared/Window'
 import { useNavigate } from 'react-router-dom'
 import { useAppSelector } from '../hooks'
+import { addFile, getAllFiles, getFileLink } from '../api/cloud_files'
 
 const Desktop = () => {
   const [fileList, setFileList] = useState()
@@ -17,47 +18,31 @@ const Desktop = () => {
   const user = useAppSelector((state) => state.user.value)
 
   useEffect(() => {
-    getFiles()
+    getFiles(user)
   }, [])
 
-  function getFiles() {
-    api
-      .get(`/cloud_files`, {
-        headers: {
-          'access-token': user.accessToken,
-          'token-type': 'Bearer',
-          client: user.client,
-          expiry: user.tokenExpiresAt,
-          uid: user.email,
-        },
-      })
-      .then((res) => {
-        setFileList(res.data.files)
-      })
-      .catch((err) => {
-        if (err.response.status === 401) {
-          navigate('/login')
-        }
-      })
+  async function getFiles(user) {
+    try {
+      const res = await getAllFiles(user)
+      setFileList(res.data.files)
+    } catch (error) {
+      if (error.response.status === 401) {
+        navigate('/login')
+      }
+    }
   }
 
-  function uploadFile(file) {
+  async function uploadFile(file) {
     let formData = new FormData()
     formData.append('file', file)
     setFileUploading(true)
-    api
-      .post('/cloud_files/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
-      .then((res) => {
-        console.log(res)
-        setFileUploading(false)
-      })
+    await addFile(user, formData)
+    setFileUploading(false)
   }
 
   async function downloadFile(id) {
     try {
-      const result = await api.get(`/cloud_files/${id}`)
+      const result = await getFileLink(user, id) 
       const { url } = result.data
       window.open(url)
     } catch (e) {
@@ -65,9 +50,9 @@ const Desktop = () => {
     }
   }
 
-  async function deleteFile(id) {
+  async function deleteUserFile(id) {
     try {
-      await api.delete(`/cloud_files/${id}`)
+      await deleteFile(user, id) 
       setFileList(fileList.filter((file) => file.id !== id))
     } catch (e) {
       console.error(e)
@@ -88,7 +73,7 @@ const Desktop = () => {
         downloadFile(id)
         break
       case 'delete':
-        deleteFile(id)
+        deleteUserFile(id)
         break
       case 'openFolder':
         openFolder(id)
