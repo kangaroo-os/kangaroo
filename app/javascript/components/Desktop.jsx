@@ -5,20 +5,30 @@ import DragAndDropUpload from './shared/DragAndDropUpload'
 import ContextMenu from './shared/context_menus/ContextMenu'
 import FileList from './shared/context_menus/FileList'
 import { Window } from './shared/Window'
+import { useNavigate } from 'react-router-dom'
 
 const Desktop = () => {
   const [fileList, setFileList] = useState()
   const [windowList, setWindowList] = useState()
   const [fileUploading, setFileUploading] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     getFiles()
   }, [])
 
   function getFiles() {
-    api.get(`/cloud_files`).then((res) => {
-      setFileList(res.data.files)
-    })
+    api
+      .get(`/cloud_files`)
+      .then((res) => {
+        debugger
+        setFileList(res.data.files)
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          navigate('/login')
+        }
+      })
   }
 
   function uploadFile(file) {
