@@ -1,5 +1,6 @@
 import React from 'react'
 import Draggable from 'react-draggable'
+import { getFileTypeIcon } from '../../helpers/cloud_file'
 import { truncateText } from '../../helpers/utils'
 
 export const FileIcon = ({ file, getFileCallback }) => {
@@ -10,6 +11,8 @@ export const FileIcon = ({ file, getFileCallback }) => {
       return 'download'
     }
   }
+
+  console.log(file)
   return (
     <Draggable>
       <div className="w-[100px] h-[130px] inline-block">
@@ -25,11 +28,7 @@ export const FileIcon = ({ file, getFileCallback }) => {
           }}
           onDoubleClick={() => getFileCallback(fileCallbackType(), file.id)}
         >
-          <img
-            draggable={false}
-            src="https://kangarooo.s3.amazonaws.com/kangaroo/fileicon.png"
-            className="rounded max-h-[50px] ml-3"
-          />
+          <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
           <p className="text-sm break-words">{truncateText(file.name, 18)}</p>
         </div>
       </div>

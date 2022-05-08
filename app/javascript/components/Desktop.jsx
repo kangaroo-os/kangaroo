@@ -3,7 +3,7 @@ import api from '../helpers/api'
 import FileIcon from '../components/shared/FileIcon'
 import DragAndDropUpload from './shared/DragAndDropUpload'
 import ContextMenu from './shared/context_menus/ContextMenu'
-import FileList from './shared/context_menus/FileList'
+import FileContextMenu from './shared/context_menus/FileContextMenu'
 import { Window } from './shared/Window'
 import { useNavigate } from 'react-router-dom'
 import { useAppSelector } from '../hooks'
@@ -115,7 +115,7 @@ const Desktop = () => {
           {fileUploading && <div>Uploading...</div>}
         </div>
         <ContextMenu>
-          <FileList />
+          <FileContextMenu user={user} path={`users/${user.id}/`} callback={(file) => setFileList(prev => [...prev, file])}/>
         </ContextMenu>
         <Window>{windowList && renderWindowList(windowList)}</Window>
       </div>

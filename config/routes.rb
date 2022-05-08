@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   delete '/cloud_files/:id', to: 'cloud_files#destroy'
   get '/cloud_files', to: 'cloud_files#index', defaults: {format: :json}
   post '/cloud_files/upload', to: 'cloud_files#upload'
+  post '/cloud_files/create_folder', to: 'cloud_files#create_folder' 
   
   get '*path', to: 'application#index'
 

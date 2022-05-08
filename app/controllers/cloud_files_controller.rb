@@ -18,8 +18,7 @@ class CloudFilesController < ApplicationController
 
     # If the file already exists, append a number to the end of the file name
     if invalid_path_names.include?(path)
-      name = create_unique_name(path, name) 
-      path = "users/#{current_user.id}/#{name}"
+      path, name = create_unique_name(path, name) 
       params[:file].original_filename = name
     end
     
@@ -68,6 +67,16 @@ class CloudFilesController < ApplicationController
       render json: { error: "File not deleted: #{e}}"}, status: :unprocessable_entity
     end
   end
+
+  # POST /cloud_files/create_folder
+  def create_folder
+    params.require(:path)
+    path, name = create_unique_name(params[:path]+"untitled folder", "untitled folder")
+    binding.pry
+    S3.client.put_object(bucket: 'kangarooo', key: path + "/")
+    file = CloudFile.create({path: path + "/", name: name, file_type: "folder", user_id: current_user.id, size: 0})
+    render json: {file: file}, status: :ok
+  end
   
   private
 
@@ -76,15 +85,19 @@ class CloudFilesController < ApplicationController
   end
 
   def create_unique_name(path, filename)
-    name, extension = filename.split(".", 2)
+
+    # eg. "/users/1/file.txt" => ["/users/1/file", ".txt"]
+    name, extension = filename.split(/(?=[?.!])/, 2)
+    path_without_name = path.split(filename).last
     if CloudFile.where(path: path).exists?
       suffix = 1
-      until CloudFile.where(path: path + suffix.to_s).blank?
+      until CloudFile.where(path: path + " " + suffix.to_s).blank?
         suffix += 1
       end
-      name + suffix.to_s + "." + extension
+      new_name = name + " " + suffix.to_s + (extension || "")
+      return [path_without_name + new_name, new_name]
     else
-      filename
+      return [path, filename]
     end
   end
 
