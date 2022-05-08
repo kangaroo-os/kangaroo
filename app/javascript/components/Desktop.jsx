@@ -21,7 +21,6 @@ const Desktop = () => {
     api
       .get(`/cloud_files`)
       .then((res) => {
-        debugger
         setFileList(res.data.files)
       })
       .catch((err) => {

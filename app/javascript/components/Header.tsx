@@ -5,13 +5,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import Dropdown from './shared/Dropdown'
 
 export default function Header({ children }) {
-  
+  let navigate = useNavigate()
+
   function logout() {
-    let navigate = useNavigate()
-    navigate('/login')
     api.delete('/logout').then((e) => {
       Cookies.remove('kangaroo_session_id')
     })
+    navigate('/login')
     return false
   }
 
