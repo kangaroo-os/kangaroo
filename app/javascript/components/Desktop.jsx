@@ -7,7 +7,7 @@ import FileList from './shared/context_menus/FileList'
 import { Window } from './shared/Window'
 import { useNavigate } from 'react-router-dom'
 import { useAppSelector } from '../hooks'
-import { addFile, getAllFiles, getFileLink } from '../api/cloud_files'
+import { addFile, getAllFiles, getFileLink, deleteFile } from '../api/cloud_files'
 
 const Desktop = () => {
   const [fileList, setFileList] = useState()

@@ -28,7 +28,9 @@ const App = () => {
 
   return (
     <Header>
-      <Outlet />
+      <div className="mt-24">
+        <Outlet />
+      </div>
     </Header>
   )
 }

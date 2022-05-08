@@ -16,8 +16,8 @@ export default function Header({ children }) {
   async function logout() {
     await logoutUser(user)
     Cookies.remove('kangaroo_session_id')
-    sessionStorage.setItem('user', JSON.stringify({}))
-    dispatch(setCurrentUser({}))
+    sessionStorage.removeItem('user')
+    dispatch(setCurrentUser(undefined))
     navigate('/login')
     return false
   }
@@ -32,8 +32,8 @@ export default function Header({ children }) {
 
   return (
     <div className="">
-      <div className=" space-x-4 fixed shadow-lg bg-gray-100 w-full p-5 flex flex-initial flex-row-reverse items-center">
-        {true ? (
+      <div className=" space-x-4 fixed top-0 shadow-lg bg-gray-100 w-full p-5 flex flex-initial flex-row-reverse items-center">
+        {user ? (
           <Dropdown menuButtonText={'Profile'} menuItems={menuItems} />
         ) : (
           <div className="space-x-5">
