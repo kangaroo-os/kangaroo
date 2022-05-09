@@ -39,7 +39,7 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
       tokenExpiresAt: res.headers['expiry'],
     }
     dispatch(setCurrentUser(user))
-    sessionStorage.setItem('user', JSON.stringify(user))
+    localStorage.setItem('user', JSON.stringify(user))
   }
 
   return (

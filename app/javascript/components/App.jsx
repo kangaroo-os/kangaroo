@@ -6,10 +6,8 @@ import Landing from './shared/Landing'
 const App = () => {
   return (
     <Header>
-      <div className="mt-24">
-        <Landing />
-        <Outlet />
-      </div>
+      <Landing />
+      <Outlet />
     </Header>
   )
 }

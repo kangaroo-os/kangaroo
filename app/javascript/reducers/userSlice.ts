@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import User from '../models/User'
 
 const user: User | undefined = JSON.parse(
-  sessionStorage.getItem('user') === 'undefined' ? undefined : sessionStorage.getItem('user'),
+  localStorage.getItem('user') === 'undefined' ? undefined : localStorage.getItem('user'),
 )
 const initialState = user
   ? {

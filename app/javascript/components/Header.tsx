@@ -17,7 +17,7 @@ export default function Header({ children }) {
     await logoutUser(user)
     navigate('/login')
     Cookies.remove('kangaroo_session_id')
-    sessionStorage.removeItem('user')
+    localStorage.removeItem('user')
     dispatch(setCurrentUser(undefined))
     return false
   }

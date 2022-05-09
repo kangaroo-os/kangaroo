@@ -72,7 +72,6 @@ class CloudFilesController < ApplicationController
   def create_folder
     params.require(:path)
     path, name = create_unique_name(params[:path]+"untitled folder", "untitled folder")
-    binding.pry
     S3.client.put_object(bucket: 'kangarooo', key: path + "/")
     file = CloudFile.create({path: path + "/", name: name, file_type: "folder", user_id: current_user.id, size: 0})
     render json: {file: file}, status: :ok
