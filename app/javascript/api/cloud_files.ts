@@ -1,7 +1,6 @@
 import api from '../helpers/api'
 import User from '../models/User'
 
-
 // Gets all of the users files and folders
 export function getAllFiles(user: User) {
   return api.get(`/cloud_files`, {
@@ -10,15 +9,17 @@ export function getAllFiles(user: User) {
 }
 
 // Adds a file to the user's cloud
-export function addFile(user: User, file: FormData) {
-  return api.post('/cloud_files/upload', file, {
+export function addFile(user: User, blob: Blob) {
+  let formData = new FormData()
+  formData.append('file', blob)
+  return api.post('/cloud_files/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data', ...getAuthHeaders(user) },
   })
 }
 
 // Deletes the file from the user's cloud
 export function deleteFile(user: User, id: number) {
-  api.delete(`/cloud_files/${id}`, { headers: getAuthHeaders(user) })
+  return api.delete(`/cloud_files/${id}`, { headers: getAuthHeaders(user) })
 }
 
 // Gets the file link for the user's cloud

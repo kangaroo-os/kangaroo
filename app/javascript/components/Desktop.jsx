@@ -6,17 +6,18 @@ import ContextMenu from './shared/context_menus/ContextMenu'
 import FileContextMenu from './shared/context_menus/FileContextMenu'
 import { Window } from './shared/Window'
 import { useNavigate } from 'react-router-dom'
-import { useAppSelector } from '../hooks'
+import { useAppDispatch, useAppSelector } from '../hooks'
 import { addFile, getAllFiles, getFileLink, deleteFile } from '../api/cloud_files'
-import UploadButton from './shared/context_menus/UploadButton'
+import UploadButton from './shared/UploadButton'
+import { addFile as addFiletoState, removeFile as removeFileFromState, setUploading } from '../reducers/desktopSlice'
 
 const Desktop = () => {
-  const [fileList, setFileList] = useState([])
-  const [windowList, setWindowList] = useState()
   const [fileUploading, setFileUploading] = useState(false)
   const navigate = useNavigate()
+  let dispatch = useAppDispatch()
 
-  const user = useAppSelector((state) => state.user.value)
+  let user = useAppSelector((state) => state.user.value)
+  let desktop = useAppSelector((state) => state.desktop.value)
 
   useEffect(() => {
     getFiles(user)
@@ -25,7 +26,7 @@ const Desktop = () => {
   async function getFiles(user) {
     try {
       const res = await getAllFiles(user)
-      setFileList(res.data.files)
+      dispatch(addFiletoState(res.data.files))
     } catch (error) {
       if (error.response.status === 401) {
         navigate('/login')
@@ -33,13 +34,11 @@ const Desktop = () => {
     }
   }
 
-  async function uploadFile(file) {
-    let formData = new FormData()
-    formData.append('file', file)
-    setFileUploading(true)
-    const res = await addFile(user, formData)
-    setFileUploading(false)
-    setFileList((prev) => [...prev, res.data.file])
+  async function uploadFile(blob) {
+    dispatch(setUploading(true))
+    const res = await addFile(user, blob)
+    dispatch(setUploading(false))
+    dispatch(addFiletoState(res.data.file))
   }
 
   async function downloadFile(id) {
@@ -55,20 +54,23 @@ const Desktop = () => {
   async function deleteUserFile(id) {
     try {
       await deleteFile(user, id)
-      setFileList(fileList.filter((file) => file.id !== id))
+      dispatch(removeFileFromState(id))
+      // setFileList(fileList.filter((file) => file.id !== id))
     } catch (e) {
       console.error(e)
     }
   }
 
   async function openFolder(name) {
-    try {
-      await api.get(`/get_folder_files?key=${name}`)
-      setWindowList(fileList.filter((file) => file !== name))
-    } catch (e) {
-      console.error(e)
-    }
+    // try {
+    //   await api.get(`/get_folder_files?key=${name}`)
+    //   setWindowList(fileList.filter((file) => file !== name))
+    // } catch (e) {
+    //   console.error(e)
+    // }
+    console.log(name)
   }
+
   function fileCallback(type, id) {
     switch (type) {
       case 'download':
@@ -113,15 +115,11 @@ const Desktop = () => {
       <div className="p-10 flex flex-row-reverse">
         <UploadButton />
         <div>
-          {fileList && renderFileList(fileList)}
-          {fileUploading && <div>Uploading...</div>}
+          {desktop.files && renderFileList(desktop.files)}
+          {desktop.uploading && <div>Uploading...</div>}
         </div>
         <ContextMenu>
-          <FileContextMenu
-            user={user}
-            path={`users/${user.id}/`}
-            callback={(file) => setFileList((prev) => [...prev, file])}
-          />
+          <FileContextMenu user={user} path={`users/${user.id}/`} callback={(file) => dispatch(addFiletoState(file))} />
         </ContextMenu>
         {/* <Window>{windowList && renderWindowList(windowList)}</Window> */}
       </div>

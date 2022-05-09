@@ -4,7 +4,7 @@ import api from '../helpers/api'
 import { Link, useNavigate } from 'react-router-dom'
 import Dropdown from './shared/Dropdown'
 import { useAppSelector, useAppDispatch } from '../hooks'
-import { setCurrentUser } from '../reducers/user/userSlice'
+import { setCurrentUser } from '../reducers/userSlice'
 import { logout as logoutUser } from '../api/auth'
 
 export default function Header({ children }) {
@@ -15,17 +15,17 @@ export default function Header({ children }) {
 
   async function logout() {
     await logoutUser(user)
+    navigate('/login')
     Cookies.remove('kangaroo_session_id')
     sessionStorage.removeItem('user')
     dispatch(setCurrentUser(undefined))
-    navigate('/login')
     return false
   }
 
   const menuItems = [
     { label: 'Profile', href: '/profile' },
     { label: 'Desktop', href: '/desktop' },
-    { label: 'Logout', action: logout, href: '#' },
+    { label: 'Logout', action: logout },
   ]
 
   const MenuButton = () => (

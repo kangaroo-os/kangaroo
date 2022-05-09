@@ -1,10 +1,12 @@
 import React, { useRef } from 'react'
-import { addFile } from '../../../api/cloud_files'
-import Dropdown from '../Dropdown'
-import { useAppSelector } from '../../../hooks'
+import { addFile } from '../../api/cloud_files'
+import Dropdown from './Dropdown'
+import { useAppDispatch, useAppSelector } from '../../hooks'
+import { setUploading, addFile as addFileToState } from '../../reducers/desktopSlice'
 
 export const UploadButton = ({ ...props }) => {
   let inputRef = useRef(null)
+  const dispatch = useAppDispatch()
   const user = useAppSelector((state) => state.user.value)
 
   const menuItems = [
@@ -13,10 +15,12 @@ export const UploadButton = ({ ...props }) => {
     { label: 'New Folder', action: () => console.log('new folder') },
   ]
 
-  async function uploadFile(file) {
-    let formData = new FormData()
-    formData.append('file', file)
-    const res = await addFile(user, formData)
+  async function handleFileUpload(e) {
+    const file = e.target.files[0]
+    dispatch(setUploading(true))
+    const res = await addFile(user, file)
+    dispatch(setUploading(false))
+    dispatch(addFileToState(res.data.file))
   }
 
   const MenuButton = () => (
@@ -27,7 +31,7 @@ export const UploadButton = ({ ...props }) => {
       }}
     >
       <i className="fa-solid fa-plus text-4xl text-white"></i>
-      <input ref={inputRef} className="hidden" type="file" onChange={(e) => uploadFile(e.target.files[0])}/>
+      <input ref={inputRef} className="hidden" type="file" onChange={(e) => handleFileUpload(e)} />
     </div>
   )
 
