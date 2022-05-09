@@ -23,14 +23,13 @@ export default function Header({ children }) {
   }
 
   const menuItems = [
-    { label: 'Profile', href: '/profile' },
     { label: 'Desktop', href: '/desktop' },
     { label: 'Logout', action: logout },
   ]
 
   const MenuButton = () => (
     <div>
-      profile
+      {user.fullName}
       <i className="fa-solid fa-chevron-down text-sm ml-2 inline-block" aria-hidden="true"></i>
     </div>
   )
