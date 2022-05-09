@@ -8,6 +8,7 @@ import { Window } from './shared/Window'
 import { useNavigate } from 'react-router-dom'
 import { useAppSelector } from '../hooks'
 import { addFile, getAllFiles, getFileLink, deleteFile } from '../api/cloud_files'
+import UploadButton from './shared/context_menus/UploadButton'
 
 const Desktop = () => {
   const [fileList, setFileList] = useState([])
@@ -105,19 +106,24 @@ const Desktop = () => {
   return (
     <>
       <DragAndDropUpload
-        className="w-full h-full rounded-lg p-10 absolute"
-        onClick={(event) => event.stopPropagation()}
+        className="w-full h-full rounded-lg p-10 absolute cursor-default"
+        // onClick={(event) => event.stopPropagation()}
         uploadCallback={uploadFile}
       />
-      <div className="p-10">
+      <div className="p-10 flex flex-row-reverse">
+        <UploadButton />
         <div>
           {fileList && renderFileList(fileList)}
           {fileUploading && <div>Uploading...</div>}
         </div>
         <ContextMenu>
-          <FileContextMenu user={user} path={`users/${user.id}/`} callback={(file) => setFileList(prev => [...prev, file])}/>
+          <FileContextMenu
+            user={user}
+            path={`users/${user.id}/`}
+            callback={(file) => setFileList((prev) => [...prev, file])}
+          />
         </ContextMenu>
-        <Window>{windowList && renderWindowList(windowList)}</Window>
+        {/* <Window>{windowList && renderWindowList(windowList)}</Window> */}
       </div>
     </>
   )

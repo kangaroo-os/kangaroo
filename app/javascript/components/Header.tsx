@@ -28,11 +28,18 @@ export default function Header({ children }) {
     { label: 'Logout', action: logout, href: '#' },
   ]
 
+  const MenuButton = () => (
+    <div>
+      profile
+      <i className="fa-solid fa-chevron-down text-sm ml-2 inline-block" aria-hidden="true"></i>
+    </div>
+  )
+
   return (
     <div className="">
       <div className="z-50 space-x-4 fixed top-0 shadow-lg bg-gray-100 w-full p-5 flex flex-initial flex-row-reverse items-center">
         {user ? (
-          <Dropdown menuButtonText={'Profile'} menuItems={menuItems} />
+          <Dropdown menuButton={MenuButton()} menuItems={menuItems} />
         ) : (
           <div className="space-x-5">
             <Link to="/login" className="text-gray-700">

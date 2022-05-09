@@ -8,7 +8,7 @@ const DragAndDropUpload = ({ uploadCallback, ...props }) => {
     }
   }, [])
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noClick: true, noKeyboard: true })
 
   return (
     <div {...getRootProps()}>
