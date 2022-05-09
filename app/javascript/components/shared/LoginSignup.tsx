@@ -9,6 +9,12 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
   let navigate = useNavigate()
   const dispatch = useAppDispatch()
   const [signup, setSignup] = useState(isSignup)
+  const [errors, setErrors] = useState(undefined)
+
+  function toggleForm() {
+    setSignup(!signup)
+    setErrors(undefined)
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -16,12 +22,20 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
     let res: AxiosResponse
     // Sign up user
     if (signup) {
-      res = await signupUser(e.target.full_name.value, e.target.email.value, e.target.password.value)
+      try {
+        res = await signupUser(e.target.full_name.value, e.target.email.value, e.target.password.value)
+      } catch (err) {
+        setErrors(err.response.data.errors.full_messages[0])
+      }
     }
 
     // Login user
     else {
-      res = await login(e.target.email.value, e.target.password.value)
+      try {
+        res = await login(e.target.email.value, e.target.password.value)
+      } catch (err) {
+        setErrors(err.response.data.errors[0])
+      }
     }
     if (res.status === 200) {
       storeSessionFromAuth(res)
@@ -94,8 +108,8 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                 </div>
+                {errors && <p className="text-red-500 text-xs mt-2">{errors}</p>}
               </div>
-
               <div className="flex items-center justify-between">
                 <div className="text-sm">
                   <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
@@ -104,8 +118,9 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
                 </div>
                 <div className="text-sm">
                   <button
+                    type="button"
                     onClick={() => {
-                      setSignup(!signup)
+                      toggleForm()
                     }}
                     className="font-medium text-indigo-600 hover:text-indigo-500"
                   >
