@@ -1,5 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
-import api from '../helpers/api'
+import React, { useState, useEffect } from 'react'
 import FileIcon from '../components/shared/FileIcon'
 import DragAndDropUpload from './shared/DragAndDropUpload'
 import ContextMenu from './shared/context_menus/ContextMenu'
@@ -10,9 +9,10 @@ import { useAppDispatch, useAppSelector } from '../hooks'
 import { addFile, getAllFiles, getFileLink, deleteFile } from '../api/cloud_files'
 import UploadButton from './shared/UploadButton'
 import { addFile as addFiletoState, removeFile as removeFileFromState, setUploading } from '../reducers/desktopSlice'
+import { LinkDialogue } from './shared/LinkDialogue'
+import Modal from './shared/Modal'
 
 const Desktop = () => {
-  const [fileUploading, setFileUploading] = useState(false)
   const navigate = useNavigate()
   let dispatch = useAppDispatch()
 
@@ -109,7 +109,6 @@ const Desktop = () => {
     <>
       <DragAndDropUpload
         className="w-full h-full rounded-lg p-10 absolute cursor-default"
-        // onClick={(event) => event.stopPropagation()}
         uploadCallback={uploadFile}
       />
       <div className="p-10 flex flex-row-reverse">
@@ -121,6 +120,7 @@ const Desktop = () => {
         <ContextMenu>
           <FileContextMenu user={user} path={`users/${user.id}/`} callback={(file) => dispatch(addFiletoState(file))} />
         </ContextMenu>
+        {/* <Modal></Modal> */}
         {/* <Window>{windowList && renderWindowList(windowList)}</Window> */}
       </div>
     </>

@@ -1,18 +1,20 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { addFile } from '../../api/cloud_files'
 import Dropdown from './Dropdown'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { setUploading, addFile as addFileToState } from '../../reducers/desktopSlice'
+import LinkDialogue from './LinkDialogue'
 
 export const UploadButton = ({ ...props }) => {
   let inputRef = useRef(null)
+  const [isLinkDialogueOpen, setIsLinkDialogueOpen] = useState(false)
   const dispatch = useAppDispatch()
   const user = useAppSelector((state) => state.user.value)
 
   const menuItems = [
     { label: 'Upload File', action: () => inputRef.current.click() },
-    { label: 'Add Link', action: () => console.log('add link') },
-    { label: 'New Folder', action: () => console.log('new folder') },
+    { label: 'Add Link', action: () => setIsLinkDialogueOpen(true) },
+    // { label: 'New Folder', action: () => console.log('new folder') },
   ]
 
   async function handleFileUpload(e) {
@@ -32,6 +34,7 @@ export const UploadButton = ({ ...props }) => {
     >
       <i className="fa-solid fa-plus text-4xl text-white"></i>
       <input ref={inputRef} className="hidden" type="file" onChange={(e) => handleFileUpload(e)} />
+      <LinkDialogue open={isLinkDialogueOpen} onClose={() => setIsLinkDialogueOpen(false)} />
     </div>
   )
 
