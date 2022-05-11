@@ -68,7 +68,7 @@ export default function Dropdown({
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items
-          className={`origin-top-${direction} absolute ${direction}-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none`}
+          className={`${direction === "left" ? "origin-top-left left-0" : "origin-top-right right-0"} absolute mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none`}
         >
           <div className="py-1">{renderMenuItems()}</div>
         </Menu.Items>
