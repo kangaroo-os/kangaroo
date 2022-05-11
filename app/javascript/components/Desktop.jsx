@@ -3,14 +3,13 @@ import FileIcon from '../components/shared/FileIcon'
 import DragAndDropUpload from './shared/DragAndDropUpload'
 import ContextMenu from './shared/context_menus/ContextMenu'
 import FileContextMenu from './shared/context_menus/FileContextMenu'
-import { Window } from './shared/Window'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../hooks'
-import { addFile, getAllFiles, getFileLink, deleteFile } from '../api/cloud_files'
+import { addCloudFile, getCloudFileLink } from '../api/cloud_files'
+import { deleteFile } from '../api/files'
+import { getAllFiles } from '../api/files'
 import UploadButton from './shared/UploadButton'
 import { addFile as addFiletoState, removeFile as removeFileFromState, setUploading } from '../reducers/desktopSlice'
-import { LinkDialogue } from './shared/LinkDialogue'
-import Modal from './shared/Modal'
 
 const Desktop = () => {
   const navigate = useNavigate()
@@ -36,14 +35,14 @@ const Desktop = () => {
 
   async function uploadFile(blob) {
     dispatch(setUploading(true))
-    const res = await addFile(blob)
+    const res = await addCloudFile(blob)
     dispatch(setUploading(false))
     dispatch(addFiletoState(res.data.file))
   }
 
   async function downloadFile(id) {
     try {
-      const result = await getFileLink(id)
+      const result = await getCloudFileLink(id)
       const { url } = result.data
       window.open(url)
     } catch (e) {

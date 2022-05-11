@@ -12,6 +12,8 @@ export function getFileTypeIcon(file: CloudFile): string {
       return 'file-audio'
     case type.includes('pdf'):
       return 'file-pdf'
+    case type.includes("link"): 
+      return 'file-arrow-up'
     default:
       return 'file'
   }

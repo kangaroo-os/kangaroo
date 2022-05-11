@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { addFile } from '../../api/cloud_files'
+import { addCloudFile } from '../../api/cloud_files'
 import Dropdown from './Dropdown'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { setUploading, addFile as addFileToState } from '../../reducers/desktopSlice'
@@ -20,7 +20,7 @@ export const UploadButton = ({ ...props }) => {
   async function handleFileUpload(e) {
     const file = e.target.files[0]
     dispatch(setUploading(true))
-    const res = await addFile(file)
+    const res = await addCloudFile(file)
     dispatch(setUploading(false))
     dispatch(addFileToState(res.data.file))
   }

@@ -64,10 +64,6 @@ class CloudFilesController < ApplicationController
   
   private
 
-  def require_login
-    redirect_to '/login' if !current_user
-  end
-
   def user_authorized?
     if params.has_key?(:id)
       if current_user.cloud_file_ids.include?(params[:id].to_i)

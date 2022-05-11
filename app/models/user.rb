@@ -6,8 +6,9 @@ class User < ApplicationRecord
   
   include DeviseTokenAuth::Concerns::User
 
-  has_many :cloud_files , dependent: :destroy
-  has_many :link_files , dependent: :destroy
+  has_many :abstract_files, dependent: :destroy
+  has_many :link_files
+  has_many :cloud_files
 
   after_create :create_bucket
 

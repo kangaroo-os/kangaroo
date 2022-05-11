@@ -1,8 +1,12 @@
 import api from '../helpers/api'
+import { getAuthHeaders } from '../helpers/auth'
 
-function addLink(path: string, name: string) {
-  return api.post('/link_files/upload', {
-    path: path,
-    name: name,
-  })
+export function addLink(path: string) {
+  return api.post(
+    '/link_files/upload',
+    {
+      path: path,
+    },
+    { headers: getAuthHeaders() },
+  )
 }

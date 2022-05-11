@@ -1,16 +1,18 @@
 class LinkFilesController < ApplicationController
+
+  require "open-uri"
+  require "uri"
   
   before_action :user_authorized?, only: [:show, :destroy]
   before_action :authenticate_user!
 
-  # POST /cloud_files/upload
+  # POST /link_files/upload
   def upload
-    params.require(:link)
-    name = params[:file].original_filename.to_s
-    path = "users/#{current_user.id}/#{name}"
+    params.require(:path)
+    name = get_website_title(params[:path])
     
-    LinkFile.create({
-      path: path, 
+    file = LinkFile.new({
+      path: params[:path], 
       name: name, 
       file_type: "link", 
       user_id: current_user.id, 
@@ -25,26 +27,19 @@ class LinkFilesController < ApplicationController
 
   end
   
-  def get_folder_files
-    params.require(:key)
-    render json: { files:  S3.client.list_objects_v2(bucket: ENV["S3_MAIN_BUCKET"], prefix: "#{params[:key]}").contents.map(&:key) }
-  end
-
-  # GET /cloud_files
+  # GET /link_files
   def index 
-    render json: { files: current_user.cloud_files }, status: :ok
+    render json: { files: current_user.link_files }, status: :ok
   end
 
-  # GET /cloud_files/:id
+  # GET /link_files/:id
   def show
-    signer = Aws::S3::Presigner.new
-    url = signer.presigned_url(:get_object, bucket: ENV["S3_MAIN_BUCKET"], key: CloudFile.find(params[:id]).path)
     render json: { url: url }
   end
 
   # DELETE /cloud_files/:id
   def destroy 
-    file = CloudFile.find(params[:id])
+    file = LinkFile.find(params[:id])
     if file
       file.destroy!
       render json: { message: "File deleted" }, status: :ok
@@ -53,19 +48,11 @@ class LinkFilesController < ApplicationController
     end
   end
 
-  # POST /cloud_files/create_folder
-  def create_folder
-    params.require(:path)
-    path, name = create_unique_name(params[:path]+"untitled folder", "untitled folder")
-    S3.client.put_object(bucket: 'kangarooo', key: path + "/")
-    file = CloudFile.create({path: path + "/", name: name, file_type: "folder", user_id: current_user.id, size: 0})
-    render json: {file: file}, status: :ok
-  end
   
   private
 
-  def require_login
-    redirect_to '/login' if !current_user
+  def get_website_title(url)
+    Nokogiri::HTML(URI.open(url)).css('title').text || "Untitled Website"
   end
 
   def user_authorized?
