@@ -1,4 +1,4 @@
-export interface CloudFile {
+export interface File {
   id: string
   file_type: string
   name: string

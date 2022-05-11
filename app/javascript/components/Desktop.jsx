@@ -70,17 +70,19 @@ const Desktop = () => {
     console.log(name)
   }
 
-  function fileCallback(type, id) {
+  function fileCallback(type, file) {
     switch (type) {
       case 'download':
-        downloadFile(id)
+        downloadFile(file.id)
         break
       case 'delete':
-        deleteUserFile(id)
+        deleteUserFile(file.id)
         break
       case 'openFolder':
-        openFolder(id)
+        openFolder(file.id)
         break
+      case 'link':
+        window.open(file.path)
       default:
         break
     }
