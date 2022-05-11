@@ -1,0 +1,2 @@
+class LinkFile < AbstractFile 
+end

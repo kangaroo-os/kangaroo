@@ -22,16 +22,9 @@ class CloudFilesController < ApplicationController
       params[:file].original_filename = name
     end
     
-    file = CloudFile.create({path: path, name: name, file_type: params[:file].content_type, user_id: current_user.id, size: params[:file].size})
-    
-    if file 
-      S3.client.put_object(
-        bucket: 'kangarooo',
-        key: path, 
-        body: params[:file].tempfile,
-        content_disposition: 'inline',
-        content_type: params[:file].content_type
-      )
+    file = CloudFile.new({path: path, name: name, file_type: params[:file].content_type, user_id: current_user.id, size: params[:file].size})
+    file.tempfile = params[:file]
+    if file.save!
       render json: {file: file}, status: :ok
     else
       render json: {error: "File not saved"}, status: :unprocessable_entity

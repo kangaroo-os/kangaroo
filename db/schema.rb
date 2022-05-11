@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_08_192327) do
+ActiveRecord::Schema.define(version: 2022_05_11_050307) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "cloud_files", force: :cascade do |t|
+  create_table "abstract_files", force: :cascade do |t|
     t.bigint "user_id"
     t.string "name"
     t.string "path"
@@ -23,7 +23,8 @@ ActiveRecord::Schema.define(version: 2022_05_08_192327) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "size", null: false
-    t.index ["user_id"], name: "index_cloud_files_on_user_id"
+    t.string "type"
+    t.index ["user_id"], name: "index_abstract_files_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -53,5 +54,5 @@ ActiveRecord::Schema.define(version: 2022_05_08_192327) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
-  add_foreign_key "cloud_files", "users"
+  add_foreign_key "abstract_files", "users"
 end
