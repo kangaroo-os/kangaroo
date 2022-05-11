@@ -20,7 +20,7 @@ export const UploadButton = ({ ...props }) => {
   async function handleFileUpload(e) {
     const file = e.target.files[0]
     dispatch(setUploading(true))
-    const res = await addFile(user, file)
+    const res = await addFile(file)
     dispatch(setUploading(false))
     dispatch(addFileToState(res.data.file))
   }

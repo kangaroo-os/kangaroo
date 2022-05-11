@@ -1,21 +1,21 @@
-class AbstractFilesController < ApplicationController
+class LinkFilesController < ApplicationController
+  
   before_action :user_authorized?, only: [:show, :destroy]
   before_action :authenticate_user!
 
   # POST /cloud_files/upload
   def upload
-    params.require(:file)
+    params.require(:link)
     name = params[:file].original_filename.to_s
     path = "users/#{current_user.id}/#{name}"
     
-    file = CloudFile.new({
+    LinkFile.create({
       path: path, 
       name: name, 
-      file_type: params[:file].content_type, 
+      file_type: "link", 
       user_id: current_user.id, 
-      size: params[:file].size, 
-      tempfile: params[:file].tempfile}
-    )
+      size: 0
+    })
     
     if file.save!
       render json: {file: file}, status: :ok

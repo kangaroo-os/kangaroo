@@ -20,12 +20,12 @@ const Desktop = () => {
   let desktop = useAppSelector((state) => state.desktop.value)
 
   useEffect(() => {
-    getFiles(user)
+    getFiles()
   }, [])
 
-  async function getFiles(user) {
+  async function getFiles() {
     try {
-      const res = await getAllFiles(user)
+      const res = await getAllFiles()
       dispatch(addFiletoState(res.data.files))
     } catch (error) {
       if (error.response.status === 401) {
@@ -36,14 +36,14 @@ const Desktop = () => {
 
   async function uploadFile(blob) {
     dispatch(setUploading(true))
-    const res = await addFile(user, blob)
+    const res = await addFile(blob)
     dispatch(setUploading(false))
     dispatch(addFiletoState(res.data.file))
   }
 
   async function downloadFile(id) {
     try {
-      const result = await getFileLink(user, id)
+      const result = await getFileLink(id)
       const { url } = result.data
       window.open(url)
     } catch (e) {
@@ -53,7 +53,7 @@ const Desktop = () => {
 
   async function deleteUserFile(id) {
     try {
-      await deleteFile(user, id)
+      await deleteFile(id)
       dispatch(removeFileFromState(id))
       // setFileList(fileList.filter((file) => file.id !== id))
     } catch (e) {
@@ -118,7 +118,7 @@ const Desktop = () => {
           {desktop.uploading && <div>Uploading...</div>}
         </div>
         <ContextMenu>
-          <FileContextMenu user={user} path={`users/${user.id}/`} callback={(file) => dispatch(addFiletoState(file))} />
+          <FileContextMenu path={`users/${user.id}/`} callback={(file) => dispatch(addFiletoState(file))} />
         </ContextMenu>
         {/* <Modal></Modal> */}
         {/* <Window>{windowList && renderWindowList(windowList)}</Window> */}

@@ -2,9 +2,9 @@ import React from 'react'
 import { callbackify } from 'util'
 import { createFolder } from '../../../api/cloud_files'
 
-export const FileContextMenu = ({ user, path, callback }) => {
+export const FileContextMenu = ({ path, callback }) => {
   async function createFolderFunction() {
-    const res = await createFolder(user, path)
+    const res = await createFolder(path)
     callback(res.data.file)
   }
   return (
