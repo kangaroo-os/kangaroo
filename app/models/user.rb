@@ -17,4 +17,11 @@ class User < ApplicationRecord
   def create_bucket
     S3.client.put_object(bucket: ENV["S3_MAIN_BUCKET"], key: "users/#{self.id}/")
   end
+
+  # Check if user has passed the file limit or not and return a boolean. Default 5GB 
+  # Optional ability to add a file to see if adding the file will exceed the limit.
+  def is_over_gb_limit?(file_size)
+    self.cloud_files.sum(:size) + file_size > self.gb_limit 
+  end
+
 end

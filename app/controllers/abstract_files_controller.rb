@@ -1,4 +1,4 @@
-class CloudFilesController < ApplicationController
+class AbstractFilesController < ApplicationController
   before_action :user_authorized?, only: [:show, :destroy]
   before_action :authenticate_user!
 
