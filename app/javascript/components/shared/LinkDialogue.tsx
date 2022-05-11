@@ -20,7 +20,7 @@ export const LinkDialogue = ({ open, onClose }) => {
         <h1>Add a link</h1>
         <form onSubmit={(e) => submitLink(e)}>
           <input required className="k-input" type="url" id="link" name="link" />
-          <div className="mr-auto space-x-2 float-right">
+          <div className="mr-auto space-x-2 float-right mt-3">
             <button
               type="button"
               onClick={onClose}
