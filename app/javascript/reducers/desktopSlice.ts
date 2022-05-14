@@ -20,6 +20,9 @@ export const desktopSlice = createSlice({
         state.value.files.push(action.payload)
       }
     },
+    setInitialFiles: (state, action) => {
+      state.value.files = action.payload
+    },
     removeFile: (state, action) => {
       state.value.files = state.value.files.filter((file) => file.id !== action.payload)
     },
@@ -27,6 +30,6 @@ export const desktopSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setUploading, addFile, removeFile } = desktopSlice.actions
+export const { setUploading, addFile, removeFile, setInitialFiles } = desktopSlice.actions
 
 export default desktopSlice.reducer

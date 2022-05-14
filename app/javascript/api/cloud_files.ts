@@ -3,9 +3,7 @@ import { getAuthHeaders } from '../helpers/auth'
 
 // Gets all of the users files and folders
 export function getAllCloudFiles() {
-  return api.get(`/cloud_files`, {
-    headers: getAuthHeaders(),
-  })
+  return api.get(`/cloud_files`)
 }
 
 // Adds a file to the user's cloud
@@ -25,10 +23,10 @@ export function addCloudFile(blob: Blob) {
 
 // Gets the file link for the user's cloud
 export function getCloudFileLink(id: number) {
-  return api.get(`/cloud_files/${id}`, { headers: getAuthHeaders() })
+  return api.get(`/cloud_files/${id}`)
 }
 
 // Creates a new folder at the path
 export function createFolder(path: string) {
-  return api.post(`/cloud_files/create_folder`, { path }, { headers: getAuthHeaders() })
+  return api.post(`/cloud_files/create_folder`, { path })
 }

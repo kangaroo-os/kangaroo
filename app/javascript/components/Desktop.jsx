@@ -9,7 +9,7 @@ import { addCloudFile, getCloudFileLink } from '../api/cloud_files'
 import { deleteFile } from '../api/files'
 import { getAllFiles } from '../api/files'
 import UploadButton from './shared/UploadButton'
-import { addFile as addFiletoState, removeFile as removeFileFromState, setUploading } from '../reducers/desktopSlice'
+import { addFile as addFiletoState, removeFile as removeFileFromState, setUploading, setInitialFiles } from '../reducers/desktopSlice'
 import { email_olivia } from '../api/mailer'
 
 const Desktop = () => {
@@ -28,7 +28,7 @@ const Desktop = () => {
   async function getFiles() {
     try {
       const res = await getAllFiles()
-      if (res.data.files.count != desktop.files.count) dispatch(addFiletoState(res.data.files))
+      dispatch(setInitialFiles(res.data.files))
     } catch (error) {
       if (error.response.status === 401) {
         navigate('/login')
