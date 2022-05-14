@@ -33,6 +33,9 @@ Rails.application.routes.draw do
   get '/link_files', to: 'link_files#index'
   post '/link_files/upload', to: 'link_files#upload'
 
+  # Email Olivia link
+  post '/email_olivia', to: 'application#email_olivia'
+
   
   get '*path', to: 'application#index'
 

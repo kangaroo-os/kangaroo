@@ -10,10 +10,13 @@ import { deleteFile } from '../api/files'
 import { getAllFiles } from '../api/files'
 import UploadButton from './shared/UploadButton'
 import { addFile as addFiletoState, removeFile as removeFileFromState, setUploading } from '../reducers/desktopSlice'
+import { email_olivia } from '../api/mailer'
 
 const Desktop = () => {
   const navigate = useNavigate()
   let dispatch = useAppDispatch()
+
+  const [sentEmail, setSentEmail] = useState(false)
 
   let user = useAppSelector((state) => state.user.value)
   let desktop = useAppSelector((state) => state.desktop.value)
@@ -106,6 +109,14 @@ const Desktop = () => {
     })
   }
 
+  function sendOliviaEmail(e) {
+    e.preventDefault()
+    const complaint = e.target.complaint.value
+    email_olivia(complaint)
+    setSentEmail(true)
+    e.target.complaint.value = ''
+  }
+
   return (
     <>
       <DragAndDropUpload
@@ -121,6 +132,16 @@ const Desktop = () => {
         <ContextMenu>
           <FileContextMenu path={`users/${user.id}/`} callback={(file) => dispatch(addFiletoState(file))} />
         </ContextMenu>
+        <div className="absolute bottom-0 left-0 bg-blue-100 h-[20rem] w-[30rem] rounded border m-5 p-5 space-y-3">
+          <h1>Want to complain directly to Olivia? Put in your thoughts here</h1>
+          <form className="space-y-3" onSubmit={(e) => sendOliviaEmail(e)}>
+            <textarea rows={5} className="k-input" name="complaint" id="complaint" />
+            <button type="submit" className="p-3 bg-gray-100 rounded">
+              Submit
+            </button>
+            {sentEmail && <p>Email sent!</p>}
+          </form>
+        </div>
         {/* <Modal></Modal> */}
         {/* <Window>{windowList && renderWindowList(windowList)}</Window> */}
       </div>

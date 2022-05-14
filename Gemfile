@@ -11,6 +11,7 @@ gem 'jbuilder', '~> 2.7'
 gem "aws-sdk-s3"
 gem 'bcrypt', '~> 3.1.7'
 gem 'devise'
+gem 'rest-client'
 gem 'omniauth'
 gem 'devise_token_auth'
 gem 'bootsnap', '>= 1.4.2', require: false
