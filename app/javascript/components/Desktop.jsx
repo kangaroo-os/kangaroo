@@ -25,7 +25,7 @@ const Desktop = () => {
   async function getFiles() {
     try {
       const res = await getAllFiles()
-      dispatch(addFiletoState(res.data.files))
+      if (res.data.files.count != desktop.files.count) dispatch(addFiletoState(res.data.files))
     } catch (error) {
       if (error.response.status === 401) {
         navigate('/login')
