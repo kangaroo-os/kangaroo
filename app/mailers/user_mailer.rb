@@ -6,6 +6,7 @@ class UserMailer < ApplicationMailer
   end
 
   def send_complaint(user, complaint)
+    return if (ENV["ENV"] != "production")
     RestClient.post "https://api:#{ENV["MAILGUN_API_KEY"]}"\
     "@api.mailgun.net/v3/sandboxa9112ce1247f4969a51901a0070f9d19.mailgun.org/messages",
     :from => "Complaining User <mailgun@sandboxa9112ce1247f4969a51901a0070f9d19.mailgun.org>",
