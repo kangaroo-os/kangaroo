@@ -1,4 +1,4 @@
-import api from '../helpers/api'
+import api, { removeAuthHeaders } from '../helpers/api'
 import User from '../models/User'
 
 export async function logout(user: User | undefined) {

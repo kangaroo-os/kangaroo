@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 import React from 'react'
-import api from '../helpers/api'
+import { removeAuthHeaders } from '../helpers/api'
 import { Link, useNavigate } from 'react-router-dom'
 import Dropdown from './shared/Dropdown'
 import { useAppSelector, useAppDispatch } from '../hooks'
@@ -18,7 +18,8 @@ export default function Header({ children }) {
     navigate('/login')
     Cookies.remove('kangaroo_session_id')
     localStorage.removeItem('user')
-    dispatch(setCurrentUser(undefined))
+    dispatch(setCurrentUser(null))
+    removeAuthHeaders()
     return false
   }
 

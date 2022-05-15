@@ -1,5 +1,4 @@
 import api from '../helpers/api'
-import { getAuthHeaders } from '../helpers/auth'
 
 export function getAllFiles() {
   return api.get('/files')

@@ -4,6 +4,7 @@ import { AxiosResponse } from 'axios'
 import { login, signup as signupUser } from '../../api/auth'
 import { useAppDispatch } from '../../hooks'
 import { setCurrentUser } from '../../reducers/userSlice'
+import { addAuthHeaders } from '../../helpers/api'
 
 export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
   let navigate = useNavigate()
@@ -54,6 +55,7 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
     }
     dispatch(setCurrentUser(user))
     localStorage.setItem('user', JSON.stringify(user))
+    addAuthHeaders()
   }
 
   return (

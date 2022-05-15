@@ -1,5 +1,6 @@
 export function getAuthHeaders() {
   let user = JSON.parse(localStorage.getItem('user'))
+  
   if (user) {
     return {
       'access-token': user.accessToken,
