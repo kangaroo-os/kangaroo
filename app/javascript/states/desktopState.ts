@@ -26,8 +26,12 @@ export const useDesktop = () => {
     }
   }, [])
 
-  function AddSelectedFile(file: File) {
-    subject.next({ ...subject.value, selectedFiles: [...subject.value.selectedFiles, file] })
+  function setSelectedFiles(id: string[]) {
+    subject.next({ ...subject.value, selectedFiles: id })
+  }
+
+  function addSelectedFile(id: string) {
+    subject.next({ ...subject.value, selectedFiles: [...subject.value.selectedFiles, id] })
   }
 
   function addFile(file: File) {
@@ -46,5 +50,5 @@ export const useDesktop = () => {
     subject.next({ ...subject.value, files: files })
   }
 
-  return { desktop, AddSelectedFile, addFile, setUploading, removeFile, setInitialFiles }
+  return { desktop, setSelectedFiles, addFile, setUploading, removeFile, setInitialFiles, addSelectedFile }
 }

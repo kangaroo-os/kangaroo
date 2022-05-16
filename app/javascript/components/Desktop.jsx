@@ -18,7 +18,7 @@ const Desktop = () => {
   const [sentEmail, setSentEmail] = useState(false)
 
   let user = getUser()
-  const { desktop, AddSelectedFile, addFile, setUploading, removeFile, setInitialFiles } = useDesktop()
+  const { desktop, setSelectedFiles, addFile, setUploading, removeFile, setInitialFiles } = useDesktop()
 
   useEffect(() => {
     getFiles()
@@ -96,7 +96,8 @@ const Desktop = () => {
       return <div>No files found</div>
     }
     return files.map((file) => {
-      return <FileIcon key={file.name} selected={true} file={file} getFileCallback={fileCallback} />
+      const active = desktop.selectedFiles.includes(file.id)
+      return <FileIcon key={file.name} selected={active} file={file} getFileCallback={fileCallback} />
     })
   }
 
@@ -132,7 +133,6 @@ const Desktop = () => {
         <ContextMenu>
           <FileContextMenu path={`users/${user.id}/`} callback={(file) => addFile(file)} />
         </ContextMenu>
-
         {/* temporarily complain to olivia text area */}
         <div className="absolute bottom-0 left-0 bg-blue-100 h-[20rem] w-[30rem] rounded border m-5 p-5 space-y-3">
           <h1>Want to complain directly to Olivia? Put in your thoughts here</h1>

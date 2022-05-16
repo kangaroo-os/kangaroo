@@ -3,6 +3,7 @@ import Draggable from 'react-draggable'
 import { getFileTypeIcon } from '../../helpers/cloud_file'
 import { truncateText } from '../../helpers/utils'
 import { File } from '../../models/File'
+import { useDesktop } from '../../states/desktopState'
 
 export const FileIcon = ({
   file,
@@ -24,9 +25,19 @@ export const FileIcon = ({
     }
   }
 
+  function handleSelect(e) {
+    if (e.metaKey || e.shiftKey) {
+      addSelectedFile(file.id)
+    } else {
+      setSelectedFiles([file.id])
+    }
+  }
+
+  const { setSelectedFiles, addSelectedFile } = useDesktop()
+
   return (
     <Draggable>
-      <div className={`${selected ? "bg-blue-100 border-2 border-blue-300" : ""} rounded p-2 m-1 inline-block`}>
+      <div className={`${selected ? 'bg-blue-100 border-2 border-blue-300' : ''} rounded p-2 m-1 inline-block`}>
         <div className="w-[100px] h-[130px]">
           <button
             onClick={() => getFileCallback('delete', file)}
@@ -35,10 +46,11 @@ export const FileIcon = ({
             x
           </button>
           <div
-          className="flex justify-center items-center flex-col"
+            className="flex justify-center items-center flex-col"
             onContextMenu={(e) => {
               console.log(e)
             }}
+            onClick={(e) => handleSelect(e)}
             onDoubleClick={() => getFileCallback(fileCallbackType(), file)}
           >
             <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
