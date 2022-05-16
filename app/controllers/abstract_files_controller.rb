@@ -17,6 +17,16 @@ class AbstractFilesController < ApplicationController
     end
   end
 
+  def update
+    file = AbstractFile.find(params[:id])
+    if file
+      file.update(abstract_file_params)
+      render json: { message: "File updated" }, status: :ok
+    else
+      render json: {error: "File not found"}, status: :not_found
+    end
+  end
+
    
   private 
 

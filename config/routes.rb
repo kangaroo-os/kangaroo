@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   # abstract files
   get '/files', to: 'abstract_files#index'
   delete '/files/:id', to: 'abstract_files#destroy'
+  put '/files/:id', to: 'abstract_files#update'
 
   # cloud files
   get '/cloud_files/:id', to: 'cloud_files#show'

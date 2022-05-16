@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useRef, useState } from 'react'
 import Draggable from 'react-draggable'
 import { getFileTypeIcon } from '../../helpers/cloud_file'
 import { truncateText } from '../../helpers/utils'
@@ -25,11 +25,23 @@ export const FileIcon = ({
     }
   }
 
+  const [editing, setEditing] = useState(false)
+  const renameRef = useRef<HTMLInputElement>(null)
+
   function handleSelect(e) {
     if (e.metaKey || e.shiftKey) {
       addSelectedFile(file.id)
     } else {
       setSelectedFiles([file.id])
+    }
+  }
+
+  function renameFile(e) {
+    if (e.key == 'Enter' && !editing) {
+      setEditing(true)
+    } else if (e.key == 'Enter' && editing) {
+      file.name = renameRef.current.value
+      setEditing(false)
     }
   }
 
@@ -46,15 +58,16 @@ export const FileIcon = ({
             x
           </button>
           <div
+            tabIndex={0}
             className="flex justify-center items-center flex-col"
-            onContextMenu={(e) => {
-              console.log(e)
-            }}
+            onContextMenu={() => setSelectedFiles([file.id])}
             onClick={(e) => handleSelect(e)}
+            onKeyPress={(e) => renameFile(e)}
             onDoubleClick={() => getFileCallback(fileCallbackType(), file)}
           >
             <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
-            <p className="text-sm break-words">{truncateText(file.name, 18)}</p>
+            {!editing && <p className="text-sm break-words">{truncateText(file.name, 18)}</p>}
+            {editing && <input ref={renameRef} defaultValue={file.name} className="text-sm" type="text" />}
           </div>
         </div>
       </div>
