@@ -1,6 +1,8 @@
+import { getUser } from "../states/userState"
+
 export function getAuthHeaders() {
-  let user = JSON.parse(localStorage.getItem('user'))
-  
+  let user = getUser()
+  debugger
   if (user) {
     return {
       'access-token': user.accessToken,

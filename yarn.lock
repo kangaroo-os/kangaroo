@@ -52,6 +52,19 @@
   dependencies:
     spark-md5 "^3.0.0"
 
+"@react-rxjs/core@^0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@react-rxjs/core/-/core-0.9.6.tgz#7f4f61403009c53a09d36a1a389b5ba4a0c5fccd"
+  integrity sha512-OEyGPca1LXz06iLZMJyFniE3fFaqNvS/+jdpk7gtNFLGmwCo5H6HPAGFEEhui90A0BpLR1hSzDHy3L9b3I9rZw==
+  dependencies:
+    "@rxstate/core" "^0.0.1"
+    use-sync-external-store "^1.0.0"
+
+"@react-rxjs/utils@^0.9.5":
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/@react-rxjs/utils/-/utils-0.9.5.tgz#e880e7bec46f6153f9402e9acc42b28225a468d2"
+  integrity sha512-RXVw8JAnBvKb23CixtrH7w5CKiiJodyck8T0s8o94XSor5XfsqpDrDk8Cq8iwyrxvvSL3+BoNAA+WCbVFTVhcg==
+
 "@reduxjs/toolkit@^1.8.1":
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.8.1.tgz#94ee1981b8cf9227cda40163a04704a9544c9a9f"
@@ -61,6 +74,11 @@
     redux "^4.1.2"
     redux-thunk "^2.4.1"
     reselect "^4.1.5"
+
+"@rxstate/core@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@rxstate/core/-/core-0.0.1.tgz#899c8c863b1c251368cde9b23bcc79a10da87a70"
+  integrity sha512-be8446G5eapl6X8IAuYvvYY78CnyuXX7pASAYG2Ww95hCbqfNLSYXqknvWeUJ4ovO63l5xdM29ct0uUysKDyog==
 
 "@tailwindcss/forms@^0.5.1":
   version "0.5.1"
@@ -837,6 +855,13 @@ run-parallel@^1.1.9:
   dependencies:
     queue-microtask "^1.2.2"
 
+rxjs@^7.5.5:
+  version "7.5.5"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.5.5.tgz#2ebad89af0f560f460ad5cc4213219e1f7dd4e9f"
+  integrity sha512-sy+H0pQofO95VDmFLzyaw9xNJU4KTRSwQIGM6+iG3SypAtCiLDzpeG8sJrNCWn2Up9km+KhkvTdbkrdy+yzZdw==
+  dependencies:
+    tslib "^2.1.0"
+
 scheduler@^0.20.2:
   version "0.20.2"
   resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.20.2.tgz#4baee39436e34aa93b4874bddcbf0fe8b8b50e91"
@@ -894,7 +919,7 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-tslib@^2.0.3:
+tslib@^2.0.3, tslib@^2.1.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
   integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==

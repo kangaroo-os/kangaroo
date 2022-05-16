@@ -2,15 +2,15 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AxiosResponse } from 'axios'
 import { login, signup as signupUser } from '../../api/auth'
-import { useAppDispatch } from '../../hooks'
-import { setCurrentUser } from '../../reducers/userSlice'
+import { useUser } from '../../states/userState'
 import { addAuthHeaders } from '../../helpers/api'
 
 export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
   let navigate = useNavigate()
-  const dispatch = useAppDispatch()
   const [signup, setSignup] = useState(isSignup)
   const [errors, setErrors] = useState(undefined)
+
+  const { setCurrentUser } = useUser()
 
   function toggleForm() {
     setSignup(!signup)
@@ -53,9 +53,9 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
       accessToken: res.headers['access-token'],
       tokenExpiresAt: res.headers['expiry'],
     }
-    dispatch(setCurrentUser(user))
-    localStorage.setItem('user', JSON.stringify(user))
+    setCurrentUser(user)
     addAuthHeaders()
+    localStorage.setItem('user', JSON.stringify(user))
   }
 
   return (

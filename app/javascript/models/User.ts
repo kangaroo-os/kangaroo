@@ -4,5 +4,5 @@ export default interface User {
   email: string;
   client: string;
   accessToken: string;
-  tokenExpiresAt: Date;
+  tokenExpiresAt: string;
 }
