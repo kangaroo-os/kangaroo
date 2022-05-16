@@ -7,7 +7,6 @@
     "@rails/activestorage": "^6.0.0-alpha",
     "@react-rxjs/core": "^0.9.6",
     "@react-rxjs/utils": "^0.9.5",
-    "@reduxjs/toolkit": "^1.8.1",
     "axios": "^0.24.0",
     "install": "^0.13.0",
     "js-cookie": "^3.0.1",
@@ -16,9 +15,7 @@
     "react-dom": "^17.0.2",
     "react-draggable": "^4.4.4",
     "react-dropzone": "^12.0.4",
-    "react-redux": "^8.0.1",
     "react-router-dom": "^6.2.1",
-    "redux": "^4.2.0",
     "rxjs": "^7.5.5",
     "turbolinks": "^5.2.0"
   },
