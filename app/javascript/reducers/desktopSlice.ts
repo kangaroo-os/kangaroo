@@ -6,6 +6,7 @@ export const desktopSlice = createSlice({
     value: {
       uploading: false,
       files: [],
+      selectedFiles: [],
     },
   },
   reducers: {
@@ -19,6 +20,9 @@ export const desktopSlice = createSlice({
       } else {
         state.value.files.push(action.payload)
       }
+    },
+    setSelectedFiles: (state, action) => {
+      state.value.selectedFiles = action.payload
     },
     setInitialFiles: (state, action) => {
       state.value.files = action.payload
