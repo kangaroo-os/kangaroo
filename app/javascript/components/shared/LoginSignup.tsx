@@ -126,7 +126,7 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
                     }}
                     className="font-medium text-indigo-600 hover:text-indigo-500"
                   >
-                    {signup ? 'Login intead' : 'Sign up instead'}
+                    {signup ? 'Login instead' : 'Sign up instead'}
                   </button>
                 </div>
               </div>
