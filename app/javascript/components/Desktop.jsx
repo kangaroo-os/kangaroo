@@ -9,19 +9,17 @@ import { addCloudFile, getCloudFileLink } from '../api/cloud_files'
 import { deleteFile } from '../api/files'
 import { getAllFiles } from '../api/files'
 import UploadButton from './shared/UploadButton'
-import { addFile as addFiletoState, removeFile as removeFileFromState, setUploading, setInitialFiles } from '../reducers/desktopSlice'
 import { email_olivia } from '../api/mailer'
+import { useDesktop, getDesktop } from '../states/desktopState'
 import { getUser } from '../states/userState'
 
 const Desktop = () => {
   const navigate = useNavigate()
-  let dispatch = useAppDispatch()
 
   const [sentEmail, setSentEmail] = useState(false)
-  const [selectedFiles, setSelectedFiles] = useState([])
 
-  let user = getUser() 
-  let desktop = useAppSelector((state) => state.desktop.value)
+  let user = getUser()
+  const { desktop, AddSelectedFile, addFile, setUploading, removeFile, setInitialFiles } = useDesktop()
 
   useEffect(() => {
     getFiles()
@@ -30,7 +28,7 @@ const Desktop = () => {
   async function getFiles() {
     try {
       const res = await getAllFiles()
-      dispatch(setInitialFiles(res.data.files))
+      setInitialFiles(res.data.files)
     } catch (error) {
       if (error.response.status === 401) {
         navigate('/login')
@@ -39,10 +37,11 @@ const Desktop = () => {
   }
 
   async function uploadFile(blob) {
-    dispatch(setUploading(true))
+    debugger
+    setUploading(true)
     const res = await addCloudFile(blob)
-    dispatch(setUploading(false))
-    dispatch(addFiletoState(res.data.file))
+    setUploading(false)
+    addFile(res.data.file)
   }
 
   async function downloadFile(id) {
@@ -58,7 +57,7 @@ const Desktop = () => {
   async function deleteUserFile(id) {
     try {
       await deleteFile(id)
-      dispatch(removeFileFromState(id))
+      removeFile(id)
       // setFileList(fileList.filter((file) => file.id !== id))
     } catch (e) {
       console.error(e)
@@ -132,7 +131,7 @@ const Desktop = () => {
           {desktop.uploading && <div>Uploading...</div>}
         </div>
         <ContextMenu>
-          <FileContextMenu path={`users/${user.id}/`} callback={(file) => dispatch(addFiletoState(file))} />
+          <FileContextMenu path={`users/${user.id}/`} callback={(file) => addFile(file)} />
         </ContextMenu>
 
         {/* temporarily complain to olivia text area */}

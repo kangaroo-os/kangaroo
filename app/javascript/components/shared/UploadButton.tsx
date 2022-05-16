@@ -1,14 +1,13 @@
 import React, { useRef, useState } from 'react'
 import { addCloudFile } from '../../api/cloud_files'
 import Dropdown from './Dropdown'
-import { useAppDispatch } from '../../hooks'
-import { setUploading, addFile as addFileToState } from '../../reducers/desktopSlice'
 import LinkDialogue from './LinkDialogue'
+import { useDesktop } from '../../states/desktopState'
 
 export const UploadButton = ({ ...props }) => {
   let inputRef = useRef(null)
   const [isLinkDialogueOpen, setIsLinkDialogueOpen] = useState(false)
-  const dispatch = useAppDispatch()
+  const { addFile, setUploading } = useDesktop()
 
   const menuItems = [
     { label: 'Upload File', action: () => inputRef.current.click() },
@@ -18,10 +17,10 @@ export const UploadButton = ({ ...props }) => {
 
   async function handleFileUpload(e) {
     const file = e.target.files[0]
-    dispatch(setUploading(true))
+    setUploading(true)
     const res = await addCloudFile(file)
-    dispatch(setUploading(false))
-    dispatch(addFileToState(res.data.file))
+    setUploading(false)
+    addFile(res.data.file)
   }
 
   const MenuButton = () => (

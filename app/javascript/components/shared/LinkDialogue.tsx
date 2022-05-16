@@ -1,16 +1,16 @@
-import React, { useState, useRef } from 'react'
+import React from 'react'
 import Modal from './Modal'
 import { addLink } from '../../api/link_files'
-import { useAppDispatch } from '../../hooks'
-import { addFile } from '../../reducers/desktopSlice'
+import { useDesktop } from '../../states/desktopState'
 
 export const LinkDialogue = ({ open, onClose }) => {
-  const dispatch = useAppDispatch()
+  const { addFile } = useDesktop()
 
   async function submitLink(e) {
     e.preventDefault()
     const res = await addLink(e.target.link.value)
-    dispatch(addFile(res.data.file))
+    addFile(res.data.file)
+
     onClose()
   }
 

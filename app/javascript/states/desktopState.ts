@@ -5,7 +5,6 @@ import { File } from '../models/File'
 let subject = new BehaviorSubject({ files: [], selectedFiles: [], uploading: false })
 
 export const getDesktop = () => {
-  console.log('getDesktop', subject.value)
   if (!subject) {
     return undefined
   }
@@ -14,7 +13,6 @@ export const getDesktop = () => {
 
 export const useDesktop = () => {
   const [desktop, setDesktop] = useState(subject.value)
-  const [rerender, setRerender] = useState(true)
 
   useEffect(() => {
     const subscription = subject.subscribe((desktop) => {
@@ -32,7 +30,7 @@ export const useDesktop = () => {
     subject.next({ ...subject.value, selectedFiles: [...subject.value.selectedFiles, file] })
   }
 
-  function addfile(file: File) {
+  function addFile(file: File) {
     subject.next({ ...subject.value, files: [...subject.value.files, file] })
   }
 
@@ -48,5 +46,5 @@ export const useDesktop = () => {
     subject.next({ ...subject.value, files: files })
   }
 
-  return { desktop, AddSelectedFile, addfile, setUploading, removeFile, setInitialFiles }
+  return { desktop, AddSelectedFile, addFile, setUploading, removeFile, setInitialFiles }
 }
