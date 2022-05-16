@@ -3,22 +3,22 @@ import React from 'react'
 import { removeAuthHeaders } from '../helpers/api'
 import { Link, useNavigate } from 'react-router-dom'
 import Dropdown from './shared/Dropdown'
-import { useAppSelector, useAppDispatch } from '../hooks'
-import { setCurrentUser } from '../reducers/userSlice'
 import { logout as logoutUser } from '../api/auth'
+import { getUser, useUser } from '../states/userState'
 
 export default function Header({ children }) {
   let navigate = useNavigate()
 
-  const user = useAppSelector((state) => state.user.value)
-  const dispatch = useAppDispatch()
+  const user = getUser()
+
+  const { removeCurrentUser } = useUser()
 
   async function logout() {
     await logoutUser(user)
     navigate('/login')
     Cookies.remove('kangaroo_session_id')
     localStorage.removeItem('user')
-    dispatch(setCurrentUser(null))
+    removeCurrentUser()
     removeAuthHeaders()
     return false
   }

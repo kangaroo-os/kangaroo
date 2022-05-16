@@ -11,6 +11,7 @@ import { getAllFiles } from '../api/files'
 import UploadButton from './shared/UploadButton'
 import { addFile as addFiletoState, removeFile as removeFileFromState, setUploading, setInitialFiles } from '../reducers/desktopSlice'
 import { email_olivia } from '../api/mailer'
+import { getUser } from '../states/userState'
 
 const Desktop = () => {
   const navigate = useNavigate()
@@ -19,7 +20,7 @@ const Desktop = () => {
   const [sentEmail, setSentEmail] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState([])
 
-  let user = useAppSelector((state) => state.user.value)
+  let user = getUser() 
   let desktop = useAppSelector((state) => state.desktop.value)
 
   useEffect(() => {

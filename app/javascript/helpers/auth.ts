@@ -2,7 +2,7 @@ import { getUser } from "../states/userState"
 
 export function getAuthHeaders() {
   let user = getUser()
-  debugger
+  console.log("AUTH", user)
   if (user) {
     return {
       'access-token': user.accessToken,
