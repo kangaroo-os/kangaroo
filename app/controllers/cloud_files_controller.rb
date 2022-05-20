@@ -24,7 +24,7 @@ class CloudFilesController < ApplicationController
     end
 
   end
-  
+
   def get_folder_files
     params.require(:key)
     render json: { files:  S3.client.list_objects_v2(bucket: ENV["S3_MAIN_BUCKET"], prefix: "#{params[:key]}").contents.map(&:key) }

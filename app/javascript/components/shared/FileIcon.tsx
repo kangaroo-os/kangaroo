@@ -67,7 +67,7 @@ export const FileIcon = ({
           >
             <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
             {!editing && <p className="text-sm break-words">{truncateText(file.name, 18)}</p>}
-            {editing && <input ref={renameRef} defaultValue={file.name} className="text-sm" type="text" />}
+            {editing && <input autoFocus ref={renameRef} defaultValue={file.name} className="text-sm" type="text" />}
           </div>
         </div>
       </div>
