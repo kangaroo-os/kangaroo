@@ -38,8 +38,9 @@ class CloudFilesController < ApplicationController
   # GET /cloud_files/:id
   def show
     signer = Aws::S3::Presigner.new
-    url = signer.presigned_url(:get_object, bucket: ENV["S3_MAIN_BUCKET"], key: CloudFile.find(params[:id]).path)
-    render json: { url: url }
+    cloud_file = CloudFile.find(params[:id])
+    url = signer.presigned_url(:get_object, bucket: ENV["S3_MAIN_BUCKET"], key: cloud_file.path)
+    render json: { url: url, name: cloud_file.name, file_type: cloud_file.file_type }
   end
 
   # DELETE /cloud_files/:id
