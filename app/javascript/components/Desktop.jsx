@@ -12,6 +12,7 @@ import { email_olivia } from '../api/mailer'
 import { useDesktop } from '../states/desktopState'
 import { getUser } from '../states/userState'
 import TableView from '@components/shared/desktop/TableView'
+import GridView from '@components/shared/desktop/GridView'
 
 const Desktop = () => {
   const navigate = useNavigate()
@@ -91,17 +92,6 @@ const Desktop = () => {
         break
     }
   }
-
-  const renderFileList = (files) => {
-    if (files.length === 0) {
-      return <div>No files found</div>
-    }
-    return files.map((file) => {
-      const active = desktop.selectedFiles.includes(file.id)
-      return <FileIcon key={file.name} selected={active} file={file} getFileCallback={fileCallback} />
-    })
-  }
-
   const renderWindowList = (files) => {
     if (files.length === 0) {
       return <div>No files found</div>
@@ -125,8 +115,10 @@ const Desktop = () => {
       <div className="p-10 flex flex-row-reverse">
         <UploadButton />
         <div>
-          {/* {desktop.files && renderFileList(desktop.files)} */}
-          <TableView files={desktop.files} selectedFiles={desktop.selectedFiles} fileCallback={fileCallback} />
+          {desktop.files && (
+            // <TableView files={desktop.files} selectedFiles={desktop.selectedFiles} setSelectedFiles={setSelectedFiles} />
+            <GridView files={desktop.files} selectedFiles={desktop.selectedFiles} fileCallback={fileCallback} />
+          )}
           {desktop.uploading && <div>Uploading...</div>}
         </div>
         <ContextMenu>

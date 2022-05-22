@@ -1,5 +1,5 @@
 import { File } from '@models/File'
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { getFileTypeIcon } from '@helpers/cloud_file'
 
 export const TableView = ({ files, selectedFiles, fileCallback }: { files: File[]; selectedFiles: string[]; fileCallback: () => {} }): ReactNode => {
