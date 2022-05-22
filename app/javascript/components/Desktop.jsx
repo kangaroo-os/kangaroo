@@ -11,6 +11,7 @@ import UploadButton from './shared/UploadButton'
 import { email_olivia } from '../api/mailer'
 import { useDesktop } from '../states/desktopState'
 import { getUser } from '../states/userState'
+import TableView from '@components/shared/desktop/TableView'
 
 const Desktop = () => {
   const navigate = useNavigate()
@@ -120,14 +121,12 @@ const Desktop = () => {
 
   return (
     <>
-      <DragAndDropUpload
-        className="w-full h-full rounded-lg p-10 absolute cursor-default"
-        uploadCallback={uploadFile}
-      />
+      <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} />
       <div className="p-10 flex flex-row-reverse">
         <UploadButton />
         <div>
-          {desktop.files && renderFileList(desktop.files)}
+          {/* {desktop.files && renderFileList(desktop.files)} */}
+          <TableView files={desktop.files} selectedFiles={desktop.selectedFiles} fileCallback={fileCallback} />
           {desktop.uploading && <div>Uploading...</div>}
         </div>
         <ContextMenu>
@@ -144,8 +143,6 @@ const Desktop = () => {
             {sentEmail && <p>Email sent!</p>}
           </form>
         </div>
-        {/* <Modal></Modal> */}
-        {/* <Window>{windowList && renderWindowList(windowList)}</Window> */}
       </div>
     </>
   )
