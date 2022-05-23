@@ -56,6 +56,7 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
     setCurrentUser(user)
     addAuthHeaders()
     localStorage.setItem('user', JSON.stringify(user))
+    localStorage.setItem('user_data', JSON.stringify({ id: user.id, email: user.email }))
   }
 
   return (

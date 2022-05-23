@@ -10,9 +10,13 @@ Rails.application.routes.draw do
   # end
 
   root 'application#index'
-  post '/login', to: 'application#login'
+  post '/login(/:chrome_auth_token)', to: 'application#login'
   get '/get_folder_files', to: 'files#get_folder_files', format: false
 
+  # Chrome Extension Specific APIs
+  post '/auth/chrome_extension/generate_chrome_verification_link', to: 'chrome_auth#generate_verification_link'
+  get '/auth/chrome_extension/verify/:chrome_auth_token', to: 'chrome_auth#request_sign_in'
+  post '/auth/chrome_extension/verify/:chrome_auth_token', to: 'chrome_auth#verify_chrome_extension'
   
   # API routes for files
   
