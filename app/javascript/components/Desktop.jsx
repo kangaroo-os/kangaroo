@@ -13,7 +13,7 @@ import { useDesktop } from '@states/desktopState'
 import { getUser } from '@states/userState'
 import TableView from '@components/shared/desktop/TableView'
 import GridView from '@components/shared/desktop/GridView'
-import { useSelectedFiles } from '@states/selectedFiles'
+import { useFiles } from '@states/filesState'
 import { fromEvent } from 'rxjs'
 
 const Desktop = () => {
@@ -23,7 +23,7 @@ const Desktop = () => {
 
   let user = getUser()
   const { desktop, addFile, setUploading, removeFile, setInitialFiles } = useDesktop()
-  const { unselectAll, selectedFiles } = useSelectedFiles()
+  const { unselectAll, files } = useFiles()
   const desktopRef = useRef(null)
 
   useEffect(() => {
@@ -124,8 +124,8 @@ const Desktop = () => {
         <UploadButton />
         <div>
           {desktop.files && (
-            // <TableView files={desktop.files} selectedFiles={desktop.selectedFiles} setSelectedFiles={setSelectedFiles} />
-            <GridView files={desktop.files} selectedFiles={selectedFiles} fileCallback={fileCallback} />
+            // <TableView files={desktop.files} selectedFiles={files.selectedFiles} setSelectedFiles={setSelectedFiles} />
+            <GridView files={desktop.files} selectedFiles={files.selectedFiles} fileCallback={fileCallback} />
           )}
           {desktop.uploading && <div>Uploading...</div>}
         </div>

@@ -1,6 +1,7 @@
-import { useSelectedFiles } from '@states/selectedFiles'
-import React, { useRef, useState } from 'react'
+import { useFiles } from '@states/filesState'
+import React, { useRef, useState, useEffect } from 'react'
 import Draggable from 'react-draggable'
+import { fromEvent } from 'rxjs'
 import { getFileTypeIcon } from '../../helpers/cloud_file'
 import { truncateText } from '../../helpers/utils'
 import { File } from '../../models/File'
@@ -25,7 +26,6 @@ export const FileIcon = ({
     }
   }
 
-  const [editing, setEditing] = useState(false)
   const renameRef = useRef<HTMLTextAreaElement>(null)
 
   function handleSelect(e) {
@@ -38,15 +38,15 @@ export const FileIcon = ({
   }
 
   function renameFile(e) {
-    if (e.key == 'Enter' && !editing) {
-      setEditing(true)
-    } else if (e.key == 'Enter' && editing) {
+    if (e.key == 'Enter' && files.selectedFiles.length == 1 && !files.editedFile) {
+      setEditingFile(file.id)
+    } else if (e.key == 'Enter' && files.editedFile) {
       file.name = renameRef.current.value
-      setEditing(false)
+      setEditingFile(null)
     }
   }
 
-  const { setSelectedFiles, addSelectedFile } = useSelectedFiles()
+  const { setSelectedFiles, addSelectedFile, files, setEditingFile } = useFiles()
 
   return (
     <Draggable>
@@ -64,8 +64,8 @@ export const FileIcon = ({
             onDoubleClick={() => getFileCallback(fileCallbackType(), file)}
           >
             <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
-            {!editing && <p className="text-xs break-words">{truncateText(file.name, 18)}</p>}
-            {editing && <textarea autoFocus ref={renameRef} defaultValue={file.name} className="text-xs w-[100px]" rows={2} />}
+            {files.editedFile != file.id && <p className="text-xs break-words">{truncateText(file.name, 18)}</p>}
+            {files.editedFile == file.id && <textarea autoFocus ref={renameRef} defaultValue={file.name} className="text-xs w-[100px]" rows={2} />}
           </div>
         </div>
       </div>

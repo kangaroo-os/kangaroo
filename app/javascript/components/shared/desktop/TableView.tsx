@@ -1,3 +1,4 @@
+import React from 'react'
 import { File } from '@models/File'
 import { ReactNode } from 'react'
 import { getFileTypeIcon } from '@helpers/cloud_file'
