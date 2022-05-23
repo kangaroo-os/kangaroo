@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import FileIcon from '../components/shared/FileIcon'
 import DragAndDropUpload from './shared/DragAndDropUpload'
 import ContextMenu from './shared/context_menus/ContextMenu'
@@ -9,10 +9,12 @@ import { deleteFile } from '../api/files'
 import { getAllFiles } from '../api/files'
 import UploadButton from './shared/UploadButton'
 import { email_olivia } from '../api/mailer'
-import { useDesktop } from '../states/desktopState'
-import { getUser } from '../states/userState'
+import { useDesktop } from '@states/desktopState'
+import { getUser } from '@states/userState'
 import TableView from '@components/shared/desktop/TableView'
 import GridView from '@components/shared/desktop/GridView'
+import { useSelectedFiles } from '@states/selectedFiles'
+import { fromEvent } from 'rxjs'
 
 const Desktop = () => {
   const navigate = useNavigate()
@@ -20,7 +22,14 @@ const Desktop = () => {
   const [sentEmail, setSentEmail] = useState(false)
 
   let user = getUser()
-  const { desktop, setSelectedFiles, addFile, setUploading, removeFile, setInitialFiles } = useDesktop()
+  const { desktop, addFile, setUploading, removeFile, setInitialFiles } = useDesktop()
+  const { unselectAll, selectedFiles } = useSelectedFiles()
+  const desktopRef = useRef(null)
+
+  useEffect(() => {
+    const desktop = fromEvent(desktopRef.current, 'click').subscribe(unselectAll)
+    return () => desktop.unsubscribe()
+  }, [])
 
   useEffect(() => {
     getFiles()
@@ -59,7 +68,6 @@ const Desktop = () => {
     try {
       await deleteFile(id)
       removeFile(id)
-      // setFileList(fileList.filter((file) => file.id !== id))
     } catch (e) {
       console.error(e)
     }
@@ -110,14 +118,14 @@ const Desktop = () => {
   }
 
   return (
-    <>
+    <div className="h-[90vh]" ref={desktopRef}>
       <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} />
       <div className="p-10 flex flex-row-reverse">
         <UploadButton />
         <div>
           {desktop.files && (
             // <TableView files={desktop.files} selectedFiles={desktop.selectedFiles} setSelectedFiles={setSelectedFiles} />
-            <GridView files={desktop.files} selectedFiles={desktop.selectedFiles} fileCallback={fileCallback} />
+            <GridView files={desktop.files} selectedFiles={selectedFiles} fileCallback={fileCallback} />
           )}
           {desktop.uploading && <div>Uploading...</div>}
         </div>
@@ -136,7 +144,7 @@ const Desktop = () => {
           </form>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

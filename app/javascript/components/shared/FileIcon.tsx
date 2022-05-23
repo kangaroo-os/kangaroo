@@ -1,9 +1,9 @@
+import { useSelectedFiles } from '@states/selectedFiles'
 import React, { useRef, useState } from 'react'
 import Draggable from 'react-draggable'
 import { getFileTypeIcon } from '../../helpers/cloud_file'
 import { truncateText } from '../../helpers/utils'
 import { File } from '../../models/File'
-import { useDesktop } from '../../states/desktopState'
 
 export const FileIcon = ({
   file,
@@ -26,9 +26,10 @@ export const FileIcon = ({
   }
 
   const [editing, setEditing] = useState(false)
-  const renameRef = useRef<HTMLInputElement>(null)
+  const renameRef = useRef<HTMLTextAreaElement>(null)
 
   function handleSelect(e) {
+    e.stopPropagation()
     if (e.metaKey || e.shiftKey) {
       addSelectedFile(file.id)
     } else {
@@ -45,7 +46,7 @@ export const FileIcon = ({
     }
   }
 
-  const { setSelectedFiles, addSelectedFile } = useDesktop()
+  const { setSelectedFiles, addSelectedFile } = useSelectedFiles()
 
   return (
     <Draggable>
@@ -58,13 +59,13 @@ export const FileIcon = ({
             tabIndex={0}
             className="flex justify-center items-center flex-col"
             onContextMenu={() => setSelectedFiles([file.id])}
-            onClick={(e) => handleSelect(e)}
+            onClickCapture={(e) => handleSelect(e)}
             onKeyPress={(e) => renameFile(e)}
             onDoubleClick={() => getFileCallback(fileCallbackType(), file)}
           >
             <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
-            {!editing && <p className="text-sm break-words">{truncateText(file.name, 18)}</p>}
-            {editing && <input autoFocus ref={renameRef} defaultValue={file.name} className="text-sm" type="text" />}
+            {!editing && <p className="text-xs break-words">{truncateText(file.name, 18)}</p>}
+            {editing && <textarea autoFocus ref={renameRef} defaultValue={file.name} className="text-xs w-[100px]" rows={2} />}
           </div>
         </div>
       </div>

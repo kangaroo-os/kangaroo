@@ -10,6 +10,7 @@ export default defineConfig({
       { find: '@components', replacement: path.resolve(__dirname, './app/javascript/components') },
       { find: '@models', replacement: path.resolve(__dirname, './app/javascript/models') },
       { find: '@helpers', replacement: path.resolve(__dirname, './app/javascript/helpers') },
+      { find: '@states', replacement: path.resolve(__dirname, './app/javascript/states') },
     ],
   },
 })
