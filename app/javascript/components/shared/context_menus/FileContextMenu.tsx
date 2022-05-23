@@ -1,9 +1,11 @@
 import { useFiles } from '@states/filesState'
 import React from 'react'
 import { createFolder } from '../../../api/cloud_files'
+import { useContextMenu } from '@states/contextMenuState'
 
 export const FileContextMenu = ({ path, callback }) => {
   const { files, setEditingFile } = useFiles()
+  const { hideContextMenu } = useContextMenu()
   async function createFolderFunction() {
     const res = await createFolder(path)
     callback(res.data.file)
@@ -14,6 +16,7 @@ export const FileContextMenu = ({ path, callback }) => {
     if (files.selectedFiles.length == 1) {
       setEditingFile(files.selectedFiles[0])
     }
+    hideContextMenu()
   }
 
   return (

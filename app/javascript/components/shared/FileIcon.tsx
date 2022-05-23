@@ -1,7 +1,6 @@
 import { useFiles } from '@states/filesState'
 import React, { useRef, useState, useEffect } from 'react'
 import Draggable from 'react-draggable'
-import { fromEvent } from 'rxjs'
 import { getFileTypeIcon } from '../../helpers/cloud_file'
 import { truncateText } from '../../helpers/utils'
 import { File } from '../../models/File'
@@ -15,6 +14,8 @@ export const FileIcon = ({
   getFileCallback: (arg1: string, arg2: File) => void
   selected: boolean
 }) => {
+  const { setSelectedFiles, addSelectedFile, files, setEditingFile } = useFiles()
+
   const fileCallbackType = () => {
     if (file.file_type === 'link') {
       return 'link'
@@ -38,6 +39,7 @@ export const FileIcon = ({
   }
 
   function renameFile(e) {
+    e.preventDefault()
     if (e.key == 'Enter' && files.selectedFiles.length == 1 && !files.editedFile) {
       setEditingFile(file.id)
     } else if (e.key == 'Enter' && files.editedFile) {
@@ -45,8 +47,6 @@ export const FileIcon = ({
       setEditingFile(null)
     }
   }
-
-  const { setSelectedFiles, addSelectedFile, files, setEditingFile } = useFiles()
 
   return (
     <Draggable>

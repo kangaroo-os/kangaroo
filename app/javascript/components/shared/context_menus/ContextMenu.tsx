@@ -1,29 +1,43 @@
-import React, { ReactNode } from 'react'
+import React, { useState, useRef } from 'react'
+import { useEffect } from 'react'
+import { fromEvent } from 'rxjs'
+import { useContextMenu } from '@states/contextMenuState'
 
 export const ContextMenu = ({ children }) => {
-  document.onclick = hideMenu
-  document.oncontextmenu = rightClick
+  const { contextMenu, showContextMenu, hideContextMenu } = useContextMenu()
 
-  // ToDo:// REMOVE THE CONTEXT MENU WHEN YOU'RE ON A DIFFERENT PAGE
+  let menuRef = useRef<HTMLDivElement>(null)
+
   function hideMenu() {
-    const menu = document.getElementById('contextMenu')
-    if (menu) {
-      menu.style.display = 'none'
-    }
+    hideContextMenu()
   }
 
   function rightClick(e) {
     e.preventDefault()
 
-    var menu = document.getElementById('contextMenu')
-
-    menu.style.display = 'block'
+    const menu = menuRef.current
+    showContextMenu(e.pageX, e.pageY)
     menu.style.left = e.pageX + 'px'
     menu.style.top = e.pageY + 'px'
   }
 
+  useEffect(() => {
+    const rightClickEvent = fromEvent(document, 'contextmenu').subscribe(rightClick)
+    const hideMenuEvent = fromEvent(document, 'click').subscribe(hideMenu)
+    return () => {
+      rightClickEvent.unsubscribe()
+      hideMenuEvent.unsubscribe()
+    }
+  })
+
   return (
-    <div id="contextMenu" className="context-menu absolute z-50 bg-gray-100 p-2 rounded" style={{ display: 'none' }}>
+    <div
+      id="contextMenu"
+      ref={menuRef}
+      className={`context-menu absolute z-50 bg-gray-100 p-2 rounded ${
+        contextMenu.hidden ? 'hidden' : `block left-[${contextMenu.x}px] top-[${contextMenu.y}px]`
+      }`}
+    >
       <ul className="space-y-2">{children}</ul>
     </div>
   )
