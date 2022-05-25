@@ -46,7 +46,6 @@ const Desktop = () => {
   }
 
   async function uploadFile(blob) {
-    debugger
     setUploading(true)
     const res = await addCloudFile(blob)
     setUploading(false)
@@ -75,7 +74,7 @@ const Desktop = () => {
   async function openFolder(file_path) {
     try {
       await getFolderFiles(file_path)
-      // setWindowList(fileList.filter((file) => file.path !== file_path))
+      // setWindowList(fileList.filte((file) => file.path !== file_path))
     }
     catch(e) {
       console.error(e)

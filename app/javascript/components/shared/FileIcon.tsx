@@ -1,9 +1,10 @@
 import { useFiles } from '@states/filesState'
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useCallback } from 'react'
 import Draggable from 'react-draggable'
 import { getFileTypeIcon } from '../../helpers/cloud_file'
 import { truncateText } from '../../helpers/utils'
 import { File } from '../../models/File'
+import { useDropzone } from 'react-dropzone'
 
 export const FileIcon = ({
   file,
@@ -15,6 +16,17 @@ export const FileIcon = ({
   selected: boolean
 }) => {
   const { setSelectedFiles, addSelectedFile, files, setEditingFile } = useFiles()
+
+  function movePath(file) {
+    console.log(file)
+  }
+
+  const onDrop = useCallback((acceptedFiles) => {
+    for (let file of acceptedFiles) {
+      movePath(file)
+    }
+  }, [])
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noClick: true, noKeyboard: true })
 
   const fileCallbackType = () => {
     if (file.file_type === 'link') {
@@ -50,22 +62,26 @@ export const FileIcon = ({
 
   return (
     <Draggable>
-      <div className={`${selected ? 'bg-blue-100 border-2 border-blue-300' : ''} rounded p-2 m-1 inline-block`}>
-        <div className="w-[100px] h-[130px]">
-          <button onClick={() => getFileCallback('delete', file)} className="hover:cursor-pointer rounded-full bg-gray-400 w-[20px] h-[20px]">
-            x
-          </button>
-          <div
-            tabIndex={0}
-            className="flex justify-center items-center flex-col"
-            onContextMenu={() => setSelectedFiles([file.id])}
-            onClickCapture={(e) => handleSelect(e)}
-            onKeyPress={(e) => renameFile(e)}
-            onDoubleClick={() => getFileCallback(fileCallbackType(), file)}
-          >
-            <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
-            {files.editedFile != file.id && <p className="text-xs break-words">{truncateText(file.name, 18)}</p>}
-            {files.editedFile == file.id && <textarea autoFocus ref={renameRef} defaultValue={file.name} className="text-xs w-[100px]" rows={2} />}
+      <div {...getRootProps()}>
+        <input {...getInputProps()} />
+        {isDragActive && <div>dropping</div>}
+        <div className={`${selected ? 'bg-blue-100 border-2 border-blue-300' : ''} rounded p-2 m-1 inline-block`}>
+          <div className="w-[100px] h-[130px]">
+            <button onClick={() => getFileCallback('delete', file)} className="hover:cursor-pointer rounded-full bg-gray-400 w-[20px] h-[20px]">
+              x
+            </button>
+            <div
+              tabIndex={0}
+              className="flex justify-center items-center flex-col"
+              onContextMenu={() => setSelectedFiles([file.id])}
+              onClickCapture={(e) => handleSelect(e)}
+              onKeyPress={(e) => renameFile(e)}
+              onDoubleClick={() => getFileCallback(fileCallbackType(), file)}
+            >
+              <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
+              {files.editedFile != file.id && <p className="text-xs break-words">{truncateText(file.name, 18)}</p>}
+              {files.editedFile == file.id && <textarea autoFocus ref={renameRef} defaultValue={file.name} className="text-xs w-[100px]" rows={2} />}
+            </div>
           </div>
         </div>
       </div>
