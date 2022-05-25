@@ -10,13 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_11_050307) do
+ActiveRecord::Schema.define(version: 2022_05_25_035333) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "abstract_files", force: :cascade do |t|
-    t.bigint "user_id"
     t.string "name"
     t.string "path"
     t.string "file_type"
@@ -24,7 +23,16 @@ ActiveRecord::Schema.define(version: 2022_05_11_050307) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "size", null: false
     t.string "type"
-    t.index ["user_id"], name: "index_abstract_files_on_user_id"
+    t.bigint "owner_id"
+  end
+
+  create_table "file_ownerships", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "abstract_file_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["abstract_file_id"], name: "index_file_ownerships_on_abstract_file_id"
+    t.index ["user_id"], name: "index_file_ownerships_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -54,5 +62,4 @@ ActiveRecord::Schema.define(version: 2022_05_11_050307) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
-  add_foreign_key "abstract_files", "users"
 end

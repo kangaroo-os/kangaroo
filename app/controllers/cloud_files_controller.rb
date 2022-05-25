@@ -12,17 +12,17 @@ class CloudFilesController < ApplicationController
       path: path, 
       name: name, 
       file_type: params[:file].content_type, 
-      user_id: current_user.id, 
       size: params[:file].size, 
-      tempfile: params[:file].tempfile}
-    )
-    
+      tempfile: params[:file].tempfile,
+      owner_id: current_user.id,
+    })
+
     if file.save!
+      file.users << current_user
       render json: {file: file}, status: :ok
     else
       render json: {error: "File not saved"}, status: :unprocessable_entity
     end
-
   end
 
   # GET /cloud_files
@@ -62,7 +62,7 @@ class CloudFilesController < ApplicationController
 
   def user_authorized?
     if params.has_key?(:id)
-      if current_user.cloud_file_ids.include?(params[:id].to_i)
+      if current_user.abstract_file_ids.include?(params[:id].to_i)
         return true
       else
         render json: { error: "You are not authorized to access this file."}, status: :unauthorized

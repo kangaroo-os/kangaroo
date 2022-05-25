@@ -19,6 +19,8 @@ class LinkFilesController < ApplicationController
       size: 0
     })
     
+    file.users << current_user
+
     if file.save!
       render json: {file: file}, status: :ok
     else
@@ -57,7 +59,7 @@ class LinkFilesController < ApplicationController
 
   def user_authorized?
     if params.has_key?(:id)
-      if current_user.cloud_file_ids.include?(params[:id].to_i)
+      if current_user.abstract_file_ids.include?(params[:id].to_i)
         return true
       else
         render json: { error: "You are not authorized to access this file."}, status: :unauthorized
