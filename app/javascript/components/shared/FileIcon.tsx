@@ -20,7 +20,7 @@ export const FileIcon = ({
     if (file.file_type === 'link') {
       return 'link'
     }
-    if (file.name.slice(-1) == '/') {
+    if (file.file_type === 'folder') {
       return 'openFolder'
     } else {
       return 'download'

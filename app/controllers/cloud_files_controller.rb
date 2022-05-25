@@ -2,8 +2,8 @@ class CloudFilesController < ApplicationController
   before_action :user_authorized?, only: [:show, :destroy]
   before_action :authenticate_user!
 
-  # POST /cloud_files/upload
-  def upload
+  # POST /cloud_files
+  def create 
     params.require(:file)
     name = params[:file].original_filename.to_s
     path = "users/#{current_user.id}/#{name}"
@@ -23,11 +23,6 @@ class CloudFilesController < ApplicationController
       render json: {error: "File not saved"}, status: :unprocessable_entity
     end
 
-  end
-
-  def get_folder_files
-    params.require(:key)
-    render json: { files:  S3.client.list_objects_v2(bucket: ENV["S3_MAIN_BUCKET"], prefix: "#{params[:key]}").contents.map(&:key) }
   end
 
   # GET /cloud_files
@@ -54,14 +49,14 @@ class CloudFilesController < ApplicationController
     end
   end
 
-  # POST /cloud_files/create_folder
-  def create_folder
-    params.require(:path)
-    path, name = create_unique_name(params[:path]+"untitled folder", "untitled folder")
-    S3.client.put_object(bucket: 'kangarooo', key: path + "/")
-    file = CloudFile.create({path: path + "/", name: name, file_type: "folder", user_id: current_user.id, size: 0})
-    render json: {file: file}, status: :ok
-  end
+  # # POST /cloud_files/create_folder
+  # def create_folder
+  #   params.require(:path)
+  #   path, name = create_unique_name(params[:path]+"untitled folder", "untitled folder")
+  #   S3.client.put_object(bucket: 'kangarooo', key: path + "/")
+  #   file = CloudFile.create({path: path + "/", name: name, file_type: "folder", user_id: current_user.id, size: 0})
+  #   render json: {file: file}, status: :ok
+  # end
   
   private
 

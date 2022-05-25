@@ -1,0 +1,2 @@
+class FolderFile < AbstractFile 
+end

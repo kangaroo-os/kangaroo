@@ -5,8 +5,7 @@ import ContextMenu from './shared/context_menus/ContextMenu'
 import FileContextMenu from './shared/context_menus/FileContextMenu'
 import { useNavigate } from 'react-router-dom'
 import { addCloudFile, getCloudFileLink } from '../api/cloud_files'
-import { deleteFile } from '../api/files'
-import { getAllFiles } from '../api/files'
+import { deleteFile, getAllFiles, getFolderFiles } from '@api/files'
 import UploadButton from './shared/UploadButton'
 import { email_olivia } from '../api/mailer'
 import { useDesktop } from '@states/desktopState'
@@ -73,14 +72,14 @@ const Desktop = () => {
     }
   }
 
-  async function openFolder(name) {
-    // try {
-    //   await api.get(`/get_folder_files?key=${name}`)
-    //   setWindowList(fileList.filter((file) => file !== name))
-    // } catch (e) {
-    //   console.error(e)
-    // }
-    console.log(name)
+  async function openFolder(file_path) {
+    try {
+      await getFolderFiles(file_path)
+      // setWindowList(fileList.filter((file) => file.path !== file_path))
+    }
+    catch(e) {
+      console.error(e)
+    }
   }
 
   function fileCallback(type, file) {
@@ -92,7 +91,7 @@ const Desktop = () => {
         deleteUserFile(file.id)
         break
       case 'openFolder':
-        openFolder(file.id)
+        openFolder(file.path)
         break
       case 'link':
         window.open(file.path)

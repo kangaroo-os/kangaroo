@@ -11,28 +11,23 @@ Rails.application.routes.draw do
 
   root 'application#index'
   post '/login', to: 'application#login'
-  get '/get_folder_files', to: 'files#get_folder_files', format: false
 
   
   # API routes for files
   
   # abstract files
-  get '/files', to: 'abstract_files#index'
-  delete '/files/:id', to: 'abstract_files#destroy'
-  put '/files/:id', to: 'abstract_files#update'
+  get '/files/get_folder_files', to: 'abstract_files#get_folder_files', format: false
+  resources :files, :controller => :abstract_files, :as => :abstract_files
 
   # cloud files
-  get '/cloud_files/:id', to: 'cloud_files#show'
-  delete '/cloud_files/:id', to: 'cloud_files#destroy'
-  get '/cloud_files', to: 'cloud_files#index'
-  post '/cloud_files/upload', to: 'cloud_files#upload'
-  post '/cloud_files/create_folder', to: 'cloud_files#create_folder' 
-
+  resources :cloud_files
+  
   # link files
-  get '/link_files/:id', to: 'link_files#show'
-  delete '/link_files/:id', to: 'link_files#destroy'
-  get '/link_files', to: 'link_files#index'
-  post '/link_files/upload', to: 'link_files#upload'
+  resources :link_files
+
+  # folder files
+  resources :folder_files
+
 
   # Email Olivia link
   post '/email_olivia', to: 'application#email_olivia'

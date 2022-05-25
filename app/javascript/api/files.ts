@@ -11,3 +11,7 @@ export function renameFile(id: string, name: string) {
 export function deleteFile(id: number) {
   return api.delete(`/files/${id}`)
 }
+
+export function getFolderFiles(file_path: string) {
+  return api.get(`/files/get_folder_files?key=${file_path}`)
+}

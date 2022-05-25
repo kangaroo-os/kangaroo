@@ -11,6 +11,7 @@ export default defineConfig({
       { find: '@models', replacement: path.resolve(__dirname, './app/javascript/models') },
       { find: '@helpers', replacement: path.resolve(__dirname, './app/javascript/helpers') },
       { find: '@states', replacement: path.resolve(__dirname, './app/javascript/states') },
+      { find: '@api', replacement: path.resolve(__dirname, './app/javascript/api') },
     ],
   },
 })

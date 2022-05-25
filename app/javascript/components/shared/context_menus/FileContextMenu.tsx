@@ -1,6 +1,6 @@
 import { useFiles } from '@states/filesState'
 import React from 'react'
-import { createFolder } from '../../../api/cloud_files'
+import { createFolder } from '@api/folder_files'
 import { useContextMenu } from '@states/contextMenuState'
 
 export const FileContextMenu = ({ path, callback }) => {

@@ -6,8 +6,8 @@ class LinkFilesController < ApplicationController
   before_action :user_authorized?, only: [:show, :destroy]
   before_action :authenticate_user!
 
-  # POST /link_files/upload
-  def upload
+  # POST /link_file/
+  def create 
     params.require(:path)
     name = get_website_title(params[:path])
     

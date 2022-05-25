@@ -27,6 +27,11 @@ class AbstractFilesController < ApplicationController
     end
   end
 
+  def get_folder_files
+    params.require(:key)
+    files = AbstractFile.where(user_id: current_user.id).where("path LIKE ?", "#{params[:key]}%")
+    render json: { files: files }
+  end
    
   private 
 
