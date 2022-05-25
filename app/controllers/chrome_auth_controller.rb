@@ -1,8 +1,21 @@
 # frozen_string_literal: true
 class ChromeAuthController < ApplicationController
-  include Devise::Controllers::Helpers
+  skip_before_action :verify_authenticity_token
+  include DeviseTokenAuth::Concerns::SetUserByToken
 
-  before_action :authenticate_user!, only: [:verify_chrome_extension]
+  PREFIX_KEY_FOR_TOKENS = '/auth/chrome_extension/verification_tokens'
+  PREFIX_KEY_FOR_USERS = '/auth/chrome_extension/validated_users'
+
+  before_action :authenticate_user!, only: %i[verify_chrome_extension sign_in]
+
+def sign_in
+  if user_signed_in?
+    token = params[:chrome_auth_token]
+    prepare_to_auth_extension_user(token) if token.present? && token_matches_user?(token)
+  else
+    redirect_to login_path
+  end
+end
 
   # Gets called from the extension to intiate the sign in process
   def generate_verification_link
@@ -10,7 +23,7 @@ class ChromeAuthController < ApplicationController
     inferred_user = User.find_by(id: params[:id], email: params[:email])
     token = generate_urlsafe_token
     if inferred_user.present? && store_user_id(token)
-      redirect_url = "/login/#{token}"
+      redirect_url = "/auth/chrome_extension/login/#{token}"
       render json: { success: true, url: redirect_url }, status: :ok
     else
       render json: { success: false }, status: :internal_server_error
@@ -25,8 +38,12 @@ class ChromeAuthController < ApplicationController
       sign_in(user)
       render json: { success: true }, status: :ok
     else
-      render json: { error: "Invalid token" }, status: :unauthorized
+      render json: { error: 'Invalid token' }, status: :unauthorized
     end
+  end
+
+  def after_sign_in_path(resource)
+    request.referrer || root_path
   end
 
   private
@@ -43,7 +60,7 @@ class ChromeAuthController < ApplicationController
   end
 
   def store_user_id(token)
-    Rails.cache.write("#{PREFIX_KEY_FOR_TOKENS}/#{token}", params[:user_id], expires_in: 90.seconds)
+    Rails.cache.write("#{PREFIX_KEY_FOR_TOKENS}/#{token}", params[:id], expires_in: 90.minutes)
   end
 
   def fetch_user_id_from_token
@@ -59,5 +76,14 @@ class ChromeAuthController < ApplicationController
     token = params[:chrome_auth_token]
     Rails.cache.delete("#{PREFIX_KEY_FOR_USERS}/#{token}")
     Rails.cache.delete("#{PREFIX_KEY_FOR_TOKENS}/#{token}")
+  end
+
+  def token_matches_user?(token)
+    Rails.cache.read("#{PREFIX_KEY_FOR_TOKENS}/#{token}") == current_user.id
+  end
+
+  # Store IP address of browser login for extension to verify
+  def prepare_to_auth_extension_user(token)
+    Rails.cache.write("#{PREFIX_KEY_FOR_USERS}/#{token}", request.remote_ip, expires_in: 90.minutes)
   end
 end

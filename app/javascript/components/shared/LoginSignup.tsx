@@ -1,11 +1,16 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AxiosResponse } from 'axios'
-import { login, signup as signupUser } from '../../api/auth'
+import { login, signup as signupUser, chromeExtensionLogin } from '../../api/auth'
 import { useUser } from '../../states/userState'
 import { addAuthHeaders } from '../../helpers/api'
 
-export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
+type LoginSignupProps = {
+  isSignup?: boolean
+  chromeExtensionAuthToken?: string
+}
+
+export default function LoginSignup({ isSignup, chromeExtensionAuthToken }: LoginSignupProps) {
   let navigate = useNavigate()
   const [signup, setSignup] = useState(isSignup)
   const [errors, setErrors] = useState(undefined)
@@ -33,7 +38,8 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
     // Login user
     else {
       try {
-        res = await login(e.target.email.value, e.target.password.value)
+        // res = await login(e.target.email.value, e.target.password.value)
+        res = await chromeExtensionLogin(e.target.email.value, e.target.password.value, chromeExtensionAuthToken)
       } catch (err) {
         setErrors(err.response.data.errors[0])
       }

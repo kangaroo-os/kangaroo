@@ -30,3 +30,10 @@ export async function login(email: string, password: string) {
     password: password,
   })
 }
+
+export async function chromeExtensionLogin(email: string, password: string, token: string) {
+  return api.post(`/auth/chrome_extension/sign_in/${token}`, {
+    email: email,
+    password: password,
+  })
+}

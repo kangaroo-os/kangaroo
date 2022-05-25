@@ -10,13 +10,18 @@ Rails.application.routes.draw do
   # end
 
   root 'application#index'
-  post '/login(/:chrome_auth_token)', to: 'application#login'
+  post '/login', to: 'application#login'
   get '/get_folder_files', to: 'files#get_folder_files', format: false
 
-  # Chrome Extension Specific APIs
-  post '/auth/chrome_extension/generate_chrome_verification_link', to: 'chrome_auth#generate_verification_link'
-  get '/auth/chrome_extension/verify/:chrome_auth_token', to: 'chrome_auth#request_sign_in'
-  post '/auth/chrome_extension/verify/:chrome_auth_token', to: 'chrome_auth#verify_chrome_extension'
+  scope :auth do
+    scope :chrome_extension do
+      # devise_scope :user do
+        post 'sign_in/:chrome_auth_token', to: 'chrome_auth#sign_in'
+        post 'generate_verification_link', to: 'chrome_auth#generate_verification_link'
+        post 'verify/:chrome_auth_token', to: 'chrome_auth#verify_chrome_extension'
+      # end
+    end
+  end
   
   # API routes for files
   

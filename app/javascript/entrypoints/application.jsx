@@ -18,6 +18,7 @@ ReactDOM.render(
           <Route path="desktop" element={<Desktop />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
+          <Route path="auth/chrome_extension/login/:chrome_auth_token" element={<Login />} />
         </Routes>
       </Header>
     </BrowserRouter>
