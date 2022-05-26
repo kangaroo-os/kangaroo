@@ -15,13 +15,13 @@ class LinkFilesController < ApplicationController
       path: params[:path], 
       name: name, 
       file_type: "link", 
-      user_id: current_user.id, 
+      owner_id: current_user.id, 
       size: 0
     })
     
-    file.users << current_user
 
     if file.save!
+      file.users << current_user
       render json: {file: file}, status: :ok
     else
       render json: {error: "File not saved"}, status: :unprocessable_entity

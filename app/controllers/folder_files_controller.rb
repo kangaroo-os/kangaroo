@@ -7,7 +7,7 @@ class FolderFilesController < ApplicationController
       path: path, 
       name: name, 
       file_type: "folder", 
-      user_id: current_user.id, 
+      owner_id: current_user.id, 
       size: 0, 
     })
     if file.save!

@@ -48,15 +48,6 @@ class CloudFilesController < ApplicationController
       render json: {error: "File not found"}, status: :not_found
     end
   end
-
-  # # POST /cloud_files/create_folder
-  # def create_folder
-  #   params.require(:path)
-  #   path, name = create_unique_name(params[:path]+"untitled folder", "untitled folder")
-  #   S3.client.put_object(bucket: 'kangarooo', key: path + "/")
-  #   file = CloudFile.create({path: path + "/", name: name, file_type: "folder", user_id: current_user.id, size: 0})
-  #   render json: {file: file}, status: :ok
-  # end
   
   private
 
