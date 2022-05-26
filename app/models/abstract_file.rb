@@ -1,13 +1,15 @@
 class AbstractFile < ApplicationRecord
   belongs_to :owner, class_name: "User", foreign_key: :owner_id
-  has_many :users, through: :file_ownerships
-  
+
   validates :name, presence: true
   validates :path, presence: true, uniqueness: true
   validates :file_type, presence: true
   validates :owner_id, presence: true
   # Makes sure the path is unique. If it's not then it will add a number to the end of the name.
   before_validation :ensure_unique_path
+
+  scope :cloud_files, -> { where(type: 'CloudFile') }
+  scope :link_files, -> { where(type: 'LinkFile') }
 
   private 
 
