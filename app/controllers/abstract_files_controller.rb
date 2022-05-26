@@ -1,7 +1,7 @@
 class AbstractFilesController < ApplicationController
   
   before_action :authenticate_user!
-  before_action :user_authorized?, only: [:destroy]
+  before_action :user_authorized?, only: [:destroy, :update]
 
   def index
     render json: { files: current_user.abstract_files }, status: :ok

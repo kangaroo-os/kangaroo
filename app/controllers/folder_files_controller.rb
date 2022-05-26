@@ -11,6 +11,7 @@ class FolderFilesController < ApplicationController
       size: 0, 
     })
     if file.save!
+      file.users << current_user
       render json: {file: file}, status: :ok
     else
       render json: {error: "File not saved"}, status: :unprocessable_entity
