@@ -1,13 +1,8 @@
 Rails.application.routes.draw do
-  mount_devise_token_auth_for 'User', at: 'auth'
 
   # Setup API routes for devise endpoints
+  mount_devise_token_auth_for 'User', at: 'auth'
   devise_for :users, skip: :all
-  # devise_scope :user do
-  #   post   '/login',       to: 'sessions#create'
-  #   delete '/logout',      to: 'sessions#destroy'
-  #   post   '/signup',       to: 'registrations#create'
-  # end
 
   root 'application#index'
   post '/login', to: 'application#login'

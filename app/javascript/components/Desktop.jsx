@@ -75,8 +75,7 @@ const Desktop = () => {
     try {
       await getFolderFiles(file_path)
       // setWindowList(fileList.filte((file) => file.path !== file_path))
-    }
-    catch(e) {
+    } catch (e) {
       console.error(e)
     }
   }
@@ -116,10 +115,12 @@ const Desktop = () => {
   }
 
   return (
-    <div className="h-[90vh]" ref={desktopRef}>
+    <div className="h-[90vh] relative" ref={desktopRef}>
       <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} />
-      <div className="p-10 flex flex-row-reverse">
+      <div className="absolute right-0 m-5">
         <UploadButton />
+      </div>
+      <div className="p-10">
         <div>
           {desktop.files && (
             // <TableView files={desktop.files} selectedFiles={files.selectedFiles} setSelectedFiles={setSelectedFiles} />

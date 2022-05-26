@@ -34,13 +34,13 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
     else {
       try {
         res = await login(e.target.email.value, e.target.password.value)
+        if (res.status === 200) {
+          storeSessionFromAuth(res)
+          navigate('/desktop')
+        }
       } catch (err) {
         setErrors(err.response.data.errors[0])
       }
-    }
-    if (res.status === 200) {
-      storeSessionFromAuth(res)
-      navigate('/desktop')
     }
   }
 
