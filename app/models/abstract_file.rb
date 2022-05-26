@@ -1,5 +1,6 @@
 class AbstractFile < ApplicationRecord
   belongs_to :owner, class_name: "User", foreign_key: :owner_id
+  has_many :users, through: :file_ownerships
   
   validates :name, presence: true
   validates :path, presence: true, uniqueness: true

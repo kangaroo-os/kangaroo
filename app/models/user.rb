@@ -1,25 +1,20 @@
 class User < ApplicationRecord
   # Include default devise modules.
+  include DeviseTokenAuth::Concerns::User
+
   devise :database_authenticatable, :registerable,
           :recoverable, :rememberable, :validatable,
           :omniauthable
   
-  include DeviseTokenAuth::Concerns::User
-  has_many :file_ownerships
-  has_many :abstract_files, through: :file_ownerships, dependent: :destroy
+  has_many :file_ownerships, dependent: :destroy
+  has_many :abstract_files, through: :file_ownerships
+  has_many :cloud_files, through: :file_ownerships
+  has_many :link_files, through: :file_ownerships
 
   after_create :create_bucket
 
   validates :full_name, presence: true
   validates :email, presence: true, uniqueness: true
-
-  def cloud_files
-    abstract_files.where(type: 'LinkFile')
-  end
-
-  def link_files
-    abstract_files.where(type: 'LinkFile')
-  end
 
   def create_bucket
     S3.client.put_object(bucket: ENV["S3_MAIN_BUCKET"], key: "users/#{self.id}/")
