@@ -1,11 +1,12 @@
 class User < ApplicationRecord
   # Include default devise modules.
-  include DeviseTokenAuth::Concerns::User
 
   devise :database_authenticatable, :registerable,
           :recoverable, :rememberable, :validatable,
           :omniauthable
   
+  include DeviseTokenAuth::Concerns::User
+
   has_many :file_ownerships, dependent: :destroy
   has_many :abstract_files, through: :file_ownerships
   has_many :cloud_files, through: :file_ownerships
