@@ -59,7 +59,7 @@ class LinkFilesController < ApplicationController
 
   def user_authorized?
     if params.has_key?(:id)
-      if current_user.abstract_file_ids.include?(params[:id].to_i)
+      if current_user.link_file_ids.include?(params[:id].to_i)
         return true
       else
         render json: { error: "You are not authorized to access this file."}, status: :unauthorized
