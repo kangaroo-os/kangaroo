@@ -4,9 +4,6 @@ class CloudFile < AbstractFile
 
   attr_accessor :tempfile
 
-  # Makes sure the path is unique. If it's not then it will add a number to the end of the name.
-  # before_validation :ensure_unique_path
-
   # Makes sure that adding the file is within the owners GB limit.
   validate :within_gb_limit?
 
@@ -15,6 +12,8 @@ class CloudFile < AbstractFile
 
   # Adds the files to S3 after creating the file in DB
   after_create :create_in_s3
+
+  before_update :rename_in_s3
 
   def create_in_s3
     S3.client.put_object(
@@ -26,20 +25,12 @@ class CloudFile < AbstractFile
     )
   end
 
-  # def ensure_unique_path
-  #   # eg. "/users/1/file.txt" => ["/users/1/file", ".txt"]
-  #   tmp_name, extension = self.name.split(/(?=[?.!])/, 2)
-  #   path_without_name = self.path.split(self.name).last
-
-  #   if CloudFile.where(path: self.path).exists?
-  #     suffix = 1
-  #     until CloudFile.where(path: self.path + " " + suffix.to_s).blank?
-  #       suffix += 1
-  #     end
-  #     self.name = tmp_name + " " + suffix.to_s + (extension || "")
-  #     self.path = path_without_name + self.name
-  #   end
-  # end
+  def rename_in_s3 
+    if self.path_changed?
+      object = S3.bucket.object(self.path_was)
+      object.move_to(bucket: ENV["S3_MAIN_BUCKET"], key: self.path)
+    end
+  end
 
   def delete_from_s3
     S3.client.delete_object(bucket: ENV["S3_MAIN_BUCKET"], key: self.path)
@@ -52,4 +43,3 @@ class CloudFile < AbstractFile
   end
   
 end
-

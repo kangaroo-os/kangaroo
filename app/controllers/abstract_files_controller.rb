@@ -35,6 +35,12 @@ class AbstractFilesController < ApplicationController
    
   private 
 
+  def abstract_file_params
+    params.permit(%w[
+      path 
+    ])
+  end
+
   def user_authorized?
     if params.has_key?(:id)
       if current_user.abstract_file_ids.include?(params[:id].to_i)

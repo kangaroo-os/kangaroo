@@ -15,16 +15,17 @@ class AbstractFile < ApplicationRecord
 
   def ensure_unique_path
     # eg. "/users/1/file.txt" => ["/users/1/file", ".txt"]
-    tmp_name, extension = self.name.split(/(?=[?.!])/, 2)
-    path_without_name = self.path.split(self.name).last
+    path_without_ext, ext = self.path.split(/(?=[?.!])/, 2)
+    name_without_ext = File.basename(self.path, ext || "")
 
     if AbstractFile.where(path: self.path).exists?
       suffix = 1
-      until AbstractFile.where(path: self.path + " " + suffix.to_s).blank?
+      until AbstractFile.where(path: path_without_ext + " #{suffix}" + (ext || "")).blank?
         suffix += 1
       end
-      self.name = tmp_name + " " + suffix.to_s + (extension || "")
-      self.path = path_without_name + self.name
     end
+    self.name = name_without_ext + (suffix.blank? ? "" : " #{suffix}") + (ext || "")
+    self.path = path_without_ext + (suffix.blank? ? "" : " #{suffix}") + (ext || "")
   end
+  
 end

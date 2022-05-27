@@ -1,4 +1,5 @@
 class S3
+  
   def self.client
     @client ||= Aws::S3::Client.new(
       region: ENV['AWS_REGION'],
@@ -6,4 +7,9 @@ class S3
       secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
     )
   end
+
+  def self.bucket 
+    @bucket ||= Aws::S3::Bucket.new(ENV['S3_MAIN_BUCKET'])
+  end 
+  
 end
