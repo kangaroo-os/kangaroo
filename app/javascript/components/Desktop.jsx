@@ -24,6 +24,7 @@ const Desktop = () => {
   const { desktop, addFile, setUploading, removeFile, setInitialFiles } = useDesktop()
   const { unselectAll, files } = useFiles()
   const desktopRef = useRef(null)
+  const [dropZoneDisabled, setDropZoneDisabled] = useState(true)
 
   useEffect(() => {
     const desktop = fromEvent(desktopRef.current, 'click').subscribe(unselectAll)
@@ -46,8 +47,8 @@ const Desktop = () => {
   }
 
   async function uploadFile(blob) {
-    setUploading(true)
     setDropZoneDisabled(true)
+    setUploading(true)
     const res = await addCloudFile(blob)
     setUploading(false)
     addFile(res.data.file)
@@ -115,21 +116,52 @@ const Desktop = () => {
     e.target.complaint.value = ''
   }
 
-  const [dropZoneDisabled, setDropZoneDisabled] = useState(true)
-  const enableIfDataTransfer = (event) => {
-    if (event.dataTransfer.types[0] === 'application/x-moz-file') {
-      setDropZoneDisabled(false)
+  // <-- Drag zone detection begins -->
+  const onDragOver = (event) => {
+    if (dropZoneDisabled && targetIsTopLevel(event)) {
+      if (validDragItems(event) && !isDragInProgress(event)) {
+        event.currentTarget.setAttribute('drag-in-progress', 'true')
+        setDropZoneDisabled(false)
+      }
     }
   }
 
+  const onDragLeave = (event) => {
+    if (!dropZoneDisabled && targetIsTopLevel(event) && isDragInProgress(event)) {
+      event.currentTarget.setAttribute('drag-in-progress', 'false')
+      setDropZoneDisabled(true)
+    }
+  }
+
+  const isDragInProgress = (event) => {
+    event.currentTarget.getAttribute('drag-in-progress') === 'true'
+  }
+
+  const validDragItems = (event) => {
+    if (event.dataTransfer.types) {
+      for (let i = 0; i < event.dataTransfer.types.length; i++) {
+        if (event.dataTransfer.types[i] === 'Files') {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  const targetIsTopLevel = (event) => {
+    return event.currentTarget.id === 'desktop'
+  }
+  // <-- Drag zone detection ends -->
 
   return (
-    <div className="h-[90vh]" ref={desktopRef} onDragOver={enableIfDataTransfer}>
-      <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} disabled={dropZoneDisabled}/>
+    <div id="desktop" className="h-[90vh]" ref={desktopRef} onDragOverCapture={onDragOver} onDragLeaveCapture={onDragLeave} >
+      {!dropZoneDisabled &&
+        <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} />
+      }
       <div className="absolute right-0 m-5">
         <UploadButton />
       </div>
-      <div className="p-10">
+      <div className="p-10 w-full h-full">
         <div>
           {desktop.files && (
             // <TableView files={desktop.files} selectedFiles={files.selectedFiles} setSelectedFiles={setSelectedFiles} />
