@@ -4,8 +4,8 @@ export function getAllFiles() {
   return api.get('/files')
 }
 
-export function renameFile(id: string, name: string) {
-  return api.put(`/files/${id}`, { name: name })
+export function renameFile(id: string, path: string) {
+  return api.put(`/files/${id}`, { path: path })
 }
 
 export function deleteFile(id: number) {

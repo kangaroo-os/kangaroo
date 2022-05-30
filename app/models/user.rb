@@ -6,7 +6,7 @@ class User < ApplicationRecord
           :omniauthable
   
   include DeviseTokenAuth::Concerns::User
-
+  
   has_many :file_ownerships, dependent: :destroy
   has_many :abstract_files, through: :file_ownerships
   has_many :cloud_files, -> { cloud_files }, through: :file_ownerships, source: :abstract_file

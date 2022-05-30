@@ -5,6 +5,7 @@ import { getFileTypeIcon } from '../../helpers/cloud_file'
 import { truncateText } from '../../helpers/utils'
 import { File } from '../../models/File'
 import { useDropzone } from 'react-dropzone'
+import { renameFile as renameFileAction } from '@api/files'
 
 export const FileIcon = ({
   file,
@@ -51,12 +52,14 @@ export const FileIcon = ({
   }
 
   function renameFile(e) {
-    e.preventDefault()
     if (e.key == 'Enter' && files.selectedFiles.length == 1 && !files.editedFile) {
+      e.preventDefault()
       setEditingFile(file.id)
     } else if (e.key == 'Enter' && files.editedFile) {
+      file.path = file.path.replace(new RegExp(file.name + '$'), renameRef.current.value);
       file.name = renameRef.current.value
       setEditingFile(null)
+      renameFileAction(file.id, file.path)
     }
   }
 

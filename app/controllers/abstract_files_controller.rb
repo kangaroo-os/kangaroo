@@ -1,7 +1,7 @@
 class AbstractFilesController < ApplicationController
   
   before_action :authenticate_user!
-  before_action :user_authorized?, only: [:destroy]
+  before_action :user_authorized?, only: [:destroy, :update]
 
   def index
     render json: { files: current_user.abstract_files }, status: :ok
@@ -29,11 +29,17 @@ class AbstractFilesController < ApplicationController
 
   def get_folder_files
     params.require(:key)
-    files = AbstractFile.where(user_id: current_user.id).where("path LIKE ?", "#{params[:key]}%")
+    files = AbstractFile.where(owner_id: current_user.id).where("path LIKE ?", "#{params[:key]}%")
     render json: { files: files }
   end
    
   private 
+
+  def abstract_file_params
+    params.permit(%w[
+      path 
+    ])
+  end
 
   def user_authorized?
     if params.has_key?(:id)
