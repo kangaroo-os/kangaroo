@@ -67,7 +67,6 @@ export const FileIcon = ({
     <Draggable>
       <div {...getRootProps()}>
         <input {...getInputProps()} />
-        {isDragActive && <div>dropping</div>}
         <div className={`${selected ? 'bg-blue-100 border-2 border-blue-300' : ''} rounded p-2 m-1 inline-block`}>
           <div className="w-[100px] h-[130px]">
             <button onClick={() => getFileCallback('delete', file)} className="hover:cursor-pointer rounded-full bg-gray-400 w-[20px] h-[20px]">

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 
 const DragAndDropUpload = ({ uploadCallback, ...props }) => {
@@ -13,11 +13,8 @@ const DragAndDropUpload = ({ uploadCallback, ...props }) => {
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
-      {isDragActive ? (
-        <div {...{ ...props, className: `${props.className} bg-blue-100` }} />
-      ) : (
-        <div {...{ ...props, className: `${props.className}` }} />
-      )}
+      <div {...{ ...props, className: `${props.className} bg-blue-100` }} />
+      {isDragActive && <div>Dropping...</div>}
     </div>
   )
 }
