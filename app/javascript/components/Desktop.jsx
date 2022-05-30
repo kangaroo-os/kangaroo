@@ -47,6 +47,7 @@ const Desktop = () => {
 
   async function uploadFile(blob) {
     setUploading(true)
+    setDropZoneDisabled(true)
     const res = await addCloudFile(blob)
     setUploading(false)
     addFile(res.data.file)
@@ -115,9 +116,17 @@ const Desktop = () => {
     e.target.complaint.value = ''
   }
 
+  const [dropZoneDisabled, setDropZoneDisabled] = useState(true)
+  const enableIfDataTransfer = (event) => {
+    if (event.dataTransfer.types[0] === 'application/x-moz-file') {
+      setDropZoneDisabled(false)
+    }
+  }
+
+
   return (
-    <div className="h-[90vh]" ref={desktopRef}>
-      <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} />
+    <div className="h-[90vh]" ref={desktopRef} onDragOver={enableIfDataTransfer}>
+      <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} disabled={dropZoneDisabled}/>
       <div className="p-10 flex flex-row-reverse">
         <UploadButton />
         <div>

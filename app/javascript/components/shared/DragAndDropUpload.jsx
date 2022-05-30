@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 
-const DragAndDropUpload = ({ uploadCallback, ...props }) => {
+const DragAndDropUpload = ({ uploadCallback, disabled, ...props }) => {
   const onDrop = useCallback((acceptedFiles) => {
     for (let file of acceptedFiles) {
       uploadCallback(file)
@@ -10,14 +10,10 @@ const DragAndDropUpload = ({ uploadCallback, ...props }) => {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noClick: true, noKeyboard: true })
 
-  return (
+  return !disabled && (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
-      {isDragActive ? (
-        <div {...{ ...props, className: `${props.className} bg-blue-100` }} />
-      ) : (
-        <div {...{ ...props, className: `${props.className}` }} />
-      )}
+      <div {...{ ...props, className: `${props.className} bg-blue-100` }} />
     </div>
   )
 }
