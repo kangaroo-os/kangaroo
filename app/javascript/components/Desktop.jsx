@@ -14,11 +14,14 @@ import TableView from '@components/shared/desktop/TableView'
 import GridView from '@components/shared/desktop/GridView'
 import { useFiles } from '@states/filesState'
 import { fromEvent } from 'rxjs'
+import Window from '@components/shared/Window'
+import { SortableFile } from '@components/shared/desktop/SortableFile'
 
 const Desktop = () => {
   const navigate = useNavigate()
 
   const [sentEmail, setSentEmail] = useState(false)
+  const [windowList, setWindowList] = useState([])
 
   let user = getUser()
   const { desktop, addFile, setUploading, removeFile, setInitialFiles } = useDesktop()
@@ -75,8 +78,8 @@ const Desktop = () => {
 
   async function openFolder(file_path) {
     try {
-      await getFolderFiles(file_path)
-      // setWindowList(fileList.filte((file) => file.path !== file_path))
+      const res = await getFolderFiles(file_path)
+      setWindowList(res.data.files.filter((file) => file.path !== file_path))
     } catch (e) {
       console.error(e)
     }
@@ -104,7 +107,8 @@ const Desktop = () => {
       return <div>No files found</div>
     }
     return files.map((file) => {
-      return <FileIcon key={file} name={file} getFileCallback={fileCallback} />
+      const active = selectedFiles.includes(file.id)
+      return <SortableFile key={file.id} selected={active} file={file} fileCallback={fileCallback} />
     })
   }
 
@@ -154,10 +158,8 @@ const Desktop = () => {
   // <-- Drag zone detection ends -->
 
   return (
-    <div id="desktop" className="h-[90vh]" ref={desktopRef} onDragOverCapture={onDragOver} onDragLeaveCapture={onDragLeave} >
-      {!dropZoneDisabled &&
-        <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} />
-      }
+    <div id="desktop" className="h-[90vh]" ref={desktopRef} onDragOverCapture={onDragOver} onDragLeaveCapture={onDragLeave}>
+      {!dropZoneDisabled && <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} />}
       <div className="absolute right-0 m-5">
         <UploadButton />
       </div>
@@ -169,9 +171,14 @@ const Desktop = () => {
           )}
           {desktop.uploading && <div>Uploading...</div>}
         </div>
+        {/* folder window list */}
+        {/* <Window>{renderWindowList(windowList)}</Window> */}
+
+        {/* Right click menu */}
         <ContextMenu>
           <FileContextMenu path={`users/${user.id}/`} callback={(file) => addFile(file)} />
         </ContextMenu>
+
         {/* temporarily complain to olivia text area */}
         <div className="absolute bottom-0 left-0 bg-blue-100 h-[20rem] w-[30rem] rounded border m-5 p-5 space-y-3">
           <h1>Want to complain directly to Olivia? Put in your thoughts here</h1>

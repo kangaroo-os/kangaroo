@@ -15,3 +15,4 @@ export const Window = ({ children }) => {
     </Draggable>
   )
 }
+export default Window
