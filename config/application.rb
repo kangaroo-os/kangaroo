@@ -11,6 +11,18 @@ module Kangaroo
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 
+    config.action_controller.action_on_unpermitted_parameters = :log
+
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      :authentication => :plain,
+      :address => "smtp.mailgun.org",
+      :port => 587,
+      :domain => ENV["MAILGUN_DOMAIN"],
+      :user_name => ENV["MAILGUN_USERNAME"],
+      :password => ENV["MAILGUN_PASSWORD"]
+    }
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

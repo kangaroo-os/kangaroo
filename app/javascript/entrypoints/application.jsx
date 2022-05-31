@@ -18,6 +18,7 @@ ReactDOM.render(
           <Route path="desktop" element={<Desktop />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
+          <Route path="reset_password" element={<Signup />} />
         </Routes>
       </Header>
     </BrowserRouter>

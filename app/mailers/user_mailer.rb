@@ -1,8 +1,16 @@
 class UserMailer < ApplicationMailer
+  include Devise::Mailers::Helpers
+
   def welcome_email
     @user = params[:user]
     @url  = 'http://example.com/login'
     mail(to: @user.email, subject: 'Welcome to My Awesome Site')
+  end
+
+  def reset_password_instructions(record, token, opts={})
+    # send the email to reset your password here
+    # record is a User object
+    # token is a unique token for resetting password
   end
 
   def send_complaint(user, complaint)

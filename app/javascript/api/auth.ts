@@ -30,3 +30,10 @@ export async function login(email: string, password: string) {
     password: password,
   })
 }
+
+export async function resetPassword(email: string) {
+  return api.post('/auth/password', {
+    email: email,
+    redirect_url: '/reset_password',
+  })
+}
