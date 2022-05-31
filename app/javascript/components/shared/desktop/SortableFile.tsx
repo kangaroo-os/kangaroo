@@ -14,7 +14,6 @@ export function SortableFile({ file, selected, fileCallback }) {
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <FileIcon key={file.id} selected={selected} file={file} getFileCallback={fileCallback} />
-      <p>{file.id}</p>
     </div>
   )
 }
