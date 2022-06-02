@@ -21,8 +21,9 @@ export const FileContextMenu = ({ path, callback }) => {
       setEditingFile(files.selectedFiles[0])
     }
     hideContextMenu()
-  }
+}
 
+  // TODO: this function doesn't work cuz when you click outside of the file icon it unselects all the selected files. 
   function handleDelete(e) {
     e.stopPropagation()
     if (files.selectedFiles.length == 1) {
