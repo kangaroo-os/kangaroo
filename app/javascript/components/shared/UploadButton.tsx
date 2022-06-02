@@ -11,16 +11,17 @@ export const UploadButton = ({ ...props }) => {
 
   const menuItems = [
     { label: 'Upload File', action: () => inputRef.current.click() },
-    { label: 'Add Link', action: () => setIsLinkDialogueOpen(true) },
+    { label: 'Add Link', action: () => { setIsLinkDialogueOpen(true);  document.getElementById('link').focus() } },
     // { label: 'New Folder', action: () => console.log('new folder') },
   ]
 
   async function handleFileUpload(e) {
-    const file = e.target.files[0]
-    setUploading(true)
-    const res = await addCloudFile(file)
-    setUploading(false)
-    addFile(res.data.file)
+    for (let file of e.target.files) {
+      setUploading(true)
+      const res = await addCloudFile(file)
+      addFile(res.data.file)
+      setUploading(false)
+    }
   }
 
   const MenuButton = () => (
@@ -31,7 +32,7 @@ export const UploadButton = ({ ...props }) => {
       }}
     >
       <i className="fa-solid fa-plus text-4xl text-white"></i>
-      <input ref={inputRef} className="hidden" type="file" onChange={(e) => handleFileUpload(e)} />
+      <input ref={inputRef} className="hidden" type="file" multiple onChange={(e) => handleFileUpload(e)} />
       <LinkDialogue open={isLinkDialogueOpen} onClose={() => setIsLinkDialogueOpen(false)} />
     </div>
   )
