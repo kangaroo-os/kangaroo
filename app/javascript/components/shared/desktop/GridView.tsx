@@ -54,7 +54,6 @@ function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selec
       <Files id="desktop" files={foldersWithItems['desktop']} strategy={horizontalListSortingStrategy}>
         {foldersWithItems['desktop'].map((file) => {
           const active = selectedFiles.includes(file.id)
-          console.log(file.id)
           return <SortableFile key={file.id} selected={active} file={file} fileCallback={fileCallback} />
         })}
       </Files>
