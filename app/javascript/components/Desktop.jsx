@@ -34,6 +34,9 @@ const Desktop = () => {
   }, [])
 
   useEffect(() => {
+    if (!user) {
+      navigate('/')
+    }
     getFiles()
   }, [])
 
@@ -171,7 +174,7 @@ const Desktop = () => {
 
         {/* Right click menu */}
         <ContextMenu>
-          <FileContextMenu path={`users/${user.id}/`} callback={(file) => addFile(file)} />
+          <FileContextMenu path={`users/${user?.id}/`} callback={(file) => addFile(file)} />
         </ContextMenu>
 
         {/* temporarily complain to olivia text area */}
