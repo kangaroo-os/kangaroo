@@ -16,11 +16,12 @@ export const UploadButton = ({ ...props }) => {
   ]
 
   async function handleFileUpload(e) {
-    const file = e.target.files[0]
-    setUploading(true)
-    const res = await addCloudFile(file)
-    setUploading(false)
-    addFile(res.data.file)
+    for (let file of e.target.files) {
+      setUploading(true)
+      const res = await addCloudFile(file)
+      addFile(res.data.file)
+      setUploading(false)
+    }
   }
 
   const MenuButton = () => (
@@ -31,7 +32,7 @@ export const UploadButton = ({ ...props }) => {
       }}
     >
       <i className="fa-solid fa-plus text-4xl text-white"></i>
-      <input ref={inputRef} className="hidden" type="file" onChange={(e) => handleFileUpload(e)} />
+      <input ref={inputRef} className="hidden" type="file" multiple onChange={(e) => handleFileUpload(e)} />
       <LinkDialogue open={isLinkDialogueOpen} onClose={() => setIsLinkDialogueOpen(false)} />
     </div>
   )
