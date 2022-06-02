@@ -4,8 +4,7 @@ class AbstractFilesController < ApplicationController
   before_action :user_authorized?, only: [:destroy, :update]
 
   def index
-    files = AbstractFileRepository.new(current_user, params).query
-    render json: { files: files }, status: :ok
+    render json: { files: current_user.abstract_files }, status: :ok
   end
 
   def destroy 

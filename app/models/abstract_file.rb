@@ -1,5 +1,4 @@
 class AbstractFile < ApplicationRecord
-  include PgSearch::Model
   belongs_to :owner, class_name: "User", foreign_key: :owner_id
 
   validates :name, presence: true
@@ -11,8 +10,6 @@ class AbstractFile < ApplicationRecord
 
   scope :cloud_files, -> { where(type: 'CloudFile') }
   scope :link_files, -> { where(type: 'LinkFile') }
-
-  pg_search_scope :search_by_name, against: :name
 
   private 
 
