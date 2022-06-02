@@ -14,7 +14,6 @@ import TableView from '@components/shared/desktop/TableView'
 import GridView from '@components/shared/desktop/GridView'
 import { useFiles } from '@states/filesState'
 import { fromEvent } from 'rxjs'
-import Window from '@components/shared/Window'
 import { SortableFile } from '@components/shared/desktop/SortableFile'
 
 const Desktop = () => {
@@ -166,13 +165,11 @@ const Desktop = () => {
       <div className="p-10 w-full h-full">
         <div>
           {desktop.files && (
-            // <TableView files={desktop.files} selectedFiles={files.selectedFiles} setSelectedFiles={setSelectedFiles} />
             <GridView files={desktop.files} selectedFiles={files.selectedFiles} fileCallback={fileCallback} />
           )}
           {desktop.uploading && <div>Uploading...</div>}
         </div>
         {/* folder window list */}
-        {/* <Window>{renderWindowList(windowList)}</Window> */}
 
         {/* Right click menu */}
         <ContextMenu>
@@ -180,7 +177,7 @@ const Desktop = () => {
         </ContextMenu>
 
         {/* temporarily complain to olivia text area */}
-        <div className="absolute bottom-0 left-0 bg-blue-100 h-[20rem] w-[30rem] rounded border m-5 p-5 space-y-3">
+        {/* <div className="absolute bottom-0 left-0 bg-blue-100 h-[20rem] w-[30rem] rounded border m-5 p-5 space-y-3">
           <h1>Want to complain directly to Olivia? Put in your thoughts here</h1>
           <form className="space-y-3" onSubmit={(e) => sendOliviaEmail(e)}>
             <textarea rows={5} className="k-input" name="complaint" id="complaint" />
@@ -189,7 +186,7 @@ const Desktop = () => {
             </button>
             {sentEmail && <p>Email sent!</p>}
           </form>
-        </div>
+        </div> */}
       </div>
     </div>
   )
