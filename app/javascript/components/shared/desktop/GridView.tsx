@@ -8,7 +8,7 @@ import { SortableFile } from './SortableFile'
 
 const sampleFolders: Bin = {
   desktop: [],
-  'folder-1': [],
+  // 'folder-1': [],
 }
 
 type Bin = {
