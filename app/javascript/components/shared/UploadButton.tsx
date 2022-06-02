@@ -11,7 +11,7 @@ export const UploadButton = ({ ...props }) => {
 
   const menuItems = [
     { label: 'Upload File', action: () => inputRef.current.click() },
-    { label: 'Add Link', action: () => setIsLinkDialogueOpen(true) },
+    { label: 'Add Link', action: () => { setIsLinkDialogueOpen(true);  document.getElementById('link').focus() } },
     // { label: 'New Folder', action: () => console.log('new folder') },
   ]
 
