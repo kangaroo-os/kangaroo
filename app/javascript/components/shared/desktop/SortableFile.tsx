@@ -3,8 +3,8 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import FileIcon from '../FileIcon'
 
-export function SortableFile({ file, selected, fileCallback }) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: file.id })
+export function SortableFile({ id, file, selected, fileCallback }) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: id })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -12,8 +12,8 @@ export function SortableFile({ file, selected, fileCallback }) {
   }
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <FileIcon key={file.id} selected={selected} file={file} getFileCallback={fileCallback} />
+    <div id={id} ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      <FileIcon key={id} selected={selected} file={file} getFileCallback={fileCallback} />
     </div>
   )
 }
