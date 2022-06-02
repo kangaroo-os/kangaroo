@@ -1,21 +1,16 @@
 import React, { ReactElement } from 'react'
-import { File } from '@models/File'
-import { SortableFile } from './SortableFile'
 import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext } from '@dnd-kit/sortable';
 
-export const Files = ({ id, files, selectedFiles, fileCallback }: { id: string; files: File[]; selectedFiles: string[]; fileCallback: () => {} }): ReactElement => {
+export const Files = ({ id, files, strategy, children }): ReactElement => {
   const { setNodeRef } = useDroppable({
-    id
+    id: id
   })
 
   return (
-    <SortableContext id="desktop-files" items={files} strategy={horizontalListSortingStrategy}>
+    <SortableContext id={id} items={files} strategy={strategy}>
       <div ref={setNodeRef} className="flex flex-wrap">
-        {files.map((file) => {
-          const active = selectedFiles.includes(file.id)
-          return <SortableFile key={file.id} selected={active} file={file} fileCallback={fileCallback} />
-        })}
+        {children}
       </div>
     </SortableContext>
   )

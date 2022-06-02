@@ -14,4 +14,7 @@ export default defineConfig({
       { find: '@api', replacement: path.resolve(__dirname, './app/javascript/api') },
     ],
   },
+  build: {
+    minify: false,
+  }
 })
