@@ -26,10 +26,6 @@ const sampleFolders: Bin = {
   ],
 }
 
-type SortableNumberType = {
-  id: string
-}
-
 type Bin = {
   [key: string]: File[]
 }
