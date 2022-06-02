@@ -164,9 +164,7 @@ const Desktop = () => {
       </div>
       <div className="p-10 w-full h-full">
         <div>
-          {desktop.files && (
-            <GridView files={desktop.files} selectedFiles={files.selectedFiles} fileCallback={fileCallback} />
-          )}
+          {desktop.files && <GridView files={desktop.files} selectedFiles={files.selectedFiles} fileCallback={fileCallback} />}
           {desktop.uploading && <div>Uploading...</div>}
         </div>
         {/* folder window list */}

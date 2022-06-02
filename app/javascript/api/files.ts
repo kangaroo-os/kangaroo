@@ -8,7 +8,7 @@ export function renameFile(id: string, path: string) {
   return api.put(`/files/${id}`, { path: path })
 }
 
-export function deleteFile(id: number) {
+export function deleteFile(id: string) {
   return api.delete(`/files/${id}`)
 }
 

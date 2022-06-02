@@ -5,7 +5,8 @@ import { getFileTypeIcon } from '../../helpers/cloud_file'
 import { truncateText } from '../../helpers/utils'
 import { File } from '../../models/File'
 import { useDropzone } from 'react-dropzone'
-import { renameFile as renameFileAction } from '@api/files'
+import { renameFile as renameFileAction, deleteFile as deleteFileAction } from '@api/files'
+import { useDesktop } from '@states/desktopState'
 
 export const FileIcon = ({
   file,
@@ -17,6 +18,7 @@ export const FileIcon = ({
   selected: boolean
 }) => {
   const { setSelectedFiles, addSelectedFile, files, setEditingFile } = useFiles()
+  const { removeFile } = useDesktop()
 
   function movePath(file) {
     console.log(file)
@@ -51,16 +53,31 @@ export const FileIcon = ({
     }
   }
 
-  function renameFile(e) {
+  function handleKeyPress(e) {
     if (e.key == 'Enter' && files.selectedFiles.length == 1 && !files.editedFile) {
       e.preventDefault()
       setEditingFile(file.id)
     } else if (e.key == 'Enter' && files.editedFile) {
-      file.path = file.path.replace(new RegExp(file.name + '$'), renameRef.current.value);
+      file.path = file.path.replace(new RegExp(file.name + '$'), renameRef.current.value)
       file.name = renameRef.current.value
       setEditingFile(null)
       renameFileAction(file.id, file.path)
     }
+  }
+
+  // Delete a file by holding CMD + DELETE
+  let keysPressed = {}
+
+  function handleKeyDown(e) {
+    keysPressed[e.key] = true
+    if ((keysPressed['Meta'] || keysPressed['Control']) && keysPressed['Backspace']) {
+      deleteFileAction(file.id)
+      removeFile(file.id)
+    }
+  }
+
+  function handleKeyUp(e) {
+    delete keysPressed[e.key]
   }
 
   return (
@@ -68,15 +85,14 @@ export const FileIcon = ({
       <input {...getInputProps()} />
       <div className={`${selected ? 'bg-blue-100 border-2 border-blue-300' : ''} rounded p-2 m-1 inline-block`}>
         <div className="w-[100px] h-[130px]">
-          <button onClick={() => getFileCallback('delete', file)} className="hover:cursor-pointer rounded-full bg-gray-400 w-[20px] h-[20px]">
-            x
-          </button>
           <div
             tabIndex={0}
             className="flex justify-center items-center flex-col"
             onContextMenu={() => setSelectedFiles([file.id])}
             onClickCapture={(e) => handleSelect(e)}
-            onKeyPress={(e) => renameFile(e)}
+            onKeyPress={(e) => handleKeyPress(e)}
+            onKeyDown={(e) => handleKeyDown(e)}
+            onKeyUp={(e) => handleKeyUp(e)}
             onDoubleClick={() => getFileCallback(fileCallbackType(), file)}
           >
             <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
