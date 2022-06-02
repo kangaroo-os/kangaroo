@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { DndContext, rectIntersection, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { arrayMove, sortableKeyboardCoordinates, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import { File } from '../../../models/File'
 import Files from './Files'
@@ -8,7 +8,7 @@ import { SortableFile } from './SortableFile'
 
 const sampleFolders: Bin = {
   desktop: [],
-  'folder-1': [
+  // 'folder-1': [
     // {
     //   id: 'file-1-1',
     // },
@@ -23,7 +23,7 @@ const sampleFolders: Bin = {
     // {
     //   id: 'file-2-2',
     // },
-  ],
+  // ],
 }
 
 type Bin = {
@@ -38,10 +38,7 @@ function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selec
       activationConstraint: {
         distance: 10
       }
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
+    })
   )
 
   // Avoid in a bit
@@ -53,10 +50,11 @@ function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selec
   }, [files])
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} collisionDetection={rectIntersection} onDragEnd={handleDragEnd}>
       <Files id="desktop" files={foldersWithItems['desktop']} strategy={horizontalListSortingStrategy}>
         {foldersWithItems['desktop'].map((file) => {
           const active = selectedFiles.includes(file.id)
+          console.log(file.id)
           return <SortableFile key={file.id} selected={active} file={file} fileCallback={fileCallback} />
         })}
       </Files>
@@ -91,21 +89,25 @@ function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selec
 
     const activeIndex = foldersWithItems[activeContainer].findIndex((file) => file.id === id)
     const overIndex = foldersWithItems[overContainer].findIndex((file) => file.id === overId)
-
+    debugger
     if (activeContainer === overContainer) {
       const newFiles = arrayMove(foldersWithItems[activeContainer], activeIndex, overIndex)
-      setFoldersWithItems({
-        ...foldersWithItems,
-        [activeContainer]: newFiles,
+      setFoldersWithItems((prev) => {
+        return {
+          ...prev,
+          [activeContainer]: newFiles,
+        }
       })
     } else {
       debugger
       foldersWithItems[activeContainer].splice(activeIndex, 1)
       foldersWithItems[overContainer].splice(overIndex, 0, active)
-      setFoldersWithItems({
-        ...foldersWithItems,
-        [activeContainer]: foldersWithItems[activeContainer],
-        [overContainer]: foldersWithItems[overContainer],
+      setFoldersWithItems((prev) => {
+        return {
+          ...prev,
+          [activeContainer]: foldersWithItems[activeContainer],
+          [overContainer]: foldersWithItems[overContainer],
+        }
       })
     }
   }
