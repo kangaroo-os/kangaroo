@@ -44,6 +44,10 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
     else if (signup) {
       try {
         res = await signupUser(e.target.full_name.value, e.target.email.value, e.target.password.value)
+        if (res.status == 200) {
+          storeSessionFromAuth(res)
+          navigate('/desktop')
+        }
       } catch (err) {
         setErrors(err.response.data.errors.full_messages[0])
       }
