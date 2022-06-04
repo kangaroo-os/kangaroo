@@ -96,7 +96,7 @@ export const FileIcon = ({
             onDoubleClick={() => getFileCallback(fileCallbackType(), file)}
           >
             {file.icon_url ? (
-              <img height={150} src={file.icon_url} className="w-10 h-10" />
+              <img src={file.icon_url} className="border-4 border-white rounded max-h-24" />
             ) : (
               <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
             )}

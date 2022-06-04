@@ -160,8 +160,8 @@ const Desktop = () => {
 
   // <-- Drag zone detection ends -->
 
-  return (
-    <div id="desktop" className="h-[90vh]" ref={desktopRef} onDragOverCapture={onDragOver} onDragLeaveCapture={onDragLeave}>
+  return ( 
+    <div id="desktop" className="h-[90vh] bg-blue-100" ref={desktopRef} onDragOverCapture={onDragOver} onDragLeaveCapture={onDragLeave}>
       {!dropZoneDisabled && <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} />}
       <div className="absolute m-5 right-[25px] top-[120px]">
         <UploadButton />

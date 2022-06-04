@@ -14,7 +14,7 @@ class AbstractFile < ApplicationRecord
   
   def icon_url
     if self.file.representable?
-      self.file.representation(resize_to_limit: [100, 100]).processed.service_url
+      self.file.representation(resize_to_fit: [100, 200]).processed.service_url
     else
       nil
     end
