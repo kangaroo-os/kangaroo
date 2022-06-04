@@ -9,9 +9,14 @@ export const UploadButton = ({ ...props }) => {
   const [isLinkDialogueOpen, setIsLinkDialogueOpen] = useState(false)
   const { addFile, setUploading } = useDesktop()
 
+  function openLinkDialogue() {
+    setIsLinkDialogueOpen(true)
+    document.getElementById('link').focus()
+  }
+
   const menuItems = [
     { label: 'Upload File', action: () => inputRef.current.click() },
-    { label: 'Add Link', action: () => { setIsLinkDialogueOpen(true);  document.getElementById('link').focus() } },
+    { label: 'Add Link', action: openLinkDialogue },
     // { label: 'New Folder', action: () => console.log('new folder') },
   ]
 

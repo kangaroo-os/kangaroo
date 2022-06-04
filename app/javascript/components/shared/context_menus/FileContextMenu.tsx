@@ -23,7 +23,6 @@ export const FileContextMenu = ({ path, callback }) => {
     hideContextMenu()
 }
 
-  // TODO: this function doesn't work cuz when you click outside of the file icon it unselects all the selected files. 
   function handleDelete(e) {
     e.stopPropagation()
     if (files.selectedFiles.length == 1) {
@@ -41,7 +40,7 @@ export const FileContextMenu = ({ path, callback }) => {
       <li className="rounded hover:bg-gray-200 p-1" onClickCapture={(e) => handleRename(e)}>
         Rename
       </li>
-      <li className="rounded hover:bg-gray-200 p-1" onClick={(e) => handleDelete(e)}>
+      <li className="rounded hover:bg-gray-200 p-1" onClickCapture={(e) => handleDelete(e)}>
         Delete
       </li>
     </>

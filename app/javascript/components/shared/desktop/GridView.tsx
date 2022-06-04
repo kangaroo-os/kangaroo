@@ -37,7 +37,13 @@ function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selec
   }, [files])
 
   return (
-    <DndContext sensors={sensors} collisionDetection={rectIntersection} onDragEnd={handleDragEnd} onDragStart={handleDragStart} onDragOver={handleDragOver}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={rectIntersection}
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+    >
       <Files id="desktop" files={foldersWithItems['desktop']} strategy={rectSortingStrategy}>
         {foldersWithItems['desktop'].map((file) => {
           const active = selectedFiles.includes(file.id)
@@ -54,7 +60,9 @@ function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selec
             })}
           </Window>
         ))}
-        <DragOverlay>{activeFile ? <FileIcon key={activeFile.id} selected={false} file={activeFile} getFileCallback={fileCallback} /> : null}</DragOverlay>
+      <DragOverlay>
+        {activeFile ? <FileIcon key={activeFile.id} selected={false} file={activeFile} getFileCallback={fileCallback} /> : null}
+      </DragOverlay>
     </DndContext>
   )
 
@@ -71,7 +79,7 @@ function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selec
   }
 
   function handleDragStart(event) {
-    const { active } = event;
+    const { active } = event
     for (const folder in foldersWithItems) {
       const folderItems = foldersWithItems[folder]
       const index = folderItems.findIndex((obj) => obj.id === active.id)
@@ -83,6 +91,8 @@ function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selec
   }
 
   function handleDragEnd(event) {
+    document.getElementById(activeFile.id).style.opacity = '1'
+
     const { active, over } = event
     const { id } = active
     const { id: overId } = over
@@ -114,7 +124,6 @@ function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selec
         }
       })
     }
-    document.getElementById(activeFile.id).style.opacity = '1'
     setActiveFile(null)
   }
 }

@@ -54,7 +54,9 @@ class LinkFilesController < ApplicationController
   private
 
   def get_website_title(url)
-    Nokogiri::HTML(URI.open(url)).css('title').text || "Untitled Website"
+    Nokogiri::HTML(URI.open(url)).css('title').text
+  rescue
+    "Untitled Website"
   end
 
   def user_authorized?
