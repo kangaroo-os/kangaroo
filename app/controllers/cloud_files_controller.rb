@@ -6,7 +6,7 @@ class CloudFilesController < ApplicationController
   def create 
     params.require(:file)
     name = params[:file].original_filename.to_s
-    path = "users/#{current_user.id}/#{name}"
+    path = "/#{name}"
     
     file = CloudFile.new({
       path: path, 
