@@ -4,7 +4,8 @@ class AbstractFilesController < ApplicationController
   before_action :user_authorized?, only: [:destroy, :update]
 
   def index
-    render json: { files: current_user.abstract_files.order(:file_type) }, status: :ok
+    render json: {files: current_user.abstract_files.map{|f| AbstractFileSerializer.new(f).serializable_hash} }, status: :ok
+    # render json: {files: current_user.abstract_files }, status: :ok
   end
 
   def destroy 

@@ -71,8 +71,8 @@ const Desktop = () => {
 
   async function deleteUserFile(id) {
     try {
-      await deleteFile(id)
       removeFile(id)
+      await deleteFile(id)
     } catch (e) {
       console.error(e)
     }
@@ -157,6 +157,7 @@ const Desktop = () => {
   const targetIsTopLevel = (event) => {
     return event.currentTarget.id === 'desktop'
   }
+
   // <-- Drag zone detection ends -->
 
   return (
