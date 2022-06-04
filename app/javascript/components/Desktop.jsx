@@ -68,8 +68,8 @@ const Desktop = () => {
 
   async function deleteUserFile(id) {
     try {
-      await deleteFile(id)
       removeFile(id)
+      await deleteFile(id)
     } catch (e) {
       console.error(e)
     }
@@ -158,9 +158,10 @@ const Desktop = () => {
   const targetIsTopLevel = (event) => {
     return event.currentTarget.id === 'desktop'
   }
+
   // <-- Drag zone detection ends -->
 
-  return (
+  return ( 
     <div id="desktop" className="h-[90vh]" ref={desktopRef} onDragOverCapture={onDragOver} onDragLeaveCapture={onDragLeave}>
       {!dropZoneDisabled && <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} />}
       <div className="absolute m-5 right-[25px] top-[120px]">

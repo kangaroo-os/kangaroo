@@ -4,4 +4,5 @@ export interface File {
   name: string
   path: string
   size: BigInteger
+  icon_url?: string
 }

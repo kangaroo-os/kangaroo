@@ -71,8 +71,8 @@ export const FileIcon = ({
   function handleKeyDown(e) {
     keysPressed[e.key] = true
     if ((keysPressed['Meta'] || keysPressed['Control']) && keysPressed['Backspace'] && !files.editedFile) {
+      removeFile(file.id)
       deleteFileAction(file.id)
-      removeFile('desktop', file.id)
     }
   }
 
@@ -95,9 +95,19 @@ export const FileIcon = ({
             onKeyUp={(e) => handleKeyUp(e)}
             onDoubleClick={() => getFileCallback(fileCallbackType(), file)}
           >
+<<<<<<< HEAD
             <i className={`fa-solid fa-${getFileTypeIcon(file)} text-5xl text-orange-300`}></i>
             {files.editedFile != file.id && <p className="text-xs break-words text-center pt-1">{truncateText(file.name, 18)}</p>}
             {files.editedFile == file.id && <textarea autoFocus ref={renameRef} defaultValue={file.name} className="text-xs h-[20px] w-[100px]" rows={1} />}
+=======
+            {file.icon_url ? (
+              <img src={file.icon_url} className="border-4 border-white rounded max-h-24" />
+            ) : (
+              <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
+            )}
+            {files.editedFile != file.id && <p className="text-xs break-words">{truncateText(file.name, 18)}</p>}
+            {files.editedFile == file.id && <textarea autoFocus ref={renameRef} defaultValue={file.name} className="text-xs w-[100px]" rows={2} />}
+>>>>>>> 07ff4dec6896ad4a23efc25b271e5e41988217da
           </div>
         </div>
       </div>
