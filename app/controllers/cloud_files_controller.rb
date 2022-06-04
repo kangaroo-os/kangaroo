@@ -19,7 +19,7 @@ class CloudFilesController < ApplicationController
 
     if file.save!
       file.users << current_user
-      render json: {file: file}, status: :ok
+      render json: {file: AbstractFileSerializer.new(file).serializable_hash}, status: :ok
     else
       render json: {error: "File not saved"}, status: :unprocessable_entity
     end
