@@ -55,7 +55,7 @@ export default function Dropdown({
   return (
     <Menu as="div" className="z-10 relative inline-block text-left">
       <div>
-        <Menu.Button>{menuButton}</Menu.Button>
+        <Menu.Button className="">{menuButton}</Menu.Button>
       </div>
 
       <Transition

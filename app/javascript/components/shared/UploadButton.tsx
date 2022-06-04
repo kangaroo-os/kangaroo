@@ -15,8 +15,8 @@ export const UploadButton = ({ ...props }) => {
   }
 
   const menuItems = [
-    { label: 'Upload File', action: () => inputRef.current.click() },
-    { label: 'Add Link', action: openLinkDialogue },
+    { label: 'File', action: () => inputRef.current.click() },
+    { label: 'Link', action: openLinkDialogue },
     // { label: 'New Folder', action: () => console.log('new folder') },
   ]
 
@@ -33,10 +33,11 @@ export const UploadButton = ({ ...props }) => {
     <div
       {...{
         ...props,
-        className: `h-[60px] w-[60px] bg-orange-400 hover:bg-opacity-90 cursor-pointer rounded-full shadow-lg flex justify-center items-center ${props.className}`,
+        className: `h-[60px] w-[120px] border-orange-400 bg-white border-4 hover:bg-opacity-90 cursor-pointer rounded-full shadow-lg flex justify-center items-center ${props.className}`,
       }}
     >
-      <i className="fa-solid fa-plus text-4xl text-white"></i>
+      <i className='fa-solid fa-plus text-2xl'></i>
+      <p className='mx-2'>New</p>
       <input ref={inputRef} className="hidden" type="file" multiple onChange={(e) => handleFileUpload(e)} />
       <LinkDialogue open={isLinkDialogueOpen} onClose={() => setIsLinkDialogueOpen(false)} />
     </div>
