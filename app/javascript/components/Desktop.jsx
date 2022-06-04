@@ -172,7 +172,6 @@ const Desktop = () => {
           {desktop.files && <GridView files={desktop.files} selectedFiles={files.selectedFiles} fileCallback={fileCallback} />}
           {desktop.uploading && <div>Uploading...</div>}
         </div>
-        {/* folder window list */}
 
         {/* Right click menu */}
         <ContextMenu>
