@@ -1,4 +1,5 @@
 class AbstractFile < ApplicationRecord
+
   belongs_to :owner, class_name: "User", foreign_key: :owner_id
 
   validates :name, presence: true
@@ -10,6 +11,14 @@ class AbstractFile < ApplicationRecord
 
   scope :cloud_files, -> { where(type: 'CloudFile') }
   scope :link_files, -> { where(type: 'LinkFile') }
+  
+  def icon_url
+    if self.file.representable?
+      self.file.representation(resize_to_limit: [100, 100]).processed.service_url
+    else
+      nil
+    end
+  end
 
   private 
 

@@ -95,7 +95,11 @@ export const FileIcon = ({
             onKeyUp={(e) => handleKeyUp(e)}
             onDoubleClick={() => getFileCallback(fileCallbackType(), file)}
           >
-            <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
+            {file.icon_url ? (
+              <img height={150} src={file.icon_url} className="w-10 h-10" />
+            ) : (
+              <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
+            )}
             {files.editedFile != file.id && <p className="text-xs break-words">{truncateText(file.name, 18)}</p>}
             {files.editedFile == file.id && <textarea autoFocus ref={renameRef} defaultValue={file.name} className="text-xs w-[100px]" rows={2} />}
           </div>
