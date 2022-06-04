@@ -26,8 +26,8 @@ export const FileContextMenu = ({ path, callback }) => {
   function handleDelete(e) {
     e.stopPropagation()
     if (files.selectedFiles.length == 1) {
-      deleteFile(files.selectedFiles[0])
       removeFile(files.selectedFiles[0])
+      deleteFile(files.selectedFiles[0])
     }
     hideContextMenu()
   }

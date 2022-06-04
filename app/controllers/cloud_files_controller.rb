@@ -13,7 +13,7 @@ class CloudFilesController < ApplicationController
       name: name, 
       file_type: params[:file].content_type, 
       size: params[:file].size, 
-      tempfile: params[:file].tempfile,
+      tempfile: params[:file],
       owner_id: current_user.id,
     })
 
@@ -32,9 +32,8 @@ class CloudFilesController < ApplicationController
 
   # GET /cloud_files/:id
   def show
-    signer = Aws::S3::Presigner.new
     cloud_file = CloudFile.find(params[:id])
-    url = signer.presigned_url(:get_object, bucket: ENV["S3_MAIN_BUCKET"], key: cloud_file.path)
+    url = cloud_file.file.service_url
     render json: { url: url, name: cloud_file.name, file_type: cloud_file.file_type }
   end
 

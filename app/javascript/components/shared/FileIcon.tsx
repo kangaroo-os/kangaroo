@@ -71,8 +71,8 @@ export const FileIcon = ({
   function handleKeyDown(e) {
     keysPressed[e.key] = true
     if ((keysPressed['Meta'] || keysPressed['Control']) && keysPressed['Backspace'] && !files.editedFile) {
-      deleteFileAction(file.id)
       removeFile(file.id)
+      deleteFileAction(file.id)
     }
   }
 
