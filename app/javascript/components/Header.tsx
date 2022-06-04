@@ -37,7 +37,7 @@ export default function Header({ children }) {
 
   return (
     <div className="">
-      <div className="z-50 space-x-4 fixed top-0 shadow-lg bg-gray-100 w-full p-5 flex flex-initial flex-row-reverse items-center">
+      <div className="z-50 space-x-4 fixed top-0 shadow-lg bg-gray-100 w-full p-[10px] flex flex-initial flex-row-reverse items-center">
         {user ? (
           <Dropdown menuButton={MenuButton()} menuItems={menuItems} />
         ) : (
@@ -61,7 +61,7 @@ export default function Header({ children }) {
           </Link>
         </div>
       </div>
-      <div className="mt-24">{children}</div>
+      <div className="mt-12">{children}</div>
     </div>
   )
 }

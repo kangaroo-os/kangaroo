@@ -2,7 +2,23 @@ import { useState, useEffect, SetStateAction } from 'react'
 import { BehaviorSubject } from 'rxjs'
 import { File } from '../models/File'
 
-let subject = new BehaviorSubject({ files: [], selectedFiles: [], uploading: false })
+export type FileStore = {
+  [name: string]: File[]
+}
+
+export type DesktopState = {
+  files: FileStore
+  selectedFiles: string[]
+  uploading: boolean
+}
+
+let subject = new BehaviorSubject<DesktopState>({
+  files: {
+    'desktop': [],
+  },
+  selectedFiles: [],
+  uploading: false,
+})
 
 export const getDesktop = () => {
   if (!subject) {
@@ -26,8 +42,14 @@ export const useDesktop = () => {
     }
   }, [])
 
-  function addFile(file: File) {
-    subject.next({ ...subject.value, files: [...subject.value.files, file] })
+  function addFile(windowId: string, file: File) {
+    subject.next({
+      ...subject.value,
+      files: {
+        ...subject.value.files,
+        [windowId]: [...subject.value.files[windowId], file],
+      },
+    })
   }
 
   function setUploading(uploading: boolean) {
@@ -35,12 +57,48 @@ export const useDesktop = () => {
   }
 
   function removeFile(id: string) {
-    subject.next({ ...subject.value, files: subject.value.files.filter((file: File) => file.id !== id) })
+    let windowId = null
+    for (const folder in subject.value.files) {
+      if (subject.value.files[folder].map(file => file.id).includes(id)) {
+        windowId = folder
+      }
+    }
+    if (!windowId) return
+    subject.next({
+      ...subject.value,
+      files: {
+        ...subject.value.files,
+        [windowId]: subject.value.files[windowId].filter((file: File) => file.id !== id),
+      },
+    })
   }
 
   function setInitialFiles(files: File[]) {
-    subject.next({ ...subject.value, files: files })
+    subject.next({
+      ...subject.value,
+      files: {
+        desktop: files,
+      },
+    })
   }
 
-  return { desktop, addFile, setUploading, removeFile, setInitialFiles }
+  function createWindow(windowId: string) {
+    subject.next({
+      ...subject.value,
+      files: {
+        ...subject.value.files,
+        [windowId]: []
+      },
+    })
+  }
+
+  function closeWindow(windowId: string) {
+    const updatedSubject = {
+      ...subject.value,
+    }
+    delete updatedSubject.files[windowId]
+    subject.next(updatedSubject)
+  }
+
+  return { desktop, addFile, setUploading, removeFile, setInitialFiles, closeWindow, createWindow }
 }

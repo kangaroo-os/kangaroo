@@ -72,7 +72,7 @@ export const FileIcon = ({
     keysPressed[e.key] = true
     if ((keysPressed['Meta'] || keysPressed['Control']) && keysPressed['Backspace'] && !files.editedFile) {
       deleteFileAction(file.id)
-      removeFile(file.id)
+      removeFile('desktop', file.id)
     }
   }
 
@@ -84,7 +84,7 @@ export const FileIcon = ({
     <div {...getRootProps()}>
       <input {...getInputProps()} />
       <div className={`${selected ? 'bg-blue-100 border-2 border-blue-300' : ''} rounded p-2 m-1 inline-block`}>
-        <div className="w-[100px] h-[130px]">
+        <div className="w-[75px] h-[75px]">
           <div
             tabIndex={0}
             className="flex justify-center items-center flex-col"
@@ -95,9 +95,9 @@ export const FileIcon = ({
             onKeyUp={(e) => handleKeyUp(e)}
             onDoubleClick={() => getFileCallback(fileCallbackType(), file)}
           >
-            <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
-            {files.editedFile != file.id && <p className="text-xs break-words">{truncateText(file.name, 18)}</p>}
-            {files.editedFile == file.id && <textarea autoFocus ref={renameRef} defaultValue={file.name} className="text-xs w-[100px]" rows={2} />}
+            <i className={`fa-solid fa-${getFileTypeIcon(file)} text-5xl text-orange-300`}></i>
+            {files.editedFile != file.id && <p className="text-xs break-words text-center pt-1">{truncateText(file.name, 18)}</p>}
+            {files.editedFile == file.id && <textarea autoFocus ref={renameRef} defaultValue={file.name} className="text-xs h-[20px] w-[100px]" rows={1} />}
           </div>
         </div>
       </div>

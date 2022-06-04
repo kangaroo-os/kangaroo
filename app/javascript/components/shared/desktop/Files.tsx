@@ -9,7 +9,7 @@ export const Files = ({ id, files, strategy, children }): ReactElement => {
 
   return (
     <SortableContext id={id} items={files} strategy={strategy}>
-      <div ref={setNodeRef} className="flex flex-wrap">
+      <div ref={setNodeRef} className="flex flex-wrap flex-col content-start max-h-[90vh]">
         {children}
       </div>
     </SortableContext>

@@ -24,7 +24,7 @@ export const UploadButton = ({ ...props }) => {
     for (let file of e.target.files) {
       setUploading(true)
       const res = await addCloudFile(file)
-      addFile(res.data.file)
+      addFile('desktop', res.data.file)
       setUploading(false)
     }
   }

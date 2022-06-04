@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useMemo, useState } from 'react'
 import { DndContext, rectIntersection, PointerSensor, useSensor, useSensors, DragOverlay } from '@dnd-kit/core'
 import { arrayMove, sortableKeyboardCoordinates, rectSortingStrategy } from '@dnd-kit/sortable'
 import { File } from '../../../models/File'
@@ -6,18 +6,10 @@ import Files from './Files'
 import Window from './../Window'
 import { SortableFile } from './SortableFile'
 import FileIcon from '../FileIcon'
+import { FileStore } from '../../../states/desktopState'
 
-const sampleFolders: Bin = {
-  desktop: [],
-  // 'folder-1': [],
-}
-
-type Bin = {
-  [key: string]: File[]
-}
-
-function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selectedFiles: string[]; fileCallback: () => {} }): ReactElement {
-  const [foldersWithItems, setFoldersWithItems] = useState<Bin>(sampleFolders)
+function GridView({ files, selectedFiles, fileCallback }: { files: FileStore; selectedFiles: string[]; fileCallback: () => {} }): ReactElement {
+  const [fileStore, setFileStore] = useState<FileStore>(files)
   const [activeFile, setActiveFile] = useState<File>()
 
   const sensors = useSensors(
@@ -30,10 +22,7 @@ function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selec
 
   // Avoid in a bit
   useEffect(() => {
-    setFoldersWithItems({
-      ...foldersWithItems,
-      desktop: files,
-    })
+    setFileStore(files)
   }, [files])
 
   return (
@@ -44,19 +33,19 @@ function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selec
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
     >
-      <Files id="desktop" files={foldersWithItems['desktop']} strategy={rectSortingStrategy}>
-        {foldersWithItems['desktop'].map((file) => {
+      <Files id="desktop" files={fileStore['desktop'] || []} strategy={rectSortingStrategy}>
+        {fileStore['desktop'].map((file) => {
           const active = selectedFiles.includes(file.id)
-          return <SortableFile id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+          return <SortableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} />
         })}
       </Files>
-      {Object.entries(foldersWithItems)
+      {Object.entries(fileStore)
         .filter(([folderId, _]) => folderId.startsWith('folder'))
         .map(([folderId, folderItems]) => (
           <Window id={folderId} files={folderItems} strategy={rectSortingStrategy}>
             {folderItems.map((file) => {
               const active = selectedFiles.includes(file.id)
-              return <SortableFile id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+              return <SortableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} />
             })}
           </Window>
         ))}
@@ -67,11 +56,13 @@ function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selec
   )
 
   function getContainerType(id) {
-    const folderKeys = Object.keys(foldersWithItems)
+    // Desktop or Windows
+    const folderKeys = Object.keys(fileStore)
     if (folderKeys.includes(id)) {
       return id
     }
-    return folderKeys.find((key) => foldersWithItems[key].find((obj) => obj.id === id))
+    // Inside folders
+    return folderKeys.find((key) => fileStore[key].find((obj) => obj.id === id))
   }
 
   function handleDragOver() {
@@ -80,8 +71,9 @@ function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selec
 
   function handleDragStart(event) {
     const { active } = event
-    for (const folder in foldersWithItems) {
-      const folderItems = foldersWithItems[folder]
+    for (const folder in fileStore) {
+      // Slow code
+      const folderItems = fileStore[folder]
       const index = folderItems.findIndex((obj) => obj.id === active.id)
       if (index !== -1) {
         setActiveFile(folderItems[index])
@@ -104,23 +96,24 @@ function GridView({ files, selectedFiles, fileCallback }: { files: File[]; selec
       return
     }
 
-    const activeIndex = foldersWithItems[activeContainer].findIndex((file) => file.id === id)
-    const overIndex = foldersWithItems[overContainer].findIndex((file) => file.id === overId)
+    const activeIndex = fileStore[activeContainer].findIndex((file) => file.id === id)
+    const overIndex = fileStore[overContainer].findIndex((file) => file.id === overId)
+
     if (activeContainer === overContainer) {
-      setFoldersWithItems((prev) => {
+      setFileStore((prev) => {
         return {
           ...prev,
-          [activeContainer]: arrayMove(foldersWithItems[activeContainer], activeIndex, overIndex),
+          [activeContainer]: arrayMove(fileStore[activeContainer], activeIndex, overIndex),
         }
       })
     } else {
-      foldersWithItems[activeContainer].splice(activeIndex, 1)
-      foldersWithItems[overContainer].splice(overIndex, 0, activeFile)
-      setFoldersWithItems((prev) => {
+      fileStore[activeContainer].splice(activeIndex, 1)
+      fileStore[overContainer].splice(overIndex, 0, activeFile)
+      setFileStore((prev) => {
         return {
           ...prev,
-          [activeContainer]: foldersWithItems[activeContainer],
-          [overContainer]: foldersWithItems[overContainer],
+          [activeContainer]: fileStore[activeContainer],
+          [overContainer]: fileStore[overContainer],
         }
       })
     }

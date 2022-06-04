@@ -11,7 +11,7 @@ export const LinkDialogue = ({ open, onClose }) => {
   async function submitLink(e) {
     e.preventDefault()
     const res = await addLink(e.target.link.value)
-    addFile(res.data.file)
+    addFile('desktop', res.data.file)
 
     onClose()
   }

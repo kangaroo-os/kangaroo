@@ -10,20 +10,17 @@ import UploadButton from './shared/UploadButton'
 import { email_olivia } from '../api/mailer'
 import { useDesktop } from '@states/desktopState'
 import { getUser } from '@states/userState'
-import TableView from '@components/shared/desktop/TableView'
 import GridView from '@components/shared/desktop/GridView'
 import { useFiles } from '@states/filesState'
 import { fromEvent } from 'rxjs'
-import { SortableFile } from '@components/shared/desktop/SortableFile'
 
 const Desktop = () => {
   const navigate = useNavigate()
 
   const [sentEmail, setSentEmail] = useState(false)
-  const [windowList, setWindowList] = useState([])
 
   let user = getUser()
-  const { desktop, addFile, setUploading, removeFile, setInitialFiles } = useDesktop()
+  const { desktop, addFile, setUploading, removeFile, setInitialFiles, createWindow } = useDesktop()
   const { unselectAll, files } = useFiles()
   const desktopRef = useRef(null)
   const [dropZoneDisabled, setDropZoneDisabled] = useState(true)
@@ -81,7 +78,11 @@ const Desktop = () => {
   async function openFolder(file_path) {
     try {
       const res = await getFolderFiles(file_path)
-      setWindowList(res.data.files.filter((file) => file.path !== file_path))
+      const files = res.data.files.filter((file) => file.path !== file_path)
+      createWindow(`folder-${file_path}`)
+      for (const file of files) {
+        addFile(`folder-${file_path}`, file)
+      }
     } catch (e) {
       console.error(e)
     }
@@ -104,23 +105,23 @@ const Desktop = () => {
         break
     }
   }
-  const renderWindowList = (files) => {
-    if (files.length === 0) {
-      return <div>No files found</div>
-    }
-    return files.map((file) => {
-      const active = selectedFiles.includes(file.id)
-      return <SortableFile key={file.id} selected={active} file={file} fileCallback={fileCallback} />
-    })
-  }
+  // const renderWindowList = (files) => {
+  //   if (files.length === 0) {
+  //     return <div>No files found</div>
+  //   }
+  //   return files.map((file) => {
+  //     const active = selectedFiles.includes(file.id)
+  //     return <SortableFile key={file.id} selected={active} file={file} fileCallback={fileCallback} />
+  //   })
+  // }
 
-  function sendOliviaEmail(e) {
-    e.preventDefault()
-    const complaint = e.target.complaint.value
-    email_olivia(complaint)
-    setSentEmail(true)
-    e.target.complaint.value = ''
-  }
+  // function sendOliviaEmail(e) {
+  //   e.preventDefault()
+  //   const complaint = e.target.complaint.value
+  //   email_olivia(complaint)
+  //   setSentEmail(true)
+  //   e.target.complaint.value = ''
+  // }
 
   // <-- Drag zone detection begins -->
   const onDragOver = (event) => {
@@ -165,7 +166,7 @@ const Desktop = () => {
       <div className="absolute m-5 right-[25px] top-[120px]">
         <UploadButton />
       </div>
-      <div className="p-10 w-full h-full">
+      <div className="p-10 w-full h-full overflow-hidden">
         <div>
           {desktop.files && <GridView files={desktop.files} selectedFiles={files.selectedFiles} fileCallback={fileCallback} />}
           {desktop.uploading && <div>Uploading...</div>}
