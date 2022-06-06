@@ -13,14 +13,10 @@ class AbstractFile < ApplicationRecord
   scope :link_files, -> { where(type: 'LinkFile') }
   
   def icon_url
-    if cloud_file?
-      return nil unless self.file.representable?
-
-      self.file.representation(resize_to_fit: [100, 200]).processed.service_url
-    elsif link_file?
-      nil
+    if cloud_file? && self.file.representable?
+      return self.file.representation(resize_to_fit: [100, 200]).processed.service_url
     end
-    nil
+    return nil
   end
 
   private 
@@ -41,10 +37,10 @@ class AbstractFile < ApplicationRecord
   end
 
   def cloud_file?
-    file_type == 'CloudFile'
+    type == 'CloudFile'
   end
 
   def link_file?
-    file_type == 'LinkFile'
+    type == 'LinkFile'
   end
 end
