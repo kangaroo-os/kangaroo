@@ -47,7 +47,7 @@ export const useDesktop = () => {
       ...subject.value,
       files: {
         ...subject.value.files,
-        [windowId]: [...subject.value.files[windowId], file],
+        [windowId]: [...(subject.value.files[windowId] || []), file],
       },
     })
   }
@@ -73,11 +73,12 @@ export const useDesktop = () => {
     })
   }
 
-  function setInitialFiles(files: File[]) {
+  function setWindowFiles(windowId: string, files: File[]) {
     subject.next({
       ...subject.value,
       files: {
-        desktop: files,
+        ...subject.value.files,
+        [windowId]: files,
       },
     })
   }
@@ -100,5 +101,5 @@ export const useDesktop = () => {
     subject.next(updatedSubject)
   }
 
-  return { desktop, addFile, setUploading, removeFile, setInitialFiles, closeWindow, createWindow }
+  return { desktop, addFile, setUploading, removeFile, setWindowFiles, closeWindow, createWindow }
 }

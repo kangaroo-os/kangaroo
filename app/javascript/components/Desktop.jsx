@@ -20,7 +20,7 @@ const Desktop = () => {
   const [sentEmail, setSentEmail] = useState(false)
 
   let user = getUser()
-  const { desktop, addFile, setUploading, removeFile, setInitialFiles, createWindow } = useDesktop()
+  const { desktop, addFile, setUploading, removeFile, setWindowFiles, createWindow } = useDesktop()
   const { unselectAll, files } = useFiles()
   const desktopRef = useRef(null)
   const [dropZoneDisabled, setDropZoneDisabled] = useState(true)
@@ -40,7 +40,7 @@ const Desktop = () => {
   async function getFiles() {
     try {
       const res = await getAllFiles()
-      setInitialFiles(res.data.files)
+      setWindowFiles('desktop', res.data.files)
     } catch (error) {
       if (error.response.status === 401) {
         navigate('/login')
@@ -164,12 +164,12 @@ const Desktop = () => {
   return ( 
     <div id="desktop" className="h-[90vh]" ref={desktopRef} onDragOverCapture={onDragOver} onDragLeaveCapture={onDragLeave}>
       {!dropZoneDisabled && <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} />}
-      <div className="absolute m-5 right-[25px] top-[120px]">
+      <div className="absolute m-5 right-[25px] top-[80px]">
         <UploadButton />
       </div>
       <div className="p-10 w-full h-full overflow-hidden">
         <div>
-          {desktop.files && <GridView files={desktop.files} selectedFiles={files.selectedFiles} fileCallback={fileCallback} />}
+          {desktop.files && <GridView fileStore={desktop.files} selectedFiles={files.selectedFiles} fileCallback={fileCallback} />}
           {desktop.uploading && <div>Uploading...</div>}
         </div>
 

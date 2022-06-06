@@ -8,7 +8,7 @@ gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'
 gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.7'
-gem "aws-sdk-s3", require: false
+gem "aws-sdk-s3"
 gem 'bcrypt', '~> 3.1.7'
 gem 'devise'
 gem 'rest-client'

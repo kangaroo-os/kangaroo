@@ -1,16 +1,17 @@
-import React, { ReactElement, useEffect, useMemo, useState } from 'react'
-import { DndContext, rectIntersection, PointerSensor, useSensor, useSensors, DragOverlay } from '@dnd-kit/core'
-import { arrayMove, sortableKeyboardCoordinates, rectSortingStrategy } from '@dnd-kit/sortable'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { DndContext, pointerWithin, PointerSensor, useSensor, useSensors, DragOverlay } from '@dnd-kit/core'
+import { arrayMove, rectSortingStrategy } from '@dnd-kit/sortable'
 import { File } from '../../../models/File'
 import Files from './Files'
 import Window from './../Window'
-import { SortableFile } from './SortableFile'
+import SortableFile from './SortableFile'
 import FileIcon from '../FileIcon'
-import { FileStore } from '../../../states/desktopState'
+import { FileStore, useDesktop } from '../../../states/desktopState'
 
-function GridView({ files, selectedFiles, fileCallback }: { files: FileStore; selectedFiles: string[]; fileCallback: () => {} }): ReactElement {
-  const [fileStore, setFileStore] = useState<FileStore>(files)
+function GridView({ fileStore, selectedFiles, fileCallback }: { fileStore: FileStore; selectedFiles: string[]; fileCallback: () => {} }): ReactElement {
+  const { setWindowFiles, addFile, removeFile } = useDesktop()
   const [activeFile, setActiveFile] = useState<File>()
+  const [hoverOverFolderId, setHoverOverFolderId] = useState<string>()
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -20,15 +21,10 @@ function GridView({ files, selectedFiles, fileCallback }: { files: FileStore; se
     }),
   )
 
-  // Avoid in a bit
-  useEffect(() => {
-    setFileStore(files)
-  }, [files])
-
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={rectIntersection}
+      collisionDetection={pointerWithin}
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
@@ -36,7 +32,8 @@ function GridView({ files, selectedFiles, fileCallback }: { files: FileStore; se
       <Files id="desktop" files={fileStore['desktop'] || []} strategy={rectSortingStrategy}>
         {fileStore['desktop'].map((file) => {
           const active = selectedFiles.includes(file.id)
-          return <SortableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+          const isFolder = file.file_type === 'folder'
+          return <SortableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} sortingDisabled={isFolder && hoverOverFolderId === file.id} />
         })}
       </Files>
       {Object.entries(fileStore)
@@ -45,7 +42,8 @@ function GridView({ files, selectedFiles, fileCallback }: { files: FileStore; se
           <Window id={folderId} files={folderItems} strategy={rectSortingStrategy}>
             {folderItems.map((file) => {
               const active = selectedFiles.includes(file.id)
-              return <SortableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+              const isFolder = file.file_type === 'folder'
+              return <SortableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} sortingDisabled={isFolder && hoverOverFolderId === file.id} />
             })}
           </Window>
         ))}
@@ -55,24 +53,44 @@ function GridView({ files, selectedFiles, fileCallback }: { files: FileStore; se
     </DndContext>
   )
 
-  function getContainerType(id) {
-    // Desktop or Windows
-    const folderKeys = Object.keys(fileStore)
-    if (folderKeys.includes(id)) {
-      return id
+  function getWindowIdAndFileIndex(id) {
+    const windowIds = Object.keys(fileStore)
+    if (windowIds.includes(id)) return [id, null]
+    for (const windowId of windowIds) {
+      const fileIndex = fileStore[windowId].findIndex(file => file.id === id)
+      if (fileIndex >= 0) {
+        return [windowId, fileIndex]
+      }
     }
-    // Inside folders
-    return folderKeys.find((key) => fileStore[key].find((obj) => obj.id === id))
+    return [null, null]
   }
 
-  function handleDragOver() {
+  // Beware of slow code.
+  function handleDragOver(event) {
     document.getElementById(activeFile.id).style.opacity = '0.25'
+    const { over } = event
+    if (!over) return
+
+    const { id: overId } = over
+
+    // Same file over same file
+    if (activeFile.id === overId) return
+
+    const [overContainer, fileIndex] = getWindowIdAndFileIndex(overId)
+    if (!overContainer || !fileIndex) return
+
+    const overFile = fileStore[overContainer][fileIndex]
+    if (overFile.file_type !== 'folder') {
+      if (hoverOverFolderId) setHoverOverFolderId(null)
+      return
+    }
+
+    if (!hoverOverFolderId) setHoverOverFolderId(overFile.id)
   }
 
   function handleDragStart(event) {
     const { active } = event
     for (const folder in fileStore) {
-      // Slow code
       const folderItems = fileStore[folder]
       const index = folderItems.findIndex((obj) => obj.id === active.id)
       if (index !== -1) {
@@ -89,35 +107,48 @@ function GridView({ files, selectedFiles, fileCallback }: { files: FileStore; se
     const { id } = active
     const { id: overId } = over
 
-    const activeContainer = getContainerType(id)
-    const overContainer = getContainerType(overId)
+    // Don't do anything if file is dropped back at the same place
+    if (id === overId) return
 
-    if (!activeContainer || !overContainer) {
-      return
+    const [activeContainer, activeIndex] = getWindowIdAndFileIndex(id)
+    const [overContainer, overIndex] = getWindowIdAndFileIndex(overId)
+
+    if (!activeContainer || !overContainer) return
+
+    // Don't allow dragging folder into its own window
+    if (overContainer === `folder-${activeFile.path}`) return
+
+    // Check if user dragged item inside a folder
+    if (overIndex) {
+      const overFile = fileStore[overContainer][overIndex]
+      // User drags item inside a folder icon, put it inside the folder
+      if (overFile.file_type === 'folder') {
+        removeFile(activeFile.id)
+        // TODO: Update path on backend instead of add file
+        // We don't need to show where the file went
+        // Get rid of following line later
+        addFile(`folder-${overFile.path}`, activeFile)
+        setActiveFile(null)
+        setHoverOverFolderId(null)
+        return
+      }
     }
 
-    const activeIndex = fileStore[activeContainer].findIndex((file) => file.id === id)
-    const overIndex = fileStore[overContainer].findIndex((file) => file.id === overId)
-
+    // If user rearranges files within same container, then change the order
+    // Else move the file into the window
     if (activeContainer === overContainer) {
-      setFileStore((prev) => {
-        return {
-          ...prev,
-          [activeContainer]: arrayMove(fileStore[activeContainer], activeIndex, overIndex),
-        }
-      })
+      // TODO BACKEND: Change the order
+      setWindowFiles(activeContainer, arrayMove(fileStore[activeContainer], activeIndex, overIndex))
     } else {
+      // TODO: Update files' paths
       fileStore[activeContainer].splice(activeIndex, 1)
       fileStore[overContainer].splice(overIndex, 0, activeFile)
-      setFileStore((prev) => {
-        return {
-          ...prev,
-          [activeContainer]: fileStore[activeContainer],
-          [overContainer]: fileStore[overContainer],
-        }
-      })
+      setWindowFiles(activeContainer, fileStore[activeContainer])
+      setWindowFiles(overContainer, fileStore[overContainer])
     }
+
     setActiveFile(null)
+    setHoverOverFolderId(null)
   }
 }
 

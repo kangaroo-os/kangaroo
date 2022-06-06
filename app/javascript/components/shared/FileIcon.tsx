@@ -1,6 +1,5 @@
 import { useFiles } from '@states/filesState'
 import React, { useRef, useState, useCallback } from 'react'
-import Draggable from 'react-draggable'
 import { getFileTypeIcon } from '../../helpers/cloud_file'
 import { truncateText } from '../../helpers/utils'
 import { File } from '../../models/File'
