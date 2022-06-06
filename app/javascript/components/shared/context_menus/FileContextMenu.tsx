@@ -5,14 +5,14 @@ import { useContextMenu } from '@states/contextMenuState'
 import { useDesktop } from '@states/desktopState'
 import { deleteFile } from '@api/files'
 
-export const FileContextMenu = ({ path, callback }) => {
+export const FileContextMenu = ({ path }) => {
   const { files, setEditingFile } = useFiles()
   const { hideContextMenu } = useContextMenu()
-  const { removeFile } = useDesktop()
+  const { removeFile, addFile } = useDesktop()
 
   async function createFolderFunction() {
     const res = await createFolder(path)
-    callback(res.data.file)
+    addFile(res.data.file.id)
   }
 
   function handleRename(e) {

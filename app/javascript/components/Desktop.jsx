@@ -161,7 +161,7 @@ const Desktop = () => {
 
   // <-- Drag zone detection ends -->
 
-  return ( 
+  return (
     <div id="desktop" className="h-[90vh]" ref={desktopRef} onDragOverCapture={onDragOver} onDragLeaveCapture={onDragLeave}>
       {!dropZoneDisabled && <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} />}
       <div className="absolute m-5 right-[25px] top-[80px]">
@@ -175,7 +175,7 @@ const Desktop = () => {
 
         {/* Right click menu */}
         <ContextMenu>
-          <FileContextMenu path={`users/${user?.id}/`} callback={(file) => addFile(file)} />
+          <FileContextMenu path={`users/${user?.id}/`} />
         </ContextMenu>
 
         {/* temporarily complain to olivia text area */}
