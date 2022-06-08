@@ -12,6 +12,7 @@ export const FileIcon = ({
   getFileCallback,
   selected,
 }: {
+  id?: string
   file: File
   getFileCallback: (arg1: string, arg2: File) => void
   selected: boolean
@@ -83,7 +84,7 @@ export const FileIcon = ({
     <div {...getRootProps()}>
       <input {...getInputProps()} />
       <div className={`${selected ? 'bg-blue-100 border-2 border-blue-300' : ''} rounded p-2 m-1 inline-block`}>
-        <div className="w-[75px] h-[75px]">
+        <div className="w-[75px] h-[75px] cursor-default">
           <div
             tabIndex={0}
             className="flex justify-center items-center flex-col"
@@ -94,11 +95,13 @@ export const FileIcon = ({
             onKeyUp={(e) => handleKeyUp(e)}
             onDoubleClick={() => getFileCallback(fileCallbackType(), file)}
           >
-            {file.icon_url ? (
-              <img src={file.icon_url} className="border-4 border-white rounded max-h-24" />
-            ) : (
-              <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
-            )}
+            <div className="cursor-pointer">
+              {file.icon_url ? (
+                <img src={file.icon_url} className="border-4 border-white rounded max-h-24" />
+              ) : (
+                <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
+              )}
+            </div>
             {files.editedFile != file.id && <p className="text-xs break-words">{truncateText(file.name, 18)}</p>}
             {files.editedFile == file.id && <textarea autoFocus ref={renameRef} defaultValue={file.name} className="text-xs w-[100px]" rows={2} />}
           </div>

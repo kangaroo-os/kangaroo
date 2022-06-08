@@ -11,7 +11,6 @@ import { FileStore, useDesktop } from '../../../states/desktopState'
 function GridView({ fileStore, selectedFiles, fileCallback }: { fileStore: FileStore; selectedFiles: string[]; fileCallback: () => {} }): ReactElement {
   const { setWindowFiles, addFile, removeFile } = useDesktop()
   const [activeFile, setActiveFile] = useState<File>()
-  const [hoverOverFolderId, setHoverOverFolderId] = useState<string>()
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -32,8 +31,7 @@ function GridView({ fileStore, selectedFiles, fileCallback }: { fileStore: FileS
       <Files id="desktop" files={fileStore['desktop'] || []} strategy={rectSortingStrategy}>
         {fileStore['desktop'].map((file) => {
           const active = selectedFiles.includes(file.id)
-          const isFolder = file.file_type === 'folder'
-          return <SortableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} sortingDisabled={isFolder && hoverOverFolderId === file.id} />
+          return <SortableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} />
         })}
       </Files>
       {Object.entries(fileStore)
@@ -42,8 +40,7 @@ function GridView({ fileStore, selectedFiles, fileCallback }: { fileStore: FileS
           <Window id={folderId} files={folderItems} strategy={rectSortingStrategy}>
             {folderItems.map((file) => {
               const active = selectedFiles.includes(file.id)
-              const isFolder = file.file_type === 'folder'
-              return <SortableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} sortingDisabled={isFolder && hoverOverFolderId === file.id} />
+              return <SortableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} />
             })}
           </Window>
         ))}
@@ -68,7 +65,9 @@ function GridView({ fileStore, selectedFiles, fileCallback }: { fileStore: FileS
   // Beware of slow code.
   function handleDragOver(event) {
     document.getElementById(activeFile.id).style.opacity = '0.25'
-    const { over } = event
+    const { over, active } = event
+    console.log(active)
+    console.log(over)
     if (!over) return
 
     const { id: overId } = over
@@ -76,16 +75,19 @@ function GridView({ fileStore, selectedFiles, fileCallback }: { fileStore: FileS
     // Same file over same file
     if (activeFile.id === overId) return
 
-    const [overContainer, fileIndex] = getWindowIdAndFileIndex(overId)
-    if (!overContainer || !fileIndex) return
-
-    const overFile = fileStore[overContainer][fileIndex]
-    if (overFile.file_type !== 'folder') {
-      if (hoverOverFolderId) setHoverOverFolderId(null)
+    const [activeContainer, activeIndex] = getWindowIdAndFileIndex(activeFile.id)
+    const [overContainer, overIndex] = getWindowIdAndFileIndex(overId)
+    if (!activeContainer || !activeIndex || !overContainer || !overIndex) {
       return
     }
 
-    if (!hoverOverFolderId) setHoverOverFolderId(overFile.id)
+    const overFile = fileStore[overContainer][overIndex]
+    if (overFile.file_type === 'folder') {
+      // TODO: Somehow have folder stay at the same spot and wait for the file to be dragged in
+    } else {
+    }
+
+    setWindowFiles(activeContainer, arrayMove(fileStore[activeContainer], activeIndex, overIndex))
   }
 
   function handleDragStart(event) {
@@ -129,7 +131,6 @@ function GridView({ fileStore, selectedFiles, fileCallback }: { fileStore: FileS
         // Get rid of following line later
         addFile(`folder-${overFile.path}`, activeFile)
         setActiveFile(null)
-        setHoverOverFolderId(null)
         return
       }
     }
@@ -148,7 +149,6 @@ function GridView({ fileStore, selectedFiles, fileCallback }: { fileStore: FileS
     }
 
     setActiveFile(null)
-    setHoverOverFolderId(null)
   }
 }
 
