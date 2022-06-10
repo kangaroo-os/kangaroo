@@ -7,6 +7,9 @@ class CloudFile < AbstractFile
 
   # Makes sure that adding the file is within the owners GB limit.
   validate :within_gb_limit?
+  
+  # Url should always be blank for cloud files.
+  validates :url, presence: false
 
   # Deletes the file from S3 
   after_destroy :delete_from_s3
@@ -14,6 +17,10 @@ class CloudFile < AbstractFile
   # Adds the files to S3 after creating the file in DB
   after_create :create_in_s3
 
+
+  def url 
+    self.file.service_url
+  end
 
   def create_in_s3
     self.file.attach(@tempfile)

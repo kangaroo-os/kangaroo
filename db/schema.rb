@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_04_054707) do
+ActiveRecord::Schema.define(version: 2022_06_10_090816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 2022_06_04_054707) do
     t.bigint "size", null: false
     t.string "type"
     t.bigint "owner_id"
+    t.string "url"
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|

@@ -15,6 +15,8 @@ class AbstractFile < ApplicationRecord
   def icon_url
     if cloud_file? && self.file.representable?
       return self.file.representation(resize_to_fit: [100, 200]).processed.service_url
+    elsif link_file? 
+      return "https://www.google.com/s2/favicons?sz=128&domain_url=#{self.url}"
     end
     return nil
   end

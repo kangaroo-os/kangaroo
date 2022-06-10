@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   root 'application#index'
   post '/login', to: 'application#login'
-
+  
   
   # API routes for files
   

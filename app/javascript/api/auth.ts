@@ -37,3 +37,10 @@ export async function resetPassword(email: string) {
     redirect_url: '/reset_password',
   })
 }
+
+export async function updatePassword(password: string) {
+  return api.put('/auth/password', {
+    password: password,
+    password_confirmation: password,
+  })
+}

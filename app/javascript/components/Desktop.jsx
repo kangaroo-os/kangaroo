@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
-import FileIcon from '../components/shared/FileIcon'
 import DragAndDropUpload from './shared/DragAndDropUpload'
 import ContextMenu from './shared/context_menus/ContextMenu'
 import FileContextMenu from './shared/context_menus/FileContextMenu'
 import { useNavigate } from 'react-router-dom'
-import { addCloudFile, getCloudFileLink } from '../api/cloud_files'
+import { addCloudFile } from '@api/cloud_files'
+import { getFileUrl } from '@api/abstract_files'
 import { deleteFile, getAllFiles, getFolderFiles } from '@api/files'
 import UploadButton from './shared/UploadButton'
-import { email_olivia } from '../api/mailer'
 import { useDesktop } from '@states/desktopState'
 import { getUser } from '@states/userState'
 import GridView from '@components/shared/desktop/GridView'
@@ -16,8 +15,6 @@ import { fromEvent } from 'rxjs'
 
 const Desktop = () => {
   const navigate = useNavigate()
-
-  const [sentEmail, setSentEmail] = useState(false)
 
   let user = getUser()
   const { desktop, addFile, setUploading, removeFile, setWindowFiles, createWindow } = useDesktop()
@@ -58,7 +55,7 @@ const Desktop = () => {
 
   async function downloadFile(id) {
     try {
-      const result = await getCloudFileLink(id)
+      const result = await getFileUrl(id)
       const { url } = result.data
       window.open(url)
     } catch (e) {
@@ -99,8 +96,6 @@ const Desktop = () => {
       case 'openFolder':
         openFolder(file.path)
         break
-      case 'link':
-        window.open(file.path)
       default:
         break
     }
@@ -177,18 +172,6 @@ const Desktop = () => {
         <ContextMenu>
           <FileContextMenu path={`users/${user?.id}/`} />
         </ContextMenu>
-
-        {/* temporarily complain to olivia text area */}
-        {/* <div className="absolute bottom-0 left-0 bg-blue-100 h-[20rem] w-[30rem] rounded border m-5 p-5 space-y-3">
-          <h1>Want to complain directly to Olivia? Put in your thoughts here</h1>
-          <form className="space-y-3" onSubmit={(e) => sendOliviaEmail(e)}>
-            <textarea rows={5} className="k-input" name="complaint" id="complaint" />
-            <button type="submit" className="p-3 bg-gray-100 rounded">
-              Submit
-            </button>
-            {sentEmail && <p>Email sent!</p>}
-          </form>
-        </div> */}
       </div>
     </div>
   )
