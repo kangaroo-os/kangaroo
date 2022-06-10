@@ -80,7 +80,7 @@ export const FileIcon = ({
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
-      <div className={`${selected ? 'bg-blue-100 border-2 border-blue-300' : ''} rounded p-2 m-1 inline-block`}>
+      <div className={`${selected ? 'bg-blue-100 border-2 border-blue-300' : ''} rounded px-2 mx-1 py-5 inline-block`}>
         <div className="w-[75px] h-[75px] cursor-default">
           <div
             tabIndex={0}
