@@ -2,12 +2,10 @@ import { useDroppable } from '@dnd-kit/core'
 import React from 'react'
 import { SortableContext } from '@dnd-kit/sortable'
 import { useDesktop } from '@states/desktopState'
+import DroppableLocation from './desktop/DroppableLocation'
 
-export const Window = ({ id, files, strategy, children }) => {
+export const Window = ({ id, children }) => {
   const { closeWindow } = useDesktop()
-  const { setNodeRef } = useDroppable({
-    id: id
-  })
 
   function handleCloseClick() {
     closeWindow(id)
@@ -15,8 +13,8 @@ export const Window = ({ id, files, strategy, children }) => {
 
   return (
     <div className="fixed top-[50%] left-[50%]">
-      <SortableContext id={id} items={files} strategy={strategy}>
-        <div ref={setNodeRef} className="flex flex-wrap border border-black h-96 w-[700px] rounded-lg z-10 bg-gray-100">
+      <DroppableLocation id={id} locationId={id}>
+        <div className="flex flex-wrap border border-black h-96 w-[700px] rounded-lg z-10 bg-gray-100">
             <div className="space-x-1 mx-2">
               <button onClick={handleCloseClick} className="bg-red-500 rounded-full h-3 w-3"></button>
               <button className="bg-yellow-500 rounded-full h-3 w-3"></button>
@@ -24,7 +22,7 @@ export const Window = ({ id, files, strategy, children }) => {
             </div>
           {children}
         </div>
-      </SortableContext>
+      </DroppableLocation>
     </div>
   )
 }
