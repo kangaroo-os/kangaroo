@@ -1,14 +1,23 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { DndContext, pointerWithin, PointerSensor, useSensor, useSensors, DragOverlay } from '@dnd-kit/core'
+import { DndContext, pointerWithin, PointerSensor, useSensor, useSensors, DragOverlay, useDroppable } from '@dnd-kit/core'
 import { arrayMove, rectSortingStrategy } from '@dnd-kit/sortable'
 import { File } from '../../../models/File'
 import Files from './Files'
 import Window from './../Window'
-import SortableFile from './SortableFile'
+import DraggableFile from './DraggableFile'
 import FileIcon from '../FileIcon'
 import { FileStore, useDesktop } from '../../../states/desktopState'
+import DroppableLocation from './DroppableLocation'
 
-function GridView({ fileStore, selectedFiles, fileCallback }: { fileStore: FileStore; selectedFiles: string[]; fileCallback: () => {} }): ReactElement {
+function GridView({
+  fileStore,
+  selectedFiles,
+  fileCallback,
+}: {
+  fileStore: FileStore
+  selectedFiles: string[]
+  fileCallback: () => {}
+}): ReactElement {
   const { setWindowFiles, addFile, removeFile } = useDesktop()
   const [activeFile, setActiveFile] = useState<File>()
 
@@ -28,24 +37,32 @@ function GridView({ fileStore, selectedFiles, fileCallback }: { fileStore: FileS
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
     >
-      <Files id="desktop" files={fileStore['desktop'] || []} strategy={rectSortingStrategy}>
+      <Files id="desktop">
         {fileStore['desktop'].map((file) => {
           const active = selectedFiles.includes(file.id)
-          return <SortableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+          return (
+            <DroppableLocation id={`droppable-${file.id}`} locationId={file.id}>
+              <DraggableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+            </DroppableLocation>
+          )
         })}
       </Files>
       {Object.entries(fileStore)
         .filter(([folderId, _]) => folderId.startsWith('folder'))
         .map(([folderId, folderItems]) => (
-          <Window id={folderId} files={folderItems} strategy={rectSortingStrategy}>
+          <Window id={folderId}>
             {folderItems.map((file) => {
               const active = selectedFiles.includes(file.id)
-              return <SortableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+              return (
+                <DroppableLocation id={`droppable-${file.id}`} locationId={file.id}>
+                  <DraggableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+                </DroppableLocation>
+              )
             })}
           </Window>
         ))}
       <DragOverlay>
-        {activeFile ? <FileIcon key={activeFile.id} selected={false} file={activeFile} getFileCallback={fileCallback} /> : null}
+        {activeFile ? <FileIcon key={activeFile.id} selected={false} file={activeFile} getFileCallback={() => null} /> : null}
       </DragOverlay>
     </DndContext>
   )
@@ -54,7 +71,7 @@ function GridView({ fileStore, selectedFiles, fileCallback }: { fileStore: FileS
     const windowIds = Object.keys(fileStore)
     if (windowIds.includes(id)) return [id, null]
     for (const windowId of windowIds) {
-      const fileIndex = fileStore[windowId].findIndex(file => file.id === id)
+      const fileIndex = fileStore[windowId].findIndex((file) => file.id === id)
       if (fileIndex >= 0) {
         return [windowId, fileIndex]
       }
@@ -64,30 +81,12 @@ function GridView({ fileStore, selectedFiles, fileCallback }: { fileStore: FileS
 
   // Beware of slow code.
   function handleDragOver(event) {
-    document.getElementById(activeFile.id).style.opacity = '0.25'
+    document.getElementById(activeFile.id).style.opacity = '0'
     const { over, active } = event
+    console.log(`active:`)
     console.log(active)
+    console.log(`over:`)
     console.log(over)
-    if (!over) return
-
-    const { id: overId } = over
-
-    // Same file over same file
-    if (activeFile.id === overId) return
-
-    const [activeContainer, activeIndex] = getWindowIdAndFileIndex(activeFile.id)
-    const [overContainer, overIndex] = getWindowIdAndFileIndex(overId)
-    if (!activeContainer || !activeIndex || !overContainer || !overIndex) {
-      return
-    }
-
-    const overFile = fileStore[overContainer][overIndex]
-    if (overFile.file_type === 'folder') {
-      // TODO: Somehow have folder stay at the same spot and wait for the file to be dragged in
-    } else {
-    }
-
-    setWindowFiles(activeContainer, arrayMove(fileStore[activeContainer], activeIndex, overIndex))
   }
 
   function handleDragStart(event) {
@@ -107,13 +106,17 @@ function GridView({ fileStore, selectedFiles, fileCallback }: { fileStore: FileS
 
     const { active, over } = event
     const { id } = active
-    const { id: overId } = over
+    debugger
+    const {
+      data: {
+        current: { locationId },
+      },
+    } = over
 
     // Don't do anything if file is dropped back at the same place
-    if (id === overId) return
-
+    if (id === locationId) return
     const [activeContainer, activeIndex] = getWindowIdAndFileIndex(id)
-    const [overContainer, overIndex] = getWindowIdAndFileIndex(overId)
+    const [overContainer, overIndex] = getWindowIdAndFileIndex(locationId)
 
     if (!activeContainer || !overContainer) return
 

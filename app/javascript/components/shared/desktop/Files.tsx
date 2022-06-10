@@ -1,18 +1,14 @@
 import React, { ReactElement } from 'react'
-import { useDroppable } from '@dnd-kit/core';
-import { SortableContext } from '@dnd-kit/sortable';
+import DroppableLocation from './DroppableLocation';
 
-export const Files = ({ id, files, strategy, children }): ReactElement => {
-  const { setNodeRef } = useDroppable({
-    id: id
-  })
+export const Files = ({ id, children }): ReactElement => {
 
   return (
-    <SortableContext id={id} items={files} strategy={strategy}>
-      <div ref={setNodeRef} className="flex flex-wrap flex-col content-start max-h-[90vh]">
+    <DroppableLocation id={'desktop'} locationId={'desktop'}>
+      <div className="flex flex-wrap flex-col content-start max-h-[90vh]">
         {children}
-      </div>
-    </SortableContext>
+        </div>
+    </DroppableLocation>
   )
 }
 
