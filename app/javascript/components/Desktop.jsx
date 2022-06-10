@@ -177,18 +177,6 @@ const Desktop = () => {
         <ContextMenu>
           <FileContextMenu path={`users/${user?.id}/`} />
         </ContextMenu>
-
-        {/* temporarily complain to olivia text area */}
-        {/* <div className="absolute bottom-0 left-0 bg-blue-100 h-[20rem] w-[30rem] rounded border m-5 p-5 space-y-3">
-          <h1>Want to complain directly to Olivia? Put in your thoughts here</h1>
-          <form className="space-y-3" onSubmit={(e) => sendOliviaEmail(e)}>
-            <textarea rows={5} className="k-input" name="complaint" id="complaint" />
-            <button type="submit" className="p-3 bg-gray-100 rounded">
-              Submit
-            </button>
-            {sentEmail && <p>Email sent!</p>}
-          </form>
-        </div> */}
       </div>
     </div>
   )

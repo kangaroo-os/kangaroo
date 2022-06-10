@@ -7,6 +7,7 @@ import Signup from '@components/Signup'
 import Header from '../components/Header'
 import NotFound from '@components/404'
 import Landing from '../components/shared/Landing'
+import ResetPassword from '@components/ResetPassword'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -18,7 +19,7 @@ ReactDOM.render(
           <Route path="desktop" element={<Desktop />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
-          <Route path="reset_password" element={<Signup />} />
+          <Route path="reset_password" element={<ResetPassword />} />
         </Routes>
       </Header>
     </BrowserRouter>
