@@ -12,7 +12,7 @@ class CloudFile < AbstractFile
   after_destroy :delete_from_s3
 
   # Adds the files to S3 after creating the file in DB
-  after_create :create_in_s3
+  before_create :create_in_s3
 
 
   def create_in_s3
