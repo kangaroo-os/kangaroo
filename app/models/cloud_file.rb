@@ -17,6 +17,7 @@ class CloudFile < AbstractFile
 
   def create_in_s3
     self.file.attach(@tempfile)
+    self.url = self.file.service_url
   end
 
   def delete_from_s3

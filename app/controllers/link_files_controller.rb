@@ -8,11 +8,12 @@ class LinkFilesController < ApplicationController
 
   # POST /link_file/
   def create 
-    params.require(:path)
-    name = get_website_title(params[:path])
+    params.require(:url)
+    name = get_website_title(params[:url])
     
     file = LinkFile.new({
-      path: params[:path], 
+      path: "/#{name}", 
+      url: params[:url],
       name: name, 
       file_type: "link", 
       owner_id: current_user.id, 
@@ -32,11 +33,6 @@ class LinkFilesController < ApplicationController
   # GET /link_files
   def index 
     render json: { files: current_user.link_files }, status: :ok
-  end
-
-  # GET /link_files/:id
-  def show
-    render json: { url: url }
   end
 
   # DELETE /cloud_files/:id

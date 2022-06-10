@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
-import FileIcon from '../components/shared/FileIcon'
 import DragAndDropUpload from './shared/DragAndDropUpload'
 import ContextMenu from './shared/context_menus/ContextMenu'
 import FileContextMenu from './shared/context_menus/FileContextMenu'
 import { useNavigate } from 'react-router-dom'
-import { addCloudFile, getCloudFileLink } from '../api/cloud_files'
+import { addCloudFile } from '@api/cloud_files'
+import { getFileUrl } from '@api/abstract_files'
 import { deleteFile, getAllFiles, getFolderFiles } from '@api/files'
 import UploadButton from './shared/UploadButton'
-import { email_olivia } from '../api/mailer'
 import { useDesktop } from '@states/desktopState'
 import { getUser } from '@states/userState'
 import GridView from '@components/shared/desktop/GridView'
@@ -16,8 +15,6 @@ import { fromEvent } from 'rxjs'
 
 const Desktop = () => {
   const navigate = useNavigate()
-
-  const [sentEmail, setSentEmail] = useState(false)
 
   let user = getUser()
   const { desktop, addFile, setUploading, removeFile, setWindowFiles, createWindow } = useDesktop()
@@ -58,7 +55,7 @@ const Desktop = () => {
 
   async function downloadFile(id) {
     try {
-      const result = await getCloudFileLink(id)
+      const result = await getFileUrl(id)
       const { url } = result.data
       window.open(url)
     } catch (e) {
@@ -99,8 +96,6 @@ const Desktop = () => {
       case 'openFolder':
         openFolder(file.path)
         break
-      case 'link':
-        window.open(file.path)
       default:
         break
     }
