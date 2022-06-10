@@ -9,6 +9,7 @@ class AbstractFilesController < ApplicationController
 
   def show
     file = AbstractFile.find(params[:id])
+    if file
       render json: { url: file.url }, status: :ok
     else
       render json: { error: "File not found" }, status: :not_found
