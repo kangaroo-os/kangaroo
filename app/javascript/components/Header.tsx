@@ -53,10 +53,10 @@ export default function Header({ children }) {
           </div>
         )}
         <div className="flex-grow flex items-center space-x-4">
-          <Link to="/">
+          <Link to={user ? '/home' : '/'}>
             <div className="bg-gray-200 h-[45px] w-[45px] rounded-full inline-block"></div>
           </Link>
-          <Link to="/" className="inline-block text-2xl font-medium">
+          <Link to={user ? '/home' : '/'} className="inline-block text-2xl font-medium">
             Kangaroo
           </Link>
         </div>
