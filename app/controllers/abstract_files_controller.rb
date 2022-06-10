@@ -5,7 +5,6 @@ class AbstractFilesController < ApplicationController
 
   def index
     render json: {files: current_user.abstract_files.map{|f| AbstractFileSerializer.new(f).serializable_hash} }, status: :ok
-    # render json: {files: current_user.abstract_files }, status: :ok
   end
 
   def destroy 
