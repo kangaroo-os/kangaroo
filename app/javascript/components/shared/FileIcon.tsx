@@ -32,9 +32,6 @@ export const FileIcon = ({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, noClick: true, noKeyboard: true })
 
   const fileCallbackType = () => {
-    if (file.file_type === 'link') {
-      return 'link'
-    }
     if (file.file_type === 'folder') {
       return 'openFolder'
     } else {

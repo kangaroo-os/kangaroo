@@ -1,10 +1,18 @@
 class AbstractFilesController < ApplicationController
   
   before_action :authenticate_user!
-  before_action :user_authorized?, only: [:destroy, :update]
+  before_action :user_authorized?, only: [:show, :destroy, :update]
 
   def index
     render json: {files: current_user.abstract_files.map{|f| AbstractFileSerializer.new(f).serializable_hash} }, status: :ok
+  end
+
+  def show
+    file = AbstractFile.find(params[:id])
+      render json: { url: file.url }, status: :ok
+    else
+      render json: { error: "File not found" }, status: :not_found
+    end
   end
 
   def destroy 
