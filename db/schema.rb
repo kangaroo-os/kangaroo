@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2022_06_10_090816) do
     t.bigint "size", null: false
     t.string "type"
     t.bigint "owner_id"
-    t.string "url", null: false
+    t.string "url"
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|

@@ -1,5 +1,5 @@
 class AddUrlToAbstractFile < ActiveRecord::Migration[6.0]
   def change
-    add_column :abstract_files, :url, :string, null: false
+    add_column :abstract_files, :url, :string
   end
 end
