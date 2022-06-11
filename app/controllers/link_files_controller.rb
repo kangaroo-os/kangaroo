@@ -12,11 +12,11 @@ class LinkFilesController < ApplicationController
     name = get_website_title(params[:url])
     
     file = LinkFile.new({
-      path: "user/#{current_user.id}/#{name}", 
+      path: "users/#{current_user.id}/#{name}", 
       url: params[:url],
       name: name, 
-      file_type: "link", 
-      owner_id: current_user.id, 
+      file_type: "link",
+      owner_id: current_user.id,
       size: 0
     })
     

@@ -12,6 +12,7 @@ import { getUser } from '@states/userState'
 import GridView from '@components/shared/desktop/GridView'
 import { useFiles } from '@states/filesState'
 import { fromEvent } from 'rxjs'
+import { setDefaultPath, getDefaultPath } from '@helpers/fileStorage'
 
 const Desktop = () => {
   const navigate = useNavigate()
@@ -37,8 +38,14 @@ const Desktop = () => {
   async function getFiles() {
     try {
       const res = await getAllFiles()
-      setWindowFiles('desktop', res.data.files)
+      const files = res.data.files
+      const basePath = res.data.path
+      setDefaultPath(basePath)
+      setWindowFiles(basePath, files)
+      console.log(desktop)
+      debugger
     } catch (error) {
+      debugger
       if (error.response.status === 401) {
         navigate('/login')
       }
@@ -50,7 +57,7 @@ const Desktop = () => {
     setUploading(true)
     const res = await addCloudFile(blob)
     setUploading(false)
-    addFile(res.data.file)
+    addFile(getDefaultPath(), res.data.file)
   }
 
   async function downloadFile(id) {
@@ -72,13 +79,13 @@ const Desktop = () => {
     }
   }
 
-  async function openFolder(file_path) {
+  async function openFolder(file_path, file_name) {
     try {
       const res = await getFolderFiles(file_path)
-      const files = res.data.files.filter((file) => file.path !== file_path)
-      createWindow(`folder-${file_path}`)
+      const files = res.data.files
+      createWindow(file_name)
       for (const file of files) {
-        addFile(`folder-${file_path}`, file)
+        addFile(file_name, file)
       }
     } catch (e) {
       console.error(e)
@@ -94,29 +101,12 @@ const Desktop = () => {
         deleteUserFile(file.id)
         break
       case 'openFolder':
-        openFolder(file.path)
+        openFolder(file.path, file.name)
         break
       default:
         break
     }
   }
-  // const renderWindowList = (files) => {
-  //   if (files.length === 0) {
-  //     return <div>No files found</div>
-  //   }
-  //   return files.map((file) => {
-  //     const active = selectedFiles.includes(file.id)
-  //     return <SortableFile key={file.id} selected={active} file={file} fileCallback={fileCallback} />
-  //   })
-  // }
-
-  // function sendOliviaEmail(e) {
-  //   e.preventDefault()
-  //   const complaint = e.target.complaint.value
-  //   email_olivia(complaint)
-  //   setSentEmail(true)
-  //   e.target.complaint.value = ''
-  // }
 
   // <-- Drag zone detection begins -->
   const onDragOver = (event) => {
@@ -151,7 +141,8 @@ const Desktop = () => {
   }
 
   const targetIsTopLevel = (event) => {
-    return event.currentTarget.id === 'desktop'
+  // TODO: FIX THIS
+    return event.currentTarget.id === null
   }
 
   // <-- Drag zone detection ends -->

@@ -1,6 +1,4 @@
-import { useDroppable } from '@dnd-kit/core'
 import React from 'react'
-import { SortableContext } from '@dnd-kit/sortable'
 import { useDesktop } from '@states/desktopState'
 import DroppableLocation from './desktop/DroppableLocation'
 

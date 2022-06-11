@@ -1,24 +1,25 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { DndContext, pointerWithin, PointerSensor, useSensor, useSensors, DragOverlay, useDroppable } from '@dnd-kit/core'
-import { arrayMove, rectSortingStrategy } from '@dnd-kit/sortable'
+import { DndContext, pointerWithin, PointerSensor, useSensor, useSensors, DragOverlay } from '@dnd-kit/core'
 import { File } from '../../../models/File'
 import Files from './Files'
 import Window from './../Window'
 import DraggableFile from './DraggableFile'
 import FileIcon from '../FileIcon'
-import { FileStore, useDesktop } from '../../../states/desktopState'
+import { FileStorage, useDesktop } from '../../../states/desktopState'
+import { getDefaultPath, getDesktopFiles, getWindows } from '@helpers/fileStorage'
 import DroppableLocation from './DroppableLocation'
+import { renameFile } from '@api/files'
 
 function GridView({
   fileStore,
   selectedFiles,
   fileCallback,
 }: {
-  fileStore: FileStore
+  fileStore: FileStorage
   selectedFiles: string[]
   fileCallback: () => {}
 }): ReactElement {
-  const { setWindowFiles, addFile, removeFile } = useDesktop()
+  const { setWindowFiles } = useDesktop()
   const [activeFile, setActiveFile] = useState<File>()
 
   const sensors = useSensors(
@@ -37,25 +38,24 @@ function GridView({
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
     >
-      <Files id="desktop">
-        {fileStore['desktop'].map((file) => {
+      <Files id={getDefaultPath()}>
+        {getDesktopFiles(fileStore)?.map((file) => {
           const active = selectedFiles.includes(file.id)
           return (
-            <DroppableLocation id={`droppable-${file.id}`} locationId={file.id}>
-              <DraggableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+            <DroppableLocation key={file.id} id={`droppable-${file.id}`} locationId={file.id}>
+              <DraggableFile id={file.id} selected={active} file={file} fileCallback={fileCallback} />
             </DroppableLocation>
           )
         })}
       </Files>
-      {Object.entries(fileStore)
-        .filter(([folderId, _]) => folderId.startsWith('folder'))
+      {Object.entries(getWindows(fileStore))
         .map(([folderId, folderItems]) => (
-          <Window id={folderId}>
+          <Window id={folderId} key={folderId}>
             {folderItems.map((file) => {
               const active = selectedFiles.includes(file.id)
               return (
-                <DroppableLocation id={`droppable-${file.id}`} locationId={file.id}>
-                  <DraggableFile key={file.id} id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+                <DroppableLocation key={file.id} id={`droppable-${file.id}`} locationId={file.id}>
+                  <DraggableFile id={file.id} selected={active} file={file} fileCallback={fileCallback} />
                 </DroppableLocation>
               )
             })}
@@ -106,7 +106,6 @@ function GridView({
 
     const { active, over } = event
     const { id } = active
-    debugger
     const {
       data: {
         current: { locationId },
@@ -121,18 +120,19 @@ function GridView({
     if (!activeContainer || !overContainer) return
 
     // Don't allow dragging folder into its own window
-    if (overContainer === `folder-${activeFile.path}`) return
+    if (overContainer === activeFile.name) return
 
-    // Check if user dragged item inside a folder
-    if (overIndex) {
+    // Check if user dragged item inside another existing file
+    if (overIndex !== null) {
       const overFile = fileStore[overContainer][overIndex]
       // User drags item inside a folder icon, put it inside the folder
       if (overFile.file_type === 'folder') {
-        removeFile(activeFile.id)
+        // removeFile(activeFile.id)
         // TODO: Update path on backend instead of add file
         // We don't need to show where the file went
         // Get rid of following line later
-        addFile(`folder-${overFile.path}`, activeFile)
+        debugger
+        renameFile(activeFile.id, `${overFile.path}/${activeFile.name}`)
         setActiveFile(null)
         return
       }
@@ -142,13 +142,15 @@ function GridView({
     // Else move the file into the window
     if (activeContainer === overContainer) {
       // TODO BACKEND: Change the order
-      setWindowFiles(activeContainer, arrayMove(fileStore[activeContainer], activeIndex, overIndex))
+      // setWindowFiles(activeContainer, arrayMove(fileStore[activeContainer], activeIndex, overIndex))
     } else {
       // TODO: Update files' paths
-      fileStore[activeContainer].splice(activeIndex, 1)
-      fileStore[overContainer].splice(overIndex, 0, activeFile)
-      setWindowFiles(activeContainer, fileStore[activeContainer])
-      setWindowFiles(overContainer, fileStore[overContainer])
+      const windows = getWindows(fileStore)
+      renameFile(activeFile.id, `${overContainer}/${activeFile.name}`)
+      windows[activeContainer].splice(activeIndex, 1)
+      windows[overContainer].splice(overIndex, 0, activeFile)
+      setWindowFiles(activeContainer, windows[activeContainer])
+      setWindowFiles(overContainer, windows[overContainer])
     }
 
     setActiveFile(null)

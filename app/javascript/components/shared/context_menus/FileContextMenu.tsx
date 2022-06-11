@@ -4,6 +4,7 @@ import { createFolder } from '@api/folder_files'
 import { useContextMenu } from '@states/contextMenuState'
 import { useDesktop } from '@states/desktopState'
 import { deleteFile } from '@api/files'
+import { getDefaultPath } from '@helpers/fileStorage'
 
 export const FileContextMenu = ({ path }) => {
   const { files, setEditingFile } = useFiles()
@@ -12,7 +13,7 @@ export const FileContextMenu = ({ path }) => {
 
   async function createFolderFunction() {
     const res = await createFolder(path)
-    addFile(res.data.file.id)
+    addFile(getDefaultPath(), res.data.file.id)
   }
 
   function handleRename(e) {
@@ -21,7 +22,7 @@ export const FileContextMenu = ({ path }) => {
       setEditingFile(files.selectedFiles[0])
     }
     hideContextMenu()
-}
+  }
 
   function handleDelete(e) {
     e.stopPropagation()
