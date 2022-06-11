@@ -65,14 +65,13 @@ export const useDesktop = () => {
   }
 
   function setWindowFiles(windowId: string, files: File[]) {
-    const newSub = {
+    subject.next({
       ...subject.value,
       files: {
         ...subject.value.files,
         [windowId]: files,
       },
-    }
-    subject.next(newSub)  
+    })  
   }
 
   function createWindow(windowId: string) {
