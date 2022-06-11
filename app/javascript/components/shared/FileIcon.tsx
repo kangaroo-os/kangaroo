@@ -96,7 +96,7 @@ export const FileIcon = ({
               {file.icon_url ? (
                 <img src={file.icon_url} className="border-4 border-white rounded max-h-24" />
               ) : (
-                <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-300`}></i>
+                <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-200`}></i>
               )}
             </div>
             {files.editedFile != file.id && <p className="text-xs break-words">{truncateText(file.name, 18)}</p>}
