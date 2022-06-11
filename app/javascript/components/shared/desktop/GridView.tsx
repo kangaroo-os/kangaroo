@@ -123,6 +123,7 @@ function GridView({
     if (overContainer === activeFile.name) return
 
     // Check if user dragged item inside another existing file
+    debugger
     if (overIndex !== null) {
       const overFile = fileStore[overContainer][overIndex]
       // User drags item inside a folder icon, put it inside the folder

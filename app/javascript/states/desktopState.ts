@@ -1,3 +1,4 @@
+import { getDefaultPath } from '@helpers/fileStorage'
 import { useState, useEffect } from 'react'
 import { BehaviorSubject } from 'rxjs'
 import { File } from '../models/File'
@@ -62,6 +63,13 @@ export const useDesktop = () => {
       }
     }
     if (!windowId) return
+    subject.next({
+      ...subject.value,
+      files: {
+        ...subject.value.files,
+        [windowId]: subject.value.files[windowId].filter(file => file.id !== id),
+      },
+    })
   }
 
   function setWindowFiles(windowId: string, files: File[]) {
@@ -85,6 +93,7 @@ export const useDesktop = () => {
   }
 
   function closeWindow(windowId: string) {
+    if (windowId === getDefaultPath()) return
     const updatedSubject = {
       ...subject.value,
     }

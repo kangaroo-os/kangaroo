@@ -48,9 +48,10 @@ class AbstractFilesController < ApplicationController
     files = files.filter do |file|
       file.path == "#{params[:key]}/#{file.name}"
     end
-    render json: { files: files }
+    serialized_files = files.map { |f| AbstractFileSerializer.new(f).serializable_hash }
+    render json: { files: serialized_files }
   end
-   
+
   private 
 
   def abstract_file_params
