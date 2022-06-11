@@ -8,7 +8,7 @@ class CloudFilesController < ApplicationController
     name = params[:file].original_filename.to_s
     
     file = CloudFile.new({
-      path: "user/#{current_user.id}/#{name}", 
+      path: "users/#{current_user.id}/#{name}", 
       name: name, 
       file_type: params[:file].content_type, 
       size: params[:file].size, 

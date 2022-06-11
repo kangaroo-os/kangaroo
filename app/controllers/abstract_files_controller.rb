@@ -4,7 +4,13 @@ class AbstractFilesController < ApplicationController
   before_action :user_authorized?, only: [:show, :destroy, :update]
 
   def index
-    render json: {files: current_user.abstract_files.map{|f| AbstractFileSerializer.new(f).serializable_hash} }, status: :ok
+    desktop_files = current_user.abstract_files.filter do |file|
+      file.path == "users/#{current_user.id}/#{file.name}"
+    end
+
+    serialized_files = desktop_files.map { |f| AbstractFileSerializer.new(f).serializable_hash }
+
+    render json: { files: serialized_files, path: "users/#{current_user.id}" }, status: :ok
   end
 
   def show
@@ -39,6 +45,9 @@ class AbstractFilesController < ApplicationController
   def get_folder_files
     params.require(:key)
     files = AbstractFile.where(owner_id: current_user.id).where("path LIKE ?", "#{params[:key]}%")
+    files = files.filter do |file|
+      file.path == "#{params[:key]}/#{file.name}"
+    end
     render json: { files: files }
   end
    

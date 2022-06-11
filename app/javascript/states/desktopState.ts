@@ -1,21 +1,19 @@
-import { useState, useEffect, SetStateAction } from 'react'
+import { useState, useEffect } from 'react'
 import { BehaviorSubject } from 'rxjs'
 import { File } from '../models/File'
 
-export type FileStore = {
+export type FileStorage = {
   [name: string]: File[]
 }
 
 export type DesktopState = {
-  files: FileStore
+  files: FileStorage
   selectedFiles: string[]
   uploading: boolean
 }
 
 let subject = new BehaviorSubject<DesktopState>({
-  files: {
-    'desktop': [],
-  },
+  files: {},
   selectedFiles: [],
   uploading: false,
 })
@@ -64,13 +62,6 @@ export const useDesktop = () => {
       }
     }
     if (!windowId) return
-    subject.next({
-      ...subject.value,
-      files: {
-        ...subject.value.files,
-        [windowId]: subject.value.files[windowId].filter((file: File) => file.id !== id),
-      },
-    })
   }
 
   function setWindowFiles(windowId: string, files: File[]) {
@@ -80,7 +71,7 @@ export const useDesktop = () => {
         ...subject.value.files,
         [windowId]: files,
       },
-    })
+    })  
   }
 
   function createWindow(windowId: string) {
@@ -101,5 +92,13 @@ export const useDesktop = () => {
     subject.next(updatedSubject)
   }
 
-  return { desktop, addFile, setUploading, removeFile, setWindowFiles, closeWindow, createWindow }
+  return {
+    desktop,
+    addFile,
+    setUploading,
+    removeFile,
+    setWindowFiles,
+    closeWindow,
+    createWindow,
+  }
 }
