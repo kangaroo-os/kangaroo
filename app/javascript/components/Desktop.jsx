@@ -41,11 +41,8 @@ const Desktop = () => {
       const files = res.data.files
       const basePath = res.data.path
       setDefaultPath(basePath)
-      setWindowFiles(basePath, files)
-      console.log(desktop)
-      debugger
+      setWindowFiles(getDefaultPath(), files)
     } catch (error) {
-      debugger
       if (error.response.status === 401) {
         navigate('/login')
       }
@@ -79,13 +76,13 @@ const Desktop = () => {
     }
   }
 
-  async function openFolder(file_path, file_name) {
+  async function openFolder(file_path) {
     try {
       const res = await getFolderFiles(file_path)
       const files = res.data.files
-      createWindow(file_name)
+      createWindow(file_path)
       for (const file of files) {
-        addFile(file_name, file)
+        addFile(file_path, file)
       }
     } catch (e) {
       console.error(e)
@@ -101,7 +98,7 @@ const Desktop = () => {
         deleteUserFile(file.id)
         break
       case 'openFolder':
-        openFolder(file.path, file.name)
+        openFolder(file.path)
         break
       default:
         break

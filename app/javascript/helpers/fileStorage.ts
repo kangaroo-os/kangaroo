@@ -5,10 +5,7 @@ const store = {
 }
 
 const setDefaultPath = (path: string) => {
-  if (!store['desktopPath'])
-    store['desktopPath'] = path
-  else
-    alert('You can only set the default path once')
+  store['desktopPath'] = path
 }
 
 const getDefaultPath = () => {
@@ -20,8 +17,9 @@ const getDesktopFiles = (fileStore: FileStorage) => {
 }
 
 const getWindows = (fileStore: FileStorage) => {
-  delete fileStore[getDefaultPath()]
-  return fileStore
+  const windows = { ...fileStore }
+  delete windows[getDefaultPath()]
+  return windows
 }
 
 export { getDesktopFiles, getWindows, setDefaultPath, getDefaultPath }

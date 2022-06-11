@@ -41,7 +41,6 @@ export const useDesktop = () => {
   }, [])
 
   function addFile(windowId: string, file: File) {
-    debugger
     subject.next({
       ...subject.value,
       files: {
@@ -56,7 +55,6 @@ export const useDesktop = () => {
   }
 
   function removeFile(id: string) {
-    debugger
     let windowId = null
     for (const folder in subject.value.files) {
       if (subject.value.files[folder].map(file => file.id).includes(id)) {
@@ -74,13 +72,10 @@ export const useDesktop = () => {
         [windowId]: files,
       },
     }
-    debugger
-    subject.next(newSub)
-    debugger  
+    subject.next(newSub)  
   }
 
   function createWindow(windowId: string) {
-    debugger
     subject.next({
       ...subject.value,
       files: {
@@ -91,7 +86,6 @@ export const useDesktop = () => {
   }
 
   function closeWindow(windowId: string) {
-    debugger
     const updatedSubject = {
       ...subject.value,
     }

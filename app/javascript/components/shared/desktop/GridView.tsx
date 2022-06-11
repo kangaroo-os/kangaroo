@@ -19,7 +19,7 @@ function GridView({
   selectedFiles: string[]
   fileCallback: () => {}
 }): ReactElement {
-  const { setWindowFiles } = useDesktop()
+  const { setWindowFiles, removeFile, closeWindow } = useDesktop()
   const [activeFile, setActiveFile] = useState<File>()
 
   const sensors = useSensors(
@@ -82,11 +82,11 @@ function GridView({
   // Beware of slow code.
   function handleDragOver(event) {
     document.getElementById(activeFile.id).style.opacity = '0'
-    const { over, active } = event
-    console.log(`active:`)
-    console.log(active)
-    console.log(`over:`)
-    console.log(over)
+    // const { over, active } = event
+    // console.log(`active:`)
+    // console.log(active)
+    // console.log(`over:`)
+    // console.log(over)
   }
 
   function handleDragStart(event) {
@@ -127,12 +127,11 @@ function GridView({
       const overFile = fileStore[overContainer][overIndex]
       // User drags item inside a folder icon, put it inside the folder
       if (overFile.file_type === 'folder') {
-        // removeFile(activeFile.id)
-        // TODO: Update path on backend instead of add file
-        // We don't need to show where the file went
-        // Get rid of following line later
-        debugger
+        removeFile(activeFile.id)
         renameFile(activeFile.id, `${overFile.path}/${activeFile.name}`)
+        if (fileStore[activeContainer].length === 0) {
+          closeWindow(activeContainer)
+        }
         setActiveFile(null)
         return
       }
@@ -144,13 +143,11 @@ function GridView({
       // TODO BACKEND: Change the order
       // setWindowFiles(activeContainer, arrayMove(fileStore[activeContainer], activeIndex, overIndex))
     } else {
-      // TODO: Update files' paths
-      const windows = getWindows(fileStore)
       renameFile(activeFile.id, `${overContainer}/${activeFile.name}`)
-      windows[activeContainer].splice(activeIndex, 1)
-      windows[overContainer].splice(overIndex, 0, activeFile)
-      setWindowFiles(activeContainer, windows[activeContainer])
-      setWindowFiles(overContainer, windows[overContainer])
+      fileStore[activeContainer].splice(activeIndex, 1)
+      fileStore[overContainer].splice(overIndex, 0, activeFile)
+      setWindowFiles(activeContainer, fileStore[activeContainer])
+      setWindowFiles(overContainer, fileStore[overContainer])
     }
 
     setActiveFile(null)
