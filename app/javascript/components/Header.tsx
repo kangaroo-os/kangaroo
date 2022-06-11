@@ -36,8 +36,8 @@ export default function Header({ children }) {
   )
 
   return (
-    <div className="">
-      <div className="z-50 space-x-4 fixed top-0 shadow-lg bg-gray-100 w-full p-[10px] flex flex-initial flex-row-reverse items-center">
+    <div>
+      <div className="bg-opacity-50 z-50 space-x-4 fixed top-0 shadow-lg bg-gray-100 w-full px-[10px] py-3 flex flex-initial flex-row-reverse items-center">
         {user ? (
           <Dropdown menuButton={MenuButton()} menuItems={menuItems} />
         ) : (
@@ -53,15 +53,15 @@ export default function Header({ children }) {
           </div>
         )}
         <div className="flex-grow flex items-center space-x-4">
-          <Link to={user ? '/home' : '/'}>
+          {/* <Link to={user ? '/home' : '/'}>
             <div className="bg-gray-200 h-[45px] w-[45px] rounded-full inline-block"></div>
-          </Link>
-          <Link to={user ? '/home' : '/'} className="inline-block text-2xl font-medium">
+          </Link> */}
+          <Link to={user ? '/home' : '/'} className="inline-block text-lg font-medium">
             Kangaroo
           </Link>
         </div>
       </div>
-      <div className="mt-12">{children}</div>
+      <div className="">{children}</div>
     </div>
   )
 }

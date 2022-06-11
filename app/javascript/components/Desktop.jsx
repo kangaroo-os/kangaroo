@@ -157,7 +157,14 @@ const Desktop = () => {
   // <-- Drag zone detection ends -->
 
   return (
-    <div id="desktop" className="h-[90vh]" ref={desktopRef} onDragOverCapture={onDragOver} onDragLeaveCapture={onDragLeave}>
+    <div
+      id="desktop"
+      className="h-[100vh] pt-10"
+      ref={desktopRef}
+      onDragOverCapture={onDragOver}
+      onDragLeaveCapture={onDragLeave}
+      style={{ backgroundImage: `url("https://kangarooo.s3.amazonaws.com/kangaroo/background.png")` }}
+    >
       {!dropZoneDisabled && <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} />}
       <div className="absolute m-5 right-[25px] top-[80px]">
         <UploadButton />

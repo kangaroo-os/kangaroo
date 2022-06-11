@@ -33,7 +33,7 @@ export const UploadButton = ({ ...props }) => {
     <div
       {...{
         ...props,
-        className: `h-[60px] w-[120px] border-orange-400 bg-white border-4 hover:bg-opacity-90 cursor-pointer rounded-full shadow-lg flex justify-center items-center ${props.className}`,
+        className: `h-[60px] w-[120px] bg-white border-4 hover:bg-opacity-90 cursor-pointer rounded-full shadow-lg flex justify-center items-center ${props.className}`,
       }}
     >
       <i className='fa-solid fa-plus text-2xl'></i>
