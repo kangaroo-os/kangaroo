@@ -4,7 +4,7 @@ import DroppableLocation from './DroppableLocation';
 export const Files = ({ id, children }): ReactElement => {
 
   return (
-    <DroppableLocation id={id} locationId={id}>
+    <DroppableLocation id={id} locationId={id} fullSize={true}>
       <div className="flex flex-wrap flex-col content-start max-h-[90vh]">
         {children}
         </div>

@@ -9,6 +9,8 @@ export default function DraggableFile({ id, file, selected, fileCallback }) {
   })
 
   const style = {
+    width: 'max-content',
+    height: 'max-content',
     transform: CSS.Transform.toString(transform),
   }
 

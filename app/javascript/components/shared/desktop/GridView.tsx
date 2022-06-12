@@ -31,40 +31,42 @@ function GridView({
   )
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={pointerWithin}
-      onDragEnd={handleDragEnd}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-    >
-      <Files id={getDefaultPath()}>
-        {getDesktopFiles(fileStore)?.map((file) => {
-          const active = selectedFiles.includes(file.id)
-          return (
-            <DroppableLocation key={file.id} id={`droppable-${file.id}`} locationId={file.id}>
-              <DraggableFile id={file.id} selected={active} file={file} fileCallback={fileCallback} />
-            </DroppableLocation>
-          )
-        })}
-      </Files>
-      {Object.entries(getWindows(fileStore))
-        .map(([folderId, folderItems]) => (
-          <Window id={folderId} key={folderId}>
-            {folderItems.map((file) => {
-              const active = selectedFiles.includes(file.id)
-              return (
-                <DroppableLocation key={file.id} id={`droppable-${file.id}`} locationId={file.id}>
-                  <DraggableFile id={file.id} selected={active} file={file} fileCallback={fileCallback} />
-                </DroppableLocation>
-              )
-            })}
-          </Window>
-        ))}
-      <DragOverlay>
-        {activeFile ? <FileIcon key={activeFile.id} selected={false} file={activeFile} getFileCallback={() => null} /> : null}
-      </DragOverlay>
-    </DndContext>
+    <div className="w-full h-full">
+      <DndContext
+        sensors={sensors}
+        collisionDetection={pointerWithin}
+        onDragEnd={handleDragEnd}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+      >
+        <Files id={getDefaultPath()}>
+          {getDesktopFiles(fileStore)?.map((file) => {
+            const active = selectedFiles.includes(file.id)
+            return (
+              <DroppableLocation key={file.id} id={`droppable-${file.id}`} locationId={file.id}>
+                <DraggableFile id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+              </DroppableLocation>
+            )
+          })}
+        </Files>
+        {Object.entries(getWindows(fileStore))
+          .map(([folderId, folderItems]) => (
+            <Window id={folderId} key={folderId}>
+              {folderItems.map((file) => {
+                const active = selectedFiles.includes(file.id)
+                return (
+                  <DroppableLocation key={file.id} id={`droppable-${file.id}`} locationId={file.id}>
+                    <DraggableFile id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+                  </DroppableLocation>
+                )
+              })}
+            </Window>
+          ))}
+        <DragOverlay>
+          {activeFile ? <FileIcon key={activeFile.id} selected={false} file={activeFile} getFileCallback={() => null} /> : null}
+        </DragOverlay>
+      </DndContext>
+    </div>
   )
 
   function getWindowIdAndFileIndex(id) {
@@ -106,6 +108,7 @@ function GridView({
 
     const { active, over } = event
     const { id } = active
+    debugger
     const {
       data: {
         current: { locationId },

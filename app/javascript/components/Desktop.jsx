@@ -158,16 +158,13 @@ const Desktop = () => {
         <UploadButton />
       </div>
       <div className="p-10 w-full h-full overflow-hidden">
-        <div>
-          {desktop.files && <GridView fileStore={desktop.files} selectedFiles={files.selectedFiles} fileCallback={fileCallback} />}
-          {desktop.uploading && <div>Uploading...</div>}
-        </div>
-
-        {/* Right click menu */}
-        <ContextMenu>
-          <FileContextMenu path={getDefaultPath()} />
-        </ContextMenu>
+        {desktop.files && <GridView fileStore={desktop.files} selectedFiles={files.selectedFiles} fileCallback={fileCallback} />}
       </div>
+      {desktop.uploading && <div>Uploading...</div>}
+      {/* Right click menu */}
+      <ContextMenu>
+        <FileContextMenu path={getDefaultPath()} />
+      </ContextMenu>
     </div>
   )
 }
