@@ -4,6 +4,7 @@ import Dropdown from './Dropdown'
 import LinkDialogue from './LinkDialogue'
 import { useDesktop } from '../../states/desktopState'
 import { getDefaultPath } from '@helpers/fileStorage'
+import { createFolder } from '@api/folder_files'
 
 export const UploadButton = ({ ...props }) => {
   let inputRef = useRef(null)
@@ -15,10 +16,15 @@ export const UploadButton = ({ ...props }) => {
     document.getElementById('link').focus()
   }
 
+  async function createFolderFunction() {
+    const res = await createFolder(getDefaultPath())
+    addFile(getDefaultPath(), res.data.file)
+  }
+
   const menuItems = [
     { label: 'File', action: () => inputRef.current.click() },
     { label: 'Link', action: openLinkDialogue },
-    // { label: 'New Folder', action: () => console.log('new folder') },
+    { label: 'New Folder', action: () => createFolderFunction() },
   ]
 
   async function handleFileUpload(e) {
@@ -37,8 +43,8 @@ export const UploadButton = ({ ...props }) => {
         className: `h-[60px] w-[120px] bg-white border-4 hover:bg-opacity-90 cursor-pointer rounded-full shadow-lg flex justify-center items-center ${props.className}`,
       }}
     >
-      <i className='fa-solid fa-plus text-2xl'></i>
-      <p className='mx-2'>New</p>
+      <i className="fa-solid fa-plus text-2xl"></i>
+      <p className="mx-2">New</p>
       <input ref={inputRef} className="hidden" type="file" multiple onChange={(e) => handleFileUpload(e)} />
       <LinkDialogue open={isLinkDialogueOpen} onClose={() => setIsLinkDialogueOpen(false)} />
     </div>

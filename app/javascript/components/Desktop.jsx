@@ -138,7 +138,7 @@ const Desktop = () => {
   }
 
   const targetIsTopLevel = (event) => {
-  // TODO: FIX THIS
+    // TODO: FIX THIS
     return event.currentTarget.id === null
   }
 
@@ -151,7 +151,7 @@ const Desktop = () => {
       ref={desktopRef}
       onDragOverCapture={onDragOver}
       onDragLeaveCapture={onDragLeave}
-      style={{ backgroundImage: `url("https://kangarooo.s3.amazonaws.com/kangaroo/background.png")`, backgroundSize: "cover" }}
+      style={{ backgroundImage: `url("https://kangarooo.s3.amazonaws.com/kangaroo/background.png")`, backgroundSize: 'cover' }}
     >
       {!dropZoneDisabled && <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} />}
       <div className="absolute m-5 right-[25px] top-[80px]">
@@ -165,7 +165,7 @@ const Desktop = () => {
 
         {/* Right click menu */}
         <ContextMenu>
-          <FileContextMenu path={`users/${user?.id}/`} />
+          <FileContextMenu path={getDefaultPath()} />
         </ContextMenu>
       </div>
     </div>

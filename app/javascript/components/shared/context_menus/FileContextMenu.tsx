@@ -13,7 +13,7 @@ export const FileContextMenu = ({ path }) => {
 
   async function createFolderFunction() {
     const res = await createFolder(path)
-    addFile(getDefaultPath(), res.data.file.id)
+    addFile(getDefaultPath(), res.data.file)
   }
 
   function handleRename(e) {
