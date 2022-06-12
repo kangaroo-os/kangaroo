@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import Modal from './Modal'
 import { addLink } from '../../api/link_files'
 import { useDesktop } from '../../states/desktopState'
@@ -10,6 +10,7 @@ export const LinkDialogue = ({ open, onClose }) => {
   const inputRef = useRef<HTMLInputElement>()
 
   async function submitLink(e) {
+    debugger
     e.preventDefault()
     const res = await addLink(e.target.link.value)
     addFile(getDefaultPath(), res.data.file)
@@ -26,8 +27,8 @@ export const LinkDialogue = ({ open, onClose }) => {
     <Modal open={open} onClose={onClose}>
       <div className="space-y-3">
         <h1>Add a link</h1>
-        <form onSubmit={(e) => submitLink(e)}>
-          <input required onChange={(e) => handleTextChange(e)} ref={inputRef} className="k-input" type="url" id="link" name="link" />
+        <form onSubmit={submitLink}>
+          <input required onChange={handleTextChange} ref={inputRef} className="k-input" type="url" id="link-input" name="link" />
           <div className="mr-auto space-x-2 float-right mt-3">
             <button type="button" onClick={onClose} className="box-content border border-gray-200 rounded p-2 min-w-[5rem]">
               Cancel

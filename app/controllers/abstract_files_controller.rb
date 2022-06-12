@@ -33,13 +33,22 @@ class AbstractFilesController < ApplicationController
   end
 
   def update
-    file = AbstractFile.find(params[:id])
-    if file
-      file.update(abstract_file_params)
-      render json: { message: "File updated" }, status: :ok
-    else
-      render json: {error: "File not found"}, status: :not_found
+    file = AbstractFile.find(abstract_file_params[:id])
+    new_path = abstract_file_params[:path]
+    return render json: {error: 'File not found'}, status: :not_found unless file.present?
+    return render json: {error: 'Illegal path'}, status: :unprocessable_entity unless new_path.starts_with?("users/#{current_user.id}")
+
+    ApplicationRecord.transaction do
+      old_path = file.path
+      file.update!(path: new_path)
+      associated_files = AbstractFile.where(owner_id: current_user.id).where('path LIKE ?', "#{old_path}/%")
+      associated_files.find_each do |subfile|
+        subfile.update!(path: "#{new_path}/#{subfile.name}")
+      end
     end
+    render json: { message: 'File updated' }, status: :ok
+  rescue ActiveRecord::RecordInvalid
+    render json: { error: 'Validation failed' }, status: :unprocessable_entity
   end
 
   def get_folder_files
@@ -52,10 +61,11 @@ class AbstractFilesController < ApplicationController
     render json: { files: serialized_files }
   end
 
-  private 
+  private
 
   def abstract_file_params
     params.permit(%w[
+      id
       path 
     ])
   end

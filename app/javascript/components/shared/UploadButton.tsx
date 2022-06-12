@@ -13,7 +13,9 @@ export const UploadButton = ({ ...props }) => {
 
   function openLinkDialogue() {
     setIsLinkDialogueOpen(true)
-    document.getElementById('link').focus()
+    setTimeout(() => {
+      document.getElementById('link-input').focus()
+    }, 100)
   }
 
   async function createFolderFunction() {

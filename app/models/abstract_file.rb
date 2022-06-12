@@ -6,6 +6,7 @@ class AbstractFile < ApplicationRecord
   validates :path, presence: true, uniqueness: true
   validates :file_type, presence: true
   validates :owner_id, presence: true
+  validate :no_illegal_characters
   # Makes sure the path is unique. If it's not then it will add a number to the end of the name.
   before_validation :ensure_unique_path
 
@@ -44,5 +45,11 @@ class AbstractFile < ApplicationRecord
 
   def link_file?
     type == 'LinkFile'
+  end
+
+  def no_illegal_characters
+    return unless %r{"|\.\.|\/}.match?(self.name)
+
+    errors.add(:path, 'contains illegal characters')
   end
 end
