@@ -24,10 +24,6 @@ Rails.application.routes.draw do
   resources :folder_files
 
 
-  # Email Olivia link
-  post '/email_olivia', to: 'application#email_olivia'
-
-  
   get '*path', to: 'application#index'
 
 end

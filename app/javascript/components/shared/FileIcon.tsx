@@ -6,7 +6,8 @@ import { File } from '../../models/File'
 import { useDropzone } from 'react-dropzone'
 import { renameFile as renameFileAction, deleteFile as deleteFileAction } from '@api/files'
 import { useDesktop } from '@states/desktopState'
-
+import { renameFileValidations } from '@helpers/validations'
+import { useError } from '@states/errorState'
 export const FileIcon = ({
   file,
   getFileCallback,
@@ -19,6 +20,7 @@ export const FileIcon = ({
 }) => {
   const { setSelectedFiles, addSelectedFile, files, setEditingFile } = useFiles()
   const { removeFile } = useDesktop()
+  const { setError } = useError()
 
   function movePath(file) {
     console.log(file)
@@ -55,10 +57,15 @@ export const FileIcon = ({
       e.preventDefault()
       setEditingFile(file.id)
     } else if (e.key == 'Enter' && files.editedFile) {
-      file.path = file.path.replace(new RegExp(file.name + '$'), renameRef.current.value)
-      file.name = renameRef.current.value
-      setEditingFile(null)
-      renameFileAction(file.id, file.path)
+      const renameError = renameFileValidations(renameRef.current.value)
+      if (renameError) {
+        setError(renameError)
+      } else {
+        file.path = file.path.replace(new RegExp(file.name + '$'), renameRef.current.value)
+        file.name = renameRef.current.value
+        setEditingFile(null)
+        renameFileAction(file.id, file.path)
+      }
     }
   }
 

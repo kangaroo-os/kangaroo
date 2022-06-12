@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BehaviorSubject, fromEvent } from 'rxjs'
+import { BehaviorSubject } from 'rxjs'
 
 let subject = new BehaviorSubject({
   selectedFiles: [] as string[],
