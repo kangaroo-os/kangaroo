@@ -120,10 +120,9 @@ function GridView({
     if (!activeContainer || !overContainer) return
 
     // Don't allow dragging folder into its own window
-    if (overContainer === activeFile.name) return
+    if (overContainer === activeFile.path) return
 
     // Check if user dragged item inside another existing file
-    debugger
     if (overIndex !== null) {
       const overFile = fileStore[overContainer][overIndex]
       // User drags item inside a folder icon, put it inside the folder
