@@ -23,7 +23,7 @@ class LinkFilesController < ApplicationController
 
     if file.save!
       file.users << current_user
-      render json: {file: file}, status: :ok
+      render json: {file: AbstractFileSerializer.new(file).serializable_hash}, status: :ok
     else
       render json: {error: "File not saved"}, status: :unprocessable_entity
     end
@@ -51,8 +51,12 @@ class LinkFilesController < ApplicationController
 
   def get_website_title(url)
     Nokogiri::HTML(URI.open(url)).css('title').text
-  rescue
-    "Untitled Website"
+    rescue
+      begin
+        Nokogiri::HTML(URI.open(URI.join url, '/')).css('title').text
+      rescue
+        "untitled website"
+      end
   end
 
   def user_authorized?
