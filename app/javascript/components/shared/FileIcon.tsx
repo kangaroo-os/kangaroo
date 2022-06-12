@@ -94,7 +94,7 @@ export const FileIcon = ({
           >
             <div className="cursor-pointer w-[50px]">
               {file.icon_url ? (
-                <img src={file.icon_url} className="border-4 border-white rounded max-h-24 object-fill w-[50px]" />
+                <img src={file.icon_url} className="border-2 border-gray-200 rounded max-h-24 object-fill w-[50px]" />
               ) : (
                 <i className={`fa-solid fa-${getFileTypeIcon(file)} text-6xl text-orange-200`}></i>
               )}
