@@ -13,6 +13,8 @@ import GridView from '@components/shared/desktop/GridView'
 import { useFiles } from '@states/filesState'
 import { fromEvent } from 'rxjs'
 import { setDefaultPath, getDefaultPath } from '@helpers/fileStorage'
+import DisappearingPopup from '@components/shared/DisappearingPopup'
+import { useError } from '@states/errorState'
 
 const Desktop = () => {
   const navigate = useNavigate()
@@ -22,6 +24,8 @@ const Desktop = () => {
   const { unselectAll, files } = useFiles()
   const desktopRef = useRef(null)
   const [dropZoneDisabled, setDropZoneDisabled] = useState(true)
+  const { error } = useError()
+  const [animate, setAnimate] = useState(false)
 
   useEffect(() => {
     const desktop = fromEvent(desktopRef.current, 'click').subscribe(unselectAll)
@@ -167,6 +171,7 @@ const Desktop = () => {
         <ContextMenu>
           <FileContextMenu path={getDefaultPath()} />
         </ContextMenu>
+        {error.message && <DisappearingPopup message={error.message} animate={animate} />}
       </div>
     </div>
   )
