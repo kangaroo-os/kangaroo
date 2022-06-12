@@ -25,7 +25,6 @@ const Desktop = () => {
   const desktopRef = useRef(null)
   const [dropZoneDisabled, setDropZoneDisabled] = useState(true)
   const { error } = useError()
-  const [animate, setAnimate] = useState(false)
 
   useEffect(() => {
     const desktop = fromEvent(desktopRef.current, 'click').subscribe(unselectAll)
@@ -171,7 +170,7 @@ const Desktop = () => {
         <ContextMenu>
           <FileContextMenu path={getDefaultPath()} />
         </ContextMenu>
-        {error.message && <DisappearingPopup message={error.message} animate={animate} />}
+        {error.message && <DisappearingPopup message={error.message} />}
       </div>
     </div>
   )
