@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDesktop } from '@states/desktopState'
 import DroppableLocation from './desktop/DroppableLocation'
+import { getDefaultPath } from '@helpers/fileStorage'
 
 export const Window = ({ id, children }) => {
   const { closeWindow } = useDesktop()
@@ -19,7 +20,7 @@ export const Window = ({ id, children }) => {
               <button className="bg-yellow-500 rounded-full h-3 w-3"></button>
               <button className="bg-green-500 rounded-full h-3 w-3"></button>
             </div>
-            <p className="ml-5">{id}</p>
+            <p className="ml-5">{id.replace(getDefaultPath(), "")}</p>
           </div>
           {children}
         </div>
