@@ -1,4 +1,4 @@
-class CloudFilesController < ApplicationController
+class CloudFilesController < AbstractFilesController
   before_action :user_authorized?, only: [:show, :destroy]
   before_action :authenticate_user!
 
@@ -18,15 +18,17 @@ class CloudFilesController < ApplicationController
 
     if file.save!
       file.users << current_user
-      render json: {file: AbstractFileSerializer.new(file).serializable_hash}, status: :ok
+      render json: {file: serialize_files([file])}, status: :ok
     else
       render json: {error: "File not saved"}, status: :unprocessable_entity
     end
   end
 
   # GET /cloud_files
-  def index 
-    render json: { files: current_user.cloud_files }, status: :ok
+  # Used in chrome extension's file dialogue 
+  def index
+    serialized_files = serialize_files(current_user.cloud_files)
+    render json: { files: serialized_files }, status: :ok
   end
 
   # GET /cloud_files/:id
@@ -46,19 +48,4 @@ class CloudFilesController < ApplicationController
       render json: {error: "File not found"}, status: :not_found
     end
   end
-  
-  private
-
-  def user_authorized?
-    if params.has_key?(:id)
-      if current_user.cloud_file_ids.include?(params[:id].to_i)
-        return true
-      else
-        render json: { error: "You are not authorized to access this file."}, status: :unauthorized
-      end
-    end
-  end
-
-
-
 end

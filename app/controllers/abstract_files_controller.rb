@@ -8,7 +8,7 @@ class AbstractFilesController < ApplicationController
       file.path == "users/#{current_user.id}/#{file.name}"
     end
 
-    serialized_files = desktop_files.map { |f| AbstractFileSerializer.new(f).serializable_hash }
+    serialized_files = serialize_files(desktop_files)
 
     render json: { files: serialized_files, path: "users/#{current_user.id}" }, status: :ok
   end
@@ -57,7 +57,7 @@ class AbstractFilesController < ApplicationController
     files = files.filter do |file|
       file.path == "#{params[:key]}/#{file.name}"
     end
-    serialized_files = files.map { |f| AbstractFileSerializer.new(f).serializable_hash }
+    serialized_files = serialize_files(files)
     render json: { files: serialized_files }
   end
 
@@ -70,6 +70,8 @@ class AbstractFilesController < ApplicationController
     ])
   end
 
+  protected
+
   def user_authorized?
     if params.has_key?(:id)
       if current_user.abstract_file_ids.include?(params[:id].to_i)
@@ -80,5 +82,7 @@ class AbstractFilesController < ApplicationController
     end
   end
 
-
+  def serialize_files(files)
+    files.map { |f| AbstractFileSerializer.new(f).serializable_hash }
+  end
 end
