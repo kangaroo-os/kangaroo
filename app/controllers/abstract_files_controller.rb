@@ -87,7 +87,7 @@ class AbstractFilesController < ApplicationController
     file = AbstractFile.find(params[:id])
     if file
       file.update!(publicly_accessible: true)
-      if (file.share_url.nil?)
+      if (file.public_share_url.nil?)
         file.update!(public_share_url: SecureRandom.urlsafe_base64(25))
       end 
       render json: { file: file }, status: :ok

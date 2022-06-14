@@ -6,16 +6,23 @@ import { makeFileShareable } from '@api/abstract_files'
 
 export const Window = ({ windowId, children }) => {
   const { closeWindow, desktop } = useDesktop()
-  const [isPublic, setIsPublic] = useState(false)
+  const [isPublic, setIsPublic] = useState(!!desktop.fileMappings[windowId].public_share_url)
+  const [publicUrl, setPublicUrl] = useState(desktop.fileMappings[windowId].public_share_url || '')
 
   function handleCloseClick() {
     closeWindow(windowId)
   }
 
-  function toggleCallback(bool: boolean) {
+  async function toggleCallback(bool: boolean) {
     setIsPublic(bool)
-    // makeFileShareable()
+    if (bool) {
+      const res = await makeFileShareable(windowId)
+      if (res.status === 200) {
+        setPublicUrl(res.data.file.public_share_url)
+      }
+    }
   }
+
   return (
     <div className="fixed top-[50%] left-[50%]">
       <div className="border-2 border-gray-400 h-96 w-[700px] rounded-lg z-10 bg-gray-200">
@@ -28,8 +35,8 @@ export const Window = ({ windowId, children }) => {
           <p className="ml-5">{desktop.fileMappings[windowId].name}</p>
         </div>
         <div className="absolute bottom-0 right-0 m-5 flex items-center space-x-2">
-          {isPublic && <input className="k-input-sm" readOnly />}
-          <Toggle onClick={(bool) => toggleCallback(bool)} />
+          {isPublic && <input value={publicUrl} className="k-input-sm" readOnly />}
+          <Toggle onClick={(bool) => toggleCallback(bool)} enabled={!!desktop.fileMappings[windowId].public_share_url} />
           <p>Public</p>
         </div>
         <DroppableLocation id={windowId} locationId={windowId} fullSize={true}>
