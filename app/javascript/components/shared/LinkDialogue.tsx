@@ -10,7 +10,6 @@ export const LinkDialogue = ({ open, onClose }) => {
   const inputRef = useRef<HTMLInputElement>()
 
   async function submitLink(e) {
-    debugger
     e.preventDefault()
     const res = await addLink(e.target.link.value)
     addFile(getDefaultPath(), res.data.file)

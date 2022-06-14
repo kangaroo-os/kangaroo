@@ -108,7 +108,6 @@ function GridView({
 
     const { active, over } = event
     const { id } = active
-    debugger
     const {
       data: {
         current: { locationId },
