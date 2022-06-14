@@ -16,7 +16,6 @@ export const Window = ({ windowId, children }) => {
     setIsPublic(bool)
     // makeFileShareable()
   }
-
   return (
     <div className="fixed top-[50%] left-[50%]">
       <div className="border-2 border-gray-400 h-96 w-[700px] rounded-lg z-10 bg-gray-200">

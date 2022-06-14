@@ -3,7 +3,7 @@ import Modal from './Modal'
 import { addLink } from '../../api/link_files'
 import { useDesktop } from '../../states/desktopState'
 import { addHttp } from '@helpers/text'
-import { getDefaultPath } from '@helpers/fileStorage'
+import { getDesktopId } from '@helpers/fileStorage'
 
 export const LinkDialogue = ({ open, onClose }) => {
   const { addFile } = useDesktop()
@@ -12,7 +12,7 @@ export const LinkDialogue = ({ open, onClose }) => {
   async function submitLink(e) {
     e.preventDefault()
     const res = await addLink(e.target.link.value)
-    addFile(getDefaultPath(), res.data.file)
+    addFile(getDesktopId(), res.data.file)
 
     onClose()
   }
