@@ -6,7 +6,7 @@ import Window from './../Window'
 import DraggableFile from './DraggableFile'
 import FileIcon from '../FileIcon'
 import { useDesktop } from '../../../states/desktopState'
-import { getDefaultPath, getDesktopFiles, getWindows } from '@helpers/fileStorage'
+import { getDesktopId, getDesktopFiles, getWindows } from '@helpers/fileStorage'
 import DroppableLocation from './DroppableLocation'
 import { moveFile } from '@api/files'
 
@@ -39,7 +39,7 @@ function GridView({
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
       >
-        <Files id={'0'}>
+        <Files id={getDesktopId()}>
           {getDesktopFiles(fileStore)?.map((file) => {
             const active = selectedFiles.includes(file.id)
             return (

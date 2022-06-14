@@ -12,7 +12,7 @@ import { getUser } from '@states/userState'
 import GridView from '@components/shared/desktop/GridView'
 import { useFiles } from '@states/filesState'
 import { fromEvent } from 'rxjs'
-import { setDefaultPath, getDefaultPath } from '@helpers/fileStorage'
+import { setDefaultPath, getDesktopId } from '@helpers/fileStorage'
 import DisappearingPopup from '@components/shared/DisappearingPopup'
 import { useError } from '@states/errorState'
 
@@ -44,7 +44,7 @@ const Desktop = () => {
       const files = res.data.files
       const basePath = res.data.path
       setDefaultPath(basePath)
-      setWindowFiles('0', files)
+      setWindowFiles(getDesktopId(), files)
     } catch (error) {
       if (error.response.status === 401) {
         navigate('/login')
@@ -57,7 +57,7 @@ const Desktop = () => {
     setUploading(true)
     const res = await addCloudFile(blob)
     setUploading(false)
-    addFile('0', res.data.file)
+    addFile(getDesktopId(), res.data.file)
   }
 
   async function downloadFile(id) {
@@ -166,7 +166,7 @@ const Desktop = () => {
       {desktop.uploading && <div>Uploading...</div>}
       {/* Right click menu */}
       <ContextMenu>
-        <FileContextMenu windowId={'0'} />
+        <FileContextMenu windowId={getDesktopId()} />
       </ContextMenu>
       {error.message && <DisappearingPopup message={error.message} />}
     </div>

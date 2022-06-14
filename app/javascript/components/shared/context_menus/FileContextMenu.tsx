@@ -4,7 +4,7 @@ import { createFolder } from '@api/folder_files'
 import { useContextMenu } from '@states/contextMenuState'
 import { useDesktop } from '@states/desktopState'
 import { deleteFile } from '@api/files'
-import { getDefaultPath } from '@helpers/fileStorage'
+import { getDefaultPath, getDesktopId } from '@helpers/fileStorage'
 
 export const FileContextMenu = ({ windowId }) => {
   const { files, setEditingFile } = useFiles()
@@ -13,7 +13,7 @@ export const FileContextMenu = ({ windowId }) => {
 
   async function createFolderFunction() {
     const res = await createFolder(desktop.fileMappings[windowId].path)
-    addFile('0', res.data.file)
+    addFile(getDesktopId(), res.data.file)
   }
 
   function handleRename(e) {
