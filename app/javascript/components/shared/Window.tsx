@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import { useDesktop } from '@states/desktopState'
 import DroppableLocation from './desktop/DroppableLocation'
-import { getDefaultPath } from '@helpers/fileStorage'
 import Toggle from '@components/shared/Toggle'
 import { makeFileShareable } from '@api/abstract_files'
 
-export const Window = ({ name, children }) => {
-  const { closeWindow } = useDesktop()
+export const Window = ({ windowId, children }) => {
+  const { closeWindow, desktop } = useDesktop()
   const [isPublic, setIsPublic] = useState(false)
 
   function handleCloseClick() {
-    closeWindow(name)
+    closeWindow(windowId)
   }
 
   function toggleCallback(bool: boolean) {
@@ -27,14 +26,14 @@ export const Window = ({ name, children }) => {
             <button className="bg-yellow-500 rounded-full h-3 w-3"></button>
             <button className="bg-green-500 rounded-full h-3 w-3"></button>
           </div>
-          <p className="ml-5">{name.replace(getDefaultPath(), '')}</p>
+          <p className="ml-5">{desktop.fileMappings[windowId].name}</p>
         </div>
         <div className="absolute bottom-0 right-0 m-5 flex items-center space-x-2">
           {isPublic && <input className="k-input-sm" readOnly />}
           <Toggle onClick={(bool) => toggleCallback(bool)} />
           <p>Public</p>
         </div>
-        <DroppableLocation id={name} locationId={name} fullSize={true}>
+        <DroppableLocation id={windowId} locationId={windowId} fullSize={true}>
           <div className="flex flex-row">{children}</div>
         </DroppableLocation>
       </div>

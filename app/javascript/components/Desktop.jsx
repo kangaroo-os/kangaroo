@@ -44,7 +44,7 @@ const Desktop = () => {
       const files = res.data.files
       const basePath = res.data.path
       setDefaultPath(basePath)
-      setWindowFiles(getDefaultPath(), files)
+      setWindowFiles('0', files)
     } catch (error) {
       if (error.response.status === 401) {
         navigate('/login')
@@ -57,7 +57,7 @@ const Desktop = () => {
     setUploading(true)
     const res = await addCloudFile(blob)
     setUploading(false)
-    addFile(getDefaultPath(), res.data.file)
+    addFile('0', res.data.file)
   }
 
   async function downloadFile(id) {
@@ -79,13 +79,13 @@ const Desktop = () => {
     }
   }
 
-  async function openFolder(id, path) {
+  async function openFolder(id) {
     try {
       const res = await getFolderFiles(id)
       const files = res.data.files
-      createWindow(path)
+      createWindow(id)
       for (const file of files) {
-        addFile(path, file)
+        addFile(id, file)
       }
     } catch (e) {
       console.error(e)
@@ -101,7 +101,7 @@ const Desktop = () => {
         deleteUserFile(file.id)
         break
       case 'openFolder':
-        openFolder(file.id, file.path)
+        openFolder(file.id)
         break
       default:
         break
@@ -166,7 +166,7 @@ const Desktop = () => {
       {desktop.uploading && <div>Uploading...</div>}
       {/* Right click menu */}
       <ContextMenu>
-        <FileContextMenu path={getDefaultPath()} />
+        <FileContextMenu windowId={'0'} />
       </ContextMenu>
       {error.message && <DisappearingPopup message={error.message} />}
     </div>

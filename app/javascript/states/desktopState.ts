@@ -3,18 +3,16 @@ import { useState, useEffect } from 'react'
 import { BehaviorSubject } from 'rxjs'
 import { File } from '../models/File'
 
-export type FileStorage = {
-  [name: string]: File[]
-}
-
 export type DesktopState = {
-  files: FileStorage
+  files: { [id: string]: File[] }
+  fileMappings: { [id: string]: File }
   selectedFiles: string[]
   uploading: boolean
 }
 
 let subject = new BehaviorSubject<DesktopState>({
   files: {},
+  fileMappings: {},
   selectedFiles: [],
   uploading: false,
 })
@@ -48,6 +46,10 @@ export const useDesktop = () => {
         ...subject.value.files,
         [windowId]: [...(subject.value.files[windowId] || []), file],
       },
+      fileMappings: {
+        ...subject.value.fileMappings,
+        [file.id]: file,
+      },
     })
   }
 
@@ -58,17 +60,21 @@ export const useDesktop = () => {
   function removeFile(id: string) {
     let windowId = null
     for (const folder in subject.value.files) {
-      if (subject.value.files[folder].map(file => file.id).includes(id)) {
+      if (subject.value.files[folder].map((file) => file.id).includes(id)) {
         windowId = folder
       }
     }
-    if (!windowId) return
+
+    let deepCopyMapping = JSON.parse(JSON.stringify(subject.value.fileMappings))
+    delete deepCopyMapping[id]
+
     subject.next({
       ...subject.value,
       files: {
         ...subject.value.files,
-        [windowId]: subject.value.files[windowId].filter(file => file.id !== id),
+        [windowId]: subject.value.files[windowId].filter((file) => file.id !== id),
       },
+      fileMappings: deepCopyMapping,
     })
   }
 
@@ -79,7 +85,14 @@ export const useDesktop = () => {
         ...subject.value.files,
         [windowId]: files,
       },
-    })  
+      fileMappings: {
+        ...subject.value.fileMappings,
+        ...files.reduce((acc, file) => {
+          acc[file.id] = file
+          return acc
+        }, {}),
+      },
+    })
   }
 
   function createWindow(windowId: string) {
@@ -87,7 +100,7 @@ export const useDesktop = () => {
       ...subject.value,
       files: {
         ...subject.value.files,
-        [windowId]: []
+        [windowId]: [],
       },
     })
   }

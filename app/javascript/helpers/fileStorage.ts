@@ -1,7 +1,6 @@
-import { FileStorage } from '@states/desktopState'
-
+import { File } from '@models/File'
 const store = {
-  desktopPath: '' 
+  desktopPath: '',
 }
 
 const setDefaultPath = (path: string) => {
@@ -12,13 +11,13 @@ const getDefaultPath = () => {
   return store['desktopPath']
 }
 
-const getDesktopFiles = (fileStore: FileStorage) => {
-  return fileStore[getDefaultPath()]
+const getDesktopFiles = (fileStore: { [id: string]: File[] }) => {
+  return fileStore['0']
 }
 
-const getWindows = (fileStore: FileStorage) => {
+const getWindows = (fileStore: { [id: string]: File[] }) => {
   const windows = { ...fileStore }
-  delete windows[getDefaultPath()]
+  delete windows['0']
   return windows
 }
 

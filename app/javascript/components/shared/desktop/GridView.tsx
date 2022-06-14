@@ -1,11 +1,11 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { DndContext, pointerWithin, PointerSensor, useSensor, useSensors, DragOverlay } from '@dnd-kit/core'
-import { File } from '../../../models/File'
+import { File } from '@models/File'
 import Files from './Files'
 import Window from './../Window'
 import DraggableFile from './DraggableFile'
 import FileIcon from '../FileIcon'
-import { FileStorage, useDesktop } from '../../../states/desktopState'
+import { useDesktop } from '../../../states/desktopState'
 import { getDefaultPath, getDesktopFiles, getWindows } from '@helpers/fileStorage'
 import DroppableLocation from './DroppableLocation'
 import { moveFile } from '@api/files'
@@ -15,7 +15,7 @@ function GridView({
   selectedFiles,
   fileCallback,
 }: {
-  fileStore: FileStorage
+  fileStore: { [id: string]: File[] }
   selectedFiles: string[]
   fileCallback: () => {}
 }): ReactElement {
@@ -39,7 +39,7 @@ function GridView({
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
       >
-        <Files id={getDefaultPath()}>
+        <Files id={'0'}>
           {getDesktopFiles(fileStore)?.map((file) => {
             const active = selectedFiles.includes(file.id)
             return (
@@ -49,19 +49,18 @@ function GridView({
             )
           })}
         </Files>
-        {Object.entries(getWindows(fileStore))
-          .map(([folderName, folderItems]) => (
-            <Window name={folderName} key={folderName}>
-              {folderItems.map((file) => {
-                const active = selectedFiles.includes(file.id)
-                return (
-                  <DroppableLocation key={file.id} id={`droppable-${file.id}`} locationId={file.id}>
-                    <DraggableFile id={file.id} selected={active} file={file} fileCallback={fileCallback} />
-                  </DroppableLocation>
-                )
-              })}
-            </Window>
-          ))}
+        {Object.entries(getWindows(fileStore)).map(([folderId, folderItems]) => (
+          <Window windowId={folderId} key={folderId}>
+            {folderItems.map((file: File) => {
+              const active = selectedFiles.includes(file.id)
+              return (
+                <DroppableLocation key={file.id} id={`droppable-${file.id}`} locationId={file.id}>
+                  <DraggableFile id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+                </DroppableLocation>
+              )
+            })}
+          </Window>
+        ))}
         <DragOverlay>
           {activeFile ? <FileIcon key={activeFile.id} selected={false} file={activeFile} getFileCallback={() => null} /> : null}
         </DragOverlay>
