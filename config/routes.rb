@@ -11,7 +11,9 @@ Rails.application.routes.draw do
   # API routes for files
   
   # abstract files
-  get '/files/get_folder_files', to: 'abstract_files#get_folder_files', format: false
+  get '/files/:id/get_folder_files', to: 'abstract_files#get_folder_files', format: false
+  put '/files/:id/make_publicly_accessible', to: 'abstract_files#make_publicly_accessible', format: false
+  
   resources :files, :controller => :abstract_files, :as => :abstract_files
 
   # cloud files

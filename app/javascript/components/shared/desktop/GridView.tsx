@@ -50,8 +50,8 @@ function GridView({
           })}
         </Files>
         {Object.entries(getWindows(fileStore))
-          .map(([folderId, folderItems]) => (
-            <Window id={folderId} key={folderId}>
+          .map(([folderName, folderItems]) => (
+            <Window name={folderName} key={folderName}>
               {folderItems.map((file) => {
                 const active = selectedFiles.includes(file.id)
                 return (

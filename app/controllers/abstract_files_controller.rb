@@ -52,13 +52,28 @@ class AbstractFilesController < ApplicationController
   end
 
   def get_folder_files
-    params.require(:key)
-    files = AbstractFile.where(owner_id: current_user.id).where("path LIKE ?", "#{params[:key]}%")
-    files = files.filter do |file|
-      file.path == "#{params[:key]}/#{file.name}"
+    params.require(:id)
+    folder = AbstractFile.find(params[:id])
+    if folder.present?
+      files = folder.children_files
+      serialized_files = serialize_files(files)
+      render json: { files: serialized_files }, status: :ok
+    else
+      render json: { error: "Folder not found" }, status: :not_found
     end
-    serialized_files = serialize_files(files)
-    render json: { files: serialized_files }
+  end
+
+  def make_publicly_accessible
+    file = AbstractFile.find(params[:id])
+    if file
+      file.update!(publicly_accessible: true)
+      if (file.share_url.nil?)
+        file.update!(public_share_url: SecureRandom.urlsafe_base64(25))
+      end 
+      render json: { file: file }, status: :ok
+    else
+      render json: {error: "File not found"}, status: :not_found
+    end
   end
 
   private

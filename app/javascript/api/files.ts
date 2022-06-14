@@ -12,6 +12,6 @@ export function deleteFile(id: string) {
   return api.delete(`/files/${id}`)
 }
 
-export function getFolderFiles(file_path: string) {
-  return api.get(`/files/get_folder_files?key=${file_path}`)
+export function getFolderFiles(id: string) {
+  return api.get(`/files/${id}/get_folder_files`)
 }

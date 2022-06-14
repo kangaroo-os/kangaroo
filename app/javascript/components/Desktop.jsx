@@ -79,13 +79,13 @@ const Desktop = () => {
     }
   }
 
-  async function openFolder(file_path) {
+  async function openFolder(id, path) {
     try {
-      const res = await getFolderFiles(file_path)
+      const res = await getFolderFiles(id)
       const files = res.data.files
-      createWindow(file_path)
+      createWindow(path)
       for (const file of files) {
-        addFile(file_path, file)
+        addFile(path, file)
       }
     } catch (e) {
       console.error(e)
@@ -101,7 +101,7 @@ const Desktop = () => {
         deleteUserFile(file.id)
         break
       case 'openFolder':
-        openFolder(file.path)
+        openFolder(file.id, file.path)
         break
       default:
         break
