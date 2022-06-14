@@ -51,6 +51,26 @@ class AbstractFilesController < ApplicationController
     render json: { error: 'Validation failed' }, status: :unprocessable_entity
   end
 
+  def move_file
+    return render json: {error: 'File not found'}, status: :not_found unless params.has_key?(:id)
+    return render json: {error: 'File cannot be moved to this location'}, statue: :unprocessable_entity unless params.has_key?(:folder_id)
+    file = AbstractFile.find(params[:id])
+    if params[:folder_id] === '0'
+      file.folder = nil 
+      file.path = "users/#{current_user.id}/#{file.name}"
+    else 
+      folder = AbstractFile.find(params[:folder_id])
+      file.folder = folder
+      file.path = "#{folder.path}/#{file.name}"
+    end
+    if file.save!
+      render json: { message: 'File moved' }, status: :ok
+    else
+      render json: { error: 'File not moved' }, status: :unprocessable_entity
+    end
+
+  end
+
   def get_folder_files
     params.require(:id)
     folder = AbstractFile.find(params[:id])

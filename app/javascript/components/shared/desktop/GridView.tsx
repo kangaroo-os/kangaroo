@@ -8,7 +8,7 @@ import FileIcon from '../FileIcon'
 import { FileStorage, useDesktop } from '../../../states/desktopState'
 import { getDefaultPath, getDesktopFiles, getWindows } from '@helpers/fileStorage'
 import DroppableLocation from './DroppableLocation'
-import { renameFile } from '@api/files'
+import { moveFile } from '@api/files'
 
 function GridView({
   fileStore,
@@ -130,7 +130,7 @@ function GridView({
       // User drags item inside a folder icon, put it inside the folder
       if (overFile.file_type === 'folder') {
         removeFile(activeFile.id)
-        renameFile(activeFile.id, `${overFile.path}/${activeFile.name}`)
+        moveFile(activeFile.id, `${overFile.id}`)
         if (fileStore[activeContainer].length === 0) {
           closeWindow(activeContainer)
         }
@@ -145,7 +145,7 @@ function GridView({
       // TODO BACKEND: Change the order
       // setWindowFiles(activeContainer, arrayMove(fileStore[activeContainer], activeIndex, overIndex))
     } else {
-      renameFile(activeFile.id, `${overContainer}/${activeFile.name}`)
+      moveFile(activeFile.id, `${overContainer}`)
       fileStore[activeContainer].splice(activeIndex, 1)
       fileStore[overContainer].splice(overIndex, 0, activeFile)
       setWindowFiles(activeContainer, fileStore[activeContainer])

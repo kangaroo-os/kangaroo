@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   
   # abstract files
   get '/files/:id/get_folder_files', to: 'abstract_files#get_folder_files', format: false
+  put '/files/:id/move_file', to: 'abstract_files#move_file', format: false
   put '/files/:id/make_publicly_accessible', to: 'abstract_files#make_publicly_accessible', format: false
   
   resources :files, :controller => :abstract_files, :as => :abstract_files
