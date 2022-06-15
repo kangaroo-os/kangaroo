@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
   # folder files
   resources :folder_files
-  get '/folder_files/:id/get_folder_files', to: 'abstract_files#get_folder_files', format: false
+  get '/folder_files/:id/get_folder_files', to: 'folder_files#get_folder_files', format: false
 
 
   get '*path', to: 'application#index'

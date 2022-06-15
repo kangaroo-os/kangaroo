@@ -8,7 +8,7 @@ class AbstractFile < ApplicationRecord
   validates :file_type, presence: true
   validates :owner_id, presence: true
   validate :no_illegal_characters
-  validate :public_share_url. uniqueness: true
+  validates :public_share_url, uniqueness: true
   # Makes sure the path is unique. If it's not then it will add a number to the end of the name.
   before_validation :ensure_unique_path
 

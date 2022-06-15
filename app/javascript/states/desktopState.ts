@@ -79,15 +79,15 @@ export const useDesktop = () => {
   }
 
   function setWindowFiles(windowId: string, files: File[]) {
+    const updatedFiles = {
+      ...subject.value.files,
+      [windowId]: files,
+    }
     subject.next({
       ...subject.value,
-      files: {
-        ...subject.value.files,
-        [windowId]: files,
-      },
+      files: updatedFiles,
       fileMappings: {
-        ...subject.value.fileMappings,
-        ...files.reduce((acc, file) => {
+        ...(Object.values(updatedFiles).flat()).reduce((acc, file) => {
           acc[file.id] = file
           return acc
         }, {}),

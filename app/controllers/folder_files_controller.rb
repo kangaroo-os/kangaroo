@@ -1,4 +1,4 @@
-class FolderFilesController < ApplicationController
+class FolderFilesController < AbstractFilesController 
   before_action :user_authorized?, only: [:get_folder_files]
 
   def create 

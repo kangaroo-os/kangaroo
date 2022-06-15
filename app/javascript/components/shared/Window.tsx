@@ -15,7 +15,7 @@ export const Window = ({ windowId, children }) => {
 
   async function toggleCallback(bool: boolean) {
     setIsPublic(bool)
-    const res = await makeFileShareable(windowId)
+    const res = await makeFileShareable(windowId, bool)
     if (res.status === 200) {
       setPublicUrl(res.data.file.public_share_url)
     }
