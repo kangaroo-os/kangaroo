@@ -5,4 +5,5 @@ export interface File {
   path: string
   size: BigInteger
   icon_url?: string
+  public_share_url?: string
 }

@@ -5,14 +5,15 @@ import FileContextMenu from './shared/context_menus/FileContextMenu'
 import { useNavigate } from 'react-router-dom'
 import { addCloudFile } from '@api/cloud_files'
 import { getFileUrl } from '@api/abstract_files'
-import { deleteFile, getAllFiles, getFolderFiles } from '@api/files'
+import { deleteFile, getAllFiles } from '@api/files'
+import { getFolderFiles } from '@api/folder_files'
 import UploadButton from './shared/UploadButton'
 import { useDesktop } from '@states/desktopState'
 import { getUser } from '@states/userState'
 import GridView from '@components/shared/desktop/GridView'
 import { useFiles } from '@states/filesState'
 import { fromEvent } from 'rxjs'
-import { setDefaultPath, getDefaultPath } from '@helpers/fileStorage'
+import { setDefaultPath, getDesktopId } from '@helpers/fileStorage'
 import DisappearingPopup from '@components/shared/DisappearingPopup'
 import { useError } from '@states/errorState'
 
@@ -44,7 +45,7 @@ const Desktop = () => {
       const files = res.data.files
       const basePath = res.data.path
       setDefaultPath(basePath)
-      setWindowFiles(getDefaultPath(), files)
+      setWindowFiles(getDesktopId(), files)
     } catch (error) {
       if (error.response.status === 401) {
         navigate('/login')
@@ -57,7 +58,7 @@ const Desktop = () => {
     setUploading(true)
     const res = await addCloudFile(blob)
     setUploading(false)
-    addFile(getDefaultPath(), res.data.file)
+    addFile(getDesktopId(), res.data.file)
   }
 
   async function downloadFile(id) {
@@ -79,13 +80,13 @@ const Desktop = () => {
     }
   }
 
-  async function openFolder(file_path) {
+  async function openFolder(id) {
     try {
-      const res = await getFolderFiles(file_path)
+      const res = await getFolderFiles(id)
       const files = res.data.files
-      createWindow(file_path)
+      createWindow(id)
       for (const file of files) {
-        addFile(file_path, file)
+        addFile(id, file)
       }
     } catch (e) {
       console.error(e)
@@ -101,7 +102,7 @@ const Desktop = () => {
         deleteUserFile(file.id)
         break
       case 'openFolder':
-        openFolder(file.path)
+        openFolder(file.id)
         break
       default:
         break
@@ -166,7 +167,7 @@ const Desktop = () => {
       {desktop.uploading && <div>Uploading...</div>}
       {/* Right click menu */}
       <ContextMenu>
-        <FileContextMenu path={getDefaultPath()} />
+        <FileContextMenu windowId={getDesktopId()} />
       </ContextMenu>
       {error.message && <DisappearingPopup message={error.message} />}
     </div>

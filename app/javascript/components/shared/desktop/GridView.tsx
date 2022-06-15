@@ -1,21 +1,21 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { DndContext, pointerWithin, PointerSensor, useSensor, useSensors, DragOverlay } from '@dnd-kit/core'
-import { File } from '../../../models/File'
+import { File } from '@models/File'
 import Files from './Files'
 import Window from './../Window'
 import DraggableFile from './DraggableFile'
 import FileIcon from '../FileIcon'
-import { FileStorage, useDesktop } from '../../../states/desktopState'
-import { getDefaultPath, getDesktopFiles, getWindows } from '@helpers/fileStorage'
+import { useDesktop } from '../../../states/desktopState'
+import { getDesktopId, getDesktopFiles, getWindows } from '@helpers/fileStorage'
 import DroppableLocation from './DroppableLocation'
-import { renameFile } from '@api/files'
+import { moveFile } from '@api/files'
 
 function GridView({
   fileStore,
   selectedFiles,
   fileCallback,
 }: {
-  fileStore: FileStorage
+  fileStore: { [id: string]: File[] }
   selectedFiles: string[]
   fileCallback: () => {}
 }): ReactElement {
@@ -39,7 +39,7 @@ function GridView({
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
       >
-        <Files id={getDefaultPath()}>
+        <Files id={getDesktopId()}>
           {getDesktopFiles(fileStore)?.map((file) => {
             const active = selectedFiles.includes(file.id)
             return (
@@ -49,22 +49,18 @@ function GridView({
             )
           })}
         </Files>
-        {Object.entries(getWindows(fileStore))
-          .map(([folderId, folderItems]) => {
-            return (
-              <Window id={folderId} key={folderId}>
-                {folderItems.map((file) => {
-                  const active = selectedFiles.includes(file.id)
-                  return (
-                    <DroppableLocation key={file.id} id={`droppable-${file.id}`} locationId={file.id}>
-                      <DraggableFile id={file.id} selected={active} file={file} fileCallback={fileCallback} />
-                    </DroppableLocation>
-                  )
-                })}
-              </Window>
-            )
-          })}
-          
+        {Object.entries(getWindows(fileStore)).map(([folderId, folderItems]) => (
+          <Window windowId={folderId} key={folderId}>
+            {folderItems.map((file: File) => {
+              const active = selectedFiles.includes(file.id)
+              return (
+                <DroppableLocation key={file.id} id={`droppable-${file.id}`} locationId={file.id}>
+                  <DraggableFile id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+                </DroppableLocation>
+              )
+            })}
+          </Window>
+        ))}
         <DragOverlay>
           {activeFile ? <FileIcon key={activeFile.id} selected={false} file={activeFile} getFileCallback={() => null} /> : null}
         </DragOverlay>
@@ -111,7 +107,6 @@ function GridView({
 
     const { active, over } = event
     const { id } = active
-    debugger
     const {
       data: {
         current: { locationId },
@@ -134,7 +129,7 @@ function GridView({
       // User drags item inside a folder icon, put it inside the folder
       if (overFile.file_type === 'folder') {
         removeFile(activeFile.id)
-        renameFile(activeFile.id, `${overFile.path}/${activeFile.name}`)
+        moveFile(activeFile.id, `${overFile.id}`)
         if (fileStore[activeContainer].length === 0) {
           closeWindow(activeContainer)
         }
@@ -149,7 +144,7 @@ function GridView({
       // TODO BACKEND: Change the order
       // setWindowFiles(activeContainer, arrayMove(fileStore[activeContainer], activeIndex, overIndex))
     } else {
-      renameFile(activeFile.id, `${overContainer}/${activeFile.name}`)
+      moveFile(activeFile.id, `${overContainer}`)
       fileStore[activeContainer].splice(activeIndex, 1)
       fileStore[overContainer].splice(overIndex, 0, activeFile)
       setWindowFiles(activeContainer, fileStore[activeContainer])

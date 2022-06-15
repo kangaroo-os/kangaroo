@@ -6,3 +6,7 @@ import { getAuthHeaders } from '../helpers/auth'
 export function createFolder(path: string) {
   return api.post(`/folder_files`, { path })
 }
+
+export function getFolderFiles(id: string) {
+  return api.get(`/folder_files/${id}/get_folder_files`)
+}

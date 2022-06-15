@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :file_ownerships, dependent: :destroy
   has_many :abstract_files, through: :file_ownerships
   has_many :cloud_files, -> { cloud_files }, through: :file_ownerships, source: :abstract_file
+  has_many :folder_files, -> { folder_files }, through: :file_ownerships, source: :abstract_file
   has_many :link_files, -> { link_files }, through: :file_ownerships, source: :abstract_file
 
   after_create :create_bucket
