@@ -23,7 +23,7 @@ export const Window = ({ windowId, children }) => {
     }
   }
 
-  const randomId = Math.random().toString(36).replace(/\.|\d/g, "")
+  const randomId = Math.random().toString(36).replace(/\.|\d/g, '')
 
   function sendElementToTop() {
     const elementId = `window-${randomId}`
@@ -35,28 +35,26 @@ export const Window = ({ windowId, children }) => {
 
   return (
     <Draggable handle={`#w-${randomId}`}>
-      <div onMouseDownCapture={sendElementToTop} data-another-window={true} id={`window-${randomId}`} className="absolute top-[30%] left-[30%]" >
-          <div className="border-2 border-gray-400 h-96 w-[700px] rounded-lg z-10 bg-gray-200">
-            <div id={`w-${randomId}`} className="flex items-center p-2 bg-gray-300 rounded-t-lg">
-              <div className="space-x-2 mx-2">
-                <button onClick={handleCloseClick} className="bg-red-500 rounded-full h-3 w-3"></button>
-                <button className="bg-yellow-500 rounded-full h-3 w-3"></button>
-                <button className="bg-green-500 rounded-full h-3 w-3"></button>
-              </div>
-              <p className="ml-5">{id.replace(getDefaultPath(), "")}</p>
+      <div onMouseDownCapture={sendElementToTop} data-another-window={true} id={`window-${randomId}`} className="absolute top-[30%] left-[30%]">
+        <div className="border-2 border-gray-400 h-96 w-[700px] rounded-lg z-10 bg-gray-200">
+          <div id={`w-${randomId}`} className="flex items-center p-2 bg-gray-300 rounded-t-lg">
+            <div className="space-x-2 mx-2">
+              <button onClick={handleCloseClick} className="bg-red-500 rounded-full h-3 w-3"></button>
+              <button className="bg-yellow-500 rounded-full h-3 w-3"></button>
+              <button className="bg-green-500 rounded-full h-3 w-3"></button>
             </div>
-             <div className="absolute bottom-0 right-0 m-5 flex items-center space-x-2">
-              {isPublic && <input value={publicUrl} className="k-input-sm" readOnly />}
-              <Toggle onClick={(bool) => toggleCallback(bool)} enabled={!!desktop.fileMappings[windowId].public_share_url} />
-              <p>Public</p>
-            </div>
-            <DroppableLocation id={id} locationId={id} fullSize={true}>
-              <div className="flex flex-row">
-              {children}
-              </div>
-            </DroppableLocation>
+            <p className="ml-5">{desktop.fileMappings[windowId].name.replace(getDefaultPath(), '')}</p>
           </div>
+          <div className="absolute bottom-0 right-0 m-5 flex items-center space-x-2">
+            {isPublic && <input value={publicUrl} className="k-input-sm" readOnly />}
+            <Toggle onClick={(bool) => toggleCallback(bool)} enabled={!!desktop.fileMappings[windowId].public_share_url} />
+            <p>Public</p>
+          </div>
+          <DroppableLocation id={windowId} locationId={windowId} fullSize={true}>
+            <div className="flex flex-row">{children}</div>
+          </DroppableLocation>
         </div>
+      </div>
     </Draggable>
   )
 }
