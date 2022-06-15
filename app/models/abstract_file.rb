@@ -11,7 +11,7 @@ class AbstractFile < ApplicationRecord
   validates :public_share_url, uniqueness: true
   validate :ensure_consistent_shareable_states
   # Makes sure the path is unique. If it's not then it will add a number to the end of the name.
-  before_validation :ensure_unique_path
+  # before_validation :ensure_unique_path
 
   scope :cloud_files, -> { where(type: 'CloudFile') }
   scope :link_files, -> { where(type: 'LinkFile') }
