@@ -94,7 +94,7 @@ class AbstractFilesController < ApplicationController
   end
 
   def recursively_make_children_shareable(file, is_public)
-    file.update!(is_shareable: is_public)
+    file.update!(is_shareable: is_public) unless file.is_root_shareable && !is_public
     if file.type == "FolderFile"
       file.children_files.each do |child|
         recursively_make_children_shareable(child, is_public)
