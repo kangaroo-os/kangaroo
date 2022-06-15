@@ -50,18 +50,21 @@ function GridView({
           })}
         </Files>
         {Object.entries(getWindows(fileStore))
-          .map(([folderId, folderItems]) => (
-            <Window id={folderId} key={folderId}>
-              {folderItems.map((file) => {
-                const active = selectedFiles.includes(file.id)
-                return (
-                  <DroppableLocation key={file.id} id={`droppable-${file.id}`} locationId={file.id}>
-                    <DraggableFile id={file.id} selected={active} file={file} fileCallback={fileCallback} />
-                  </DroppableLocation>
-                )
-              })}
-            </Window>
-          ))}
+          .map(([folderId, folderItems]) => {
+            return (
+              <Window id={folderId} key={folderId}>
+                {folderItems.map((file) => {
+                  const active = selectedFiles.includes(file.id)
+                  return (
+                    <DroppableLocation key={file.id} id={`droppable-${file.id}`} locationId={file.id}>
+                      <DraggableFile id={file.id} selected={active} file={file} fileCallback={fileCallback} />
+                    </DroppableLocation>
+                  )
+                })}
+              </Window>
+            )
+          })}
+          
         <DragOverlay>
           {activeFile ? <FileIcon key={activeFile.id} selected={false} file={activeFile} getFileCallback={() => null} /> : null}
         </DragOverlay>

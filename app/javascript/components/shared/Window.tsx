@@ -11,13 +11,21 @@ export const Window = ({ id, children }) => {
     closeWindow(id)
   }
 
-  const randomId = Math.random().toString(36).replace(/\./g,"")
+  const randomId = Math.random().toString(36).replace(/\.|\d/g, "")
+
+  function sendElementToTop() {
+    const elementId = `window-${randomId}`
+    const element = document.getElementById(elementId)
+    const otherWindows = document.querySelectorAll(`[data-another-window]:not(#${elementId})`)
+    const maxZIndex = Array.from(otherWindows).reduce((acc, elem: any) => Math.max(elem?.style.zIndex, acc), 0)
+    if (element) element.style.zIndex = `${maxZIndex + 1}`
+  }
 
   return (
-    <Draggable handle={`#draggable-${randomId}`}>
-      <div className="">
-          <div id={`draggable-${randomId}`} className="border-2 border-gray-400 h-96 w-[700px] rounded-lg z-10 bg-gray-200">
-            <div className="flex items-center p-2 bg-gray-300 rounded-t-lg">
+    <Draggable handle={`#w-${randomId}`}>
+      <div onMouseDownCapture={sendElementToTop} data-another-window={true} id={`window-${randomId}`} className="absolute top-[30%] left-[30%]" >
+          <div className="border-2 border-gray-400 h-96 w-[700px] rounded-lg z-10 bg-gray-200">
+            <div id={`w-${randomId}`} className="flex items-center p-2 bg-gray-300 rounded-t-lg">
               <div className="space-x-2 mx-2">
                 <button onClick={handleCloseClick} className="bg-red-500 rounded-full h-3 w-3"></button>
                 <button className="bg-yellow-500 rounded-full h-3 w-3"></button>
