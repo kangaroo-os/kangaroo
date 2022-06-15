@@ -12,7 +12,7 @@ export const FileContextMenu = ({ windowId }) => {
   const { removeFile, addFile, desktop } = useDesktop()
 
   async function createFolderFunction() {
-    const res = await createFolder(desktop.fileMappings[windowId].path)
+    const res = await createFolder(getDefaultPath())
     addFile(getDesktopId(), res.data.file)
   }
 
