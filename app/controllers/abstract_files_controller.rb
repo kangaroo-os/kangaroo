@@ -1,7 +1,7 @@
 class AbstractFilesController < ApplicationController
   
   before_action :authenticate_user!
-  before_action :user_authorized?, only: [:show, :destroy, :update]
+  before_action :user_authorized?, only: [:show, :destroy, :update, :make_publicly_accessible, :move_file]
 
   def index
     desktop_files = current_user.abstract_files.filter do |file|
@@ -71,25 +71,11 @@ class AbstractFilesController < ApplicationController
 
   end
 
-  def get_folder_files
-    params.require(:id)
-    folder = AbstractFile.find(params[:id])
-    if folder.present?
-      files = folder.children_files
-      serialized_files = serialize_files(files)
-      render json: { files: serialized_files }, status: :ok
-    else
-      render json: { error: "Folder not found" }, status: :not_found
-    end
-  end
-
   def make_publicly_accessible
-    file = AbstractFile.find(params[:id])
+    return render json: {error: "Missing is_public parameter"}, status: :unprocessable_entity unless params.has_key?(:is_public)
+    file = current_user.abstract_files.find(params[:id])
     if file
-      file.update!(publicly_accessible: true)
-      if (file.public_share_url.nil?)
-        file.update!(public_share_url: SecureRandom.urlsafe_base64(25))
-      end 
+      file.update!(publicly_accessible: params[:is_public])
       render json: { file: file }, status: :ok
     else
       render json: {error: "File not found"}, status: :not_found

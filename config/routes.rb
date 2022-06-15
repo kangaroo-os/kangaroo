@@ -11,7 +11,6 @@ Rails.application.routes.draw do
   # API routes for files
   
   # abstract files
-  get '/files/:id/get_folder_files', to: 'abstract_files#get_folder_files', format: false
   put '/files/:id/move_file', to: 'abstract_files#move_file', format: false
   put '/files/:id/make_publicly_accessible', to: 'abstract_files#make_publicly_accessible', format: false
   
@@ -25,6 +24,7 @@ Rails.application.routes.draw do
 
   # folder files
   resources :folder_files
+  get '/folder_files/:id/get_folder_files', to: 'abstract_files#get_folder_files', format: false
 
 
   get '*path', to: 'application#index'

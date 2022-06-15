@@ -8,12 +8,16 @@ class AbstractFile < ApplicationRecord
   validates :file_type, presence: true
   validates :owner_id, presence: true
   validate :no_illegal_characters
+  validate :public_share_url. uniqueness: true
   # Makes sure the path is unique. If it's not then it will add a number to the end of the name.
   before_validation :ensure_unique_path
 
   scope :cloud_files, -> { where(type: 'CloudFile') }
   scope :link_files, -> { where(type: 'LinkFile') }
-  
+  scope :folder_files, -> { where(type: 'FolderFile') }
+
+  before_create :create_unique_share_url
+
   def icon_url
     if cloud_file? && self.file.representable?
       return self.file.representation(resize_to_fit: [100, 200]).processed.service_url
@@ -24,6 +28,14 @@ class AbstractFile < ApplicationRecord
   end
 
   private 
+
+  def create_unique_share_url
+    unique_share_url = SecureRandom.urlsafe_base64(25)
+    while AbstractFile.where(public_share_url: unique_share_url).count != 0
+      unique_share_url = SecureRandom.urlsafe_base64(25)
+    end
+    self.public_share_url = unique_share_url
+  end
 
   def ensure_unique_path
     # eg. "/users/1/file.txt" => ["/users/1/file", ".txt"]

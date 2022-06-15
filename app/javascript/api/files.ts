@@ -15,7 +15,3 @@ export function moveFile(id: string, folderId: string) {
 export function deleteFile(id: string) {
   return api.delete(`/files/${id}`)
 }
-
-export function getFolderFiles(id: string) {
-  return api.get(`/files/${id}/get_folder_files`)
-}
