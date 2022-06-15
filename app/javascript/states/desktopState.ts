@@ -111,7 +111,6 @@ export const useDesktop = () => {
       ...subject.value,
     }
     delete updatedSubject.files[windowId]
-    delete updatedSubject.fileMappings[windowId]
     subject.next(updatedSubject)
   }
 
