@@ -6,5 +6,5 @@ export interface File {
   size: BigInteger
   icon_url?: string
   public_share_url?: string
-  publicly_accessible: boolean
+  is_shareable: boolean
 }

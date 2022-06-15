@@ -68,9 +68,9 @@ export const Window = ({ windowId, children }) => {
                   readOnly
                 />
               )}
-              {showCopied && <i className="absolute fa-solid fa-circle-check text-green-700"></i>}
-              {!showCopied && <i className="absolute fa-regular fa-clipboard text-gray-500"></i>}
-              <Toggle onClick={(bool) => toggleCallback(bool)} enabled={!!desktop.fileMappings[windowId].publicly_accessible} />
+              {isPublic && showCopied && <i className="absolute fa-solid fa-circle-check text-green-700"></i>}
+              {isPublic && !showCopied && <i className="absolute fa-regular fa-clipboard text-gray-500"></i>}
+              <Toggle onClick={(bool) => toggleCallback(bool)} enabled={!!desktop.fileMappings[windowId].is_shareable} />
               <p>Public</p>
             </div>
           </div>

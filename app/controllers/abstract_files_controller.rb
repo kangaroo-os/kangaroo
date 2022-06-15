@@ -75,7 +75,9 @@ class AbstractFilesController < ApplicationController
     return render json: {error: "Missing is_public parameter"}, status: :unprocessable_entity unless params.has_key?(:is_public)
     file = current_user.abstract_files.find(params[:id])
     if file
-      file.update!(publicly_accessible: params[:is_public])
+      file.update(is_root_shareable: params[:is_public])
+      recursively_make_children_shareable(file, params[:is_public])
+      file.save!
       render json: { file: file }, status: :ok
     else
       render json: {error: "File not found"}, status: :not_found
@@ -89,6 +91,15 @@ class AbstractFilesController < ApplicationController
       id
       path 
     ])
+  end
+
+  def recursively_make_children_shareable(file, is_public)
+    file.update!(is_shareable: is_public)
+    if file.type == "FolderFile"
+      file.children_files.each do |child|
+        recursively_make_children_shareable(child, is_public)
+      end
+    end
   end
 
   protected

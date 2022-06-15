@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_14_112536) do
+ActiveRecord::Schema.define(version: 2022_06_15_113005) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,9 +25,10 @@ ActiveRecord::Schema.define(version: 2022_06_14_112536) do
     t.string "type"
     t.bigint "owner_id"
     t.string "url"
-    t.boolean "publicly_accessible", default: false
     t.string "public_share_url"
     t.bigint "folder_id"
+    t.boolean "is_root_shareable", default: false
+    t.boolean "is_shareable", default: false
     t.index ["folder_id"], name: "index_abstract_files_on_folder_id"
   end
 

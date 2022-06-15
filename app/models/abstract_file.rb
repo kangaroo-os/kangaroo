@@ -9,6 +9,7 @@ class AbstractFile < ApplicationRecord
   validates :owner_id, presence: true
   validate :no_illegal_characters
   validates :public_share_url, uniqueness: true
+  validate :ensure_consistent_shareable_states
   # Makes sure the path is unique. If it's not then it will add a number to the end of the name.
   before_validation :ensure_unique_path
 
@@ -50,6 +51,11 @@ class AbstractFile < ApplicationRecord
     end
     self.name = name_without_ext + (suffix.blank? ? "" : " #{suffix}") + (ext || "")
     self.path = path_without_ext + (suffix.blank? ? "" : " #{suffix}") + (ext || "")
+  end
+
+  def ensure_consistent_shareable_states
+    return unless self.is_root_shareable && !self.is_shareable 
+    errors.add(:is_shareable, 'must be shareable if it is root shareable')
   end
 
   def cloud_file?
