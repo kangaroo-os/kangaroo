@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import DragAndDropUpload from './shared/DragAndDropUpload'
 import ContextMenu from './shared/context_menus/ContextMenu'
-import FileContextMenu from './shared/context_menus/FileContextMenu'
 import { useNavigate } from 'react-router-dom'
 import { addCloudFile } from '@api/cloud_files'
 import { getFileUrl } from '@api/abstract_files'
@@ -165,9 +164,7 @@ const Desktop = () => {
       </div>
       {desktop.uploading && <div>Uploading...</div>}
       {/* Right click menu */}
-      <ContextMenu>
-        <FileContextMenu path={getDefaultPath()} />
-      </ContextMenu>
+      <ContextMenu />
       {error.message && <DisappearingPopup message={error.message} />}
     </div>
   )

@@ -8,6 +8,7 @@ import { renameFile as renameFileAction, deleteFile as deleteFileAction } from '
 import { useDesktop } from '@states/desktopState'
 import { renameFileValidations } from '@helpers/validations'
 import { useError } from '@states/errorState'
+import { useContextMenu } from '@states/contextMenuState'
 export const FileIcon = ({
   file,
   getFileCallback,
@@ -21,6 +22,7 @@ export const FileIcon = ({
   const { setSelectedFiles, addSelectedFile, files, setEditingFile } = useFiles()
   const { removeFile } = useDesktop()
   const { setError } = useError()
+  const { setContextMenuLocation } = useContextMenu()
 
   function movePath(file) {
     console.log(file)
@@ -92,7 +94,7 @@ export const FileIcon = ({
           <div
             tabIndex={0}
             className="flex justify-center items-center flex-col"
-            onContextMenu={() => setSelectedFiles([file.id])}
+            onContextMenu={() => { setSelectedFiles([file.id]); setContextMenuLocation(file.id, false) } }
             onClickCapture={(e) => handleSelect(e)}
             onKeyPress={(e) => handleKeyPress(e)}
             onKeyDown={(e) => handleKeyDown(e)}
