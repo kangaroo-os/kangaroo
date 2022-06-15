@@ -2,15 +2,25 @@ class FolderFilesController < AbstractFilesController
   before_action :user_authorized?, only: [:get_folder_files]
 
   def create 
-    params.require(:path)
-    name = "untitled folder"
-    
+    params.require(:id)
+    name = 'untitled folder'
+    id = params[:id]
+
+    if id == '0'
+      path = "users/#{current_user.id}/#{name}"
+      folder_id = nil
+    else
+      path = AbstractFile.find(id).path + "/#{name}"
+      folder_id = id
+    end
+
     file = FolderFile.new({
-      path: "users/#{current_user.id}/#{name}",
-      name: name, 
-      file_type: "folder", 
-      owner_id: current_user.id, 
+      path: path,
+      name: name,
+      file_type: "folder",
+      owner_id: current_user.id,
       size: 0, 
+      folder_id: folder_id,
     })
     if file.save!
       file.users << current_user
