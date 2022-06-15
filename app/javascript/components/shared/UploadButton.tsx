@@ -3,7 +3,7 @@ import { addCloudFile } from '../../api/cloud_files'
 import Dropdown from './Dropdown'
 import LinkDialogue from './LinkDialogue'
 import { useDesktop } from '../../states/desktopState'
-import { getDefaultPath } from '@helpers/fileStorage'
+import { getDefaultPath, getDesktopId} from '@helpers/fileStorage'
 import { createFolder } from '@api/folder_files'
 
 export const UploadButton = ({ ...props }) => {
@@ -20,7 +20,7 @@ export const UploadButton = ({ ...props }) => {
 
   async function createFolderFunction() {
     const res = await createFolder(getDefaultPath())
-    addFile(getDefaultPath(), res.data.file)
+    addFile(getDesktopId(), res.data.file)
   }
 
   const menuItems = [
@@ -33,7 +33,7 @@ export const UploadButton = ({ ...props }) => {
     for (let file of e.target.files) {
       setUploading(true)
       const res = await addCloudFile(file)
-      addFile(getDefaultPath(), res.data.file)
+      addFile(getDesktopId(), res.data.file)
       setUploading(false)
     }
   }

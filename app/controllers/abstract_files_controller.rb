@@ -1,7 +1,7 @@
 class AbstractFilesController < ApplicationController
   
   before_action :authenticate_user!
-  before_action :user_authorized?, only: [:show, :destroy, :update, :move_file]
+  before_action :user_authorized?, only: [:show, :destroy, :update, :make_publicly_accessible, :move_file]
 
   def index
     desktop_files = current_user.abstract_files.filter do |file|
@@ -51,14 +51,35 @@ class AbstractFilesController < ApplicationController
     render json: { error: 'Validation failed' }, status: :unprocessable_entity
   end
 
-  def get_folder_files
-    params.require(:key)
-    files = AbstractFile.where(owner_id: current_user.id).where("path LIKE ?", "#{params[:key]}%")
-    files = files.filter do |file|
-      file.path == "#{params[:key]}/#{file.name}"
+  def move_file
+    return render json: {error: 'File not found'}, status: :not_found unless params.has_key?(:id)
+    return render json: {error: 'File cannot be moved to this location'}, statue: :unprocessable_entity unless params.has_key?(:folder_id)
+    file = current_user.abstract_files.find(params[:id])
+    if params[:folder_id] === '0'
+      file.folder = nil 
+      file.path = "users/#{current_user.id}/#{file.name}"
+    else 
+      folder = current_user.folder_files.find(params[:folder_id])
+      file.folder = folder
+      file.path = "#{folder.path}/#{file.name}"
     end
-    serialized_files = serialize_files(files)
-    render json: { files: serialized_files }
+    if file.save!
+      render json: { message: 'File moved' }, status: :ok
+    else
+      render json: { error: 'File not moved' }, status: :unprocessable_entity
+    end
+
+  end
+
+  def make_publicly_accessible
+    return render json: {error: "Missing is_public parameter"}, status: :unprocessable_entity unless params.has_key?(:is_public)
+    file = current_user.abstract_files.find(params[:id])
+    if file
+      file.update!(publicly_accessible: params[:is_public])
+      render json: { file: file }, status: :ok
+    else
+      render json: {error: "File not found"}, status: :not_found
+    end
   end
 
   private

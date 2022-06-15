@@ -6,10 +6,8 @@ import { deleteFile } from '@api/files'
 
 export const FileContextMenu = () => {
   const { files, setEditingFile } = useFiles()
-  const { getContextMenuLocation, hideContextMenu } = useContextMenu()
-  const { removeFile, addFile } = useDesktop()
-
-  const [menuLocation] = getContextMenuLocation()
+  const { hideContextMenu } = useContextMenu()
+  const { removeFile } = useDesktop()
 
   function handleRename(e) {
     e.stopPropagation()

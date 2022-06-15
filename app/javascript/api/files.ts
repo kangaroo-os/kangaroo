@@ -1,4 +1,4 @@
-import api from '../helpers/api'
+import api from '@helpers/api'
 
 export function getAllFiles() {
   return api.get('/files')
@@ -8,10 +8,10 @@ export function renameFile(id: string, path: string) {
   return api.put(`/files/${id}`, { path: path })
 }
 
-export function deleteFile(id: string) {
-  return api.delete(`/files/${id}`)
+export function moveFile(id: string, folderId: string) {
+  return api.put(`/files/${id}/move_file`, { folder_id: folderId })
 }
 
-export function getFolderFiles(file_path: string) {
-  return api.get(`/files/get_folder_files?key=${file_path}`)
+export function deleteFile(id: string) {
+  return api.delete(`/files/${id}`)
 }
