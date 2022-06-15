@@ -2,9 +2,12 @@ import React, { useState, useRef } from 'react'
 import { useEffect } from 'react'
 import { fromEvent } from 'rxjs'
 import { useContextMenu } from '@states/contextMenuState'
+import FileContextMenu from './FileContextMenu'
+import DefaultContextMenu from './DefaultContextMenu'
 
-export const ContextMenu = ({ children }) => {
-  const { contextMenu, showContextMenu, hideContextMenu } = useContextMenu()
+export const ContextMenu = () => {
+  const { contextMenu, showContextMenu, hideContextMenu, getContextMenuLocation } = useContextMenu()
+  const [locationId, isFolder] = getContextMenuLocation()
 
   let menuRef = useRef<HTMLDivElement>(null)
 
@@ -38,7 +41,9 @@ export const ContextMenu = ({ children }) => {
         contextMenu.hidden ? 'hidden' : `block left-[${contextMenu.x}px] top-[${contextMenu.y}px]`
       }`}
     >
-      <ul className="space-y-2">{children}</ul>
+      <ul className="space-y-2">
+        { isFolder ? <DefaultContextMenu /> : <FileContextMenu /> }
+      </ul>
     </div>
   )
 }

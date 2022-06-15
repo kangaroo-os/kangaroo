@@ -1,20 +1,13 @@
 import { useFiles } from '@states/filesState'
 import React from 'react'
-import { createFolder } from '@api/folder_files'
 import { useContextMenu } from '@states/contextMenuState'
 import { useDesktop } from '@states/desktopState'
 import { deleteFile } from '@api/files'
-import { getDefaultPath, getDesktopId } from '@helpers/fileStorage'
 
-export const FileContextMenu = ({ windowId }) => {
+export const FileContextMenu = () => {
   const { files, setEditingFile } = useFiles()
   const { hideContextMenu } = useContextMenu()
-  const { removeFile, addFile, desktop } = useDesktop()
-
-  async function createFolderFunction() {
-    const res = await createFolder(getDefaultPath())
-    addFile(getDesktopId(), res.data.file)
-  }
+  const { removeFile } = useDesktop()
 
   function handleRename(e) {
     e.stopPropagation()
@@ -35,9 +28,6 @@ export const FileContextMenu = ({ windowId }) => {
 
   return (
     <>
-      <li className="rounded hover:bg-gray-200 p-1" onClick={() => createFolderFunction()}>
-        New Folder
-      </li>
       <li className="rounded hover:bg-gray-200 p-1" onClickCapture={(e) => handleRename(e)}>
         Rename
       </li>

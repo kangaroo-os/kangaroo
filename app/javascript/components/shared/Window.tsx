@@ -6,10 +6,12 @@ import { makeFileShareable } from '@api/abstract_files'
 import { getDefaultPath } from '@helpers/fileStorage'
 import Draggable from 'react-draggable'
 import { sleep } from '@helpers/sleep'
+import { useContextMenu } from '@states/contextMenuState'
 
 export const Window = ({ windowId, children }) => {
   const { closeWindow, desktop } = useDesktop()
   const shareRef = useRef<HTMLInputElement>()
+  const { setContextMenuLocation } = useContextMenu()
   const [showCopied, setShowCopied] = useState(false)
   const [isPublic, setIsPublic] = useState(desktop.fileMappings[windowId].publicly_accessible)
   const [publicUrl, setPublicUrl] = useState(desktop.fileMappings[windowId].public_share_url || '')
@@ -47,7 +49,13 @@ export const Window = ({ windowId, children }) => {
 
   return (
     <Draggable handle={`#w-${randomId}`}>
-      <div onMouseDownCapture={sendElementToTop} data-another-window={true} id={`window-${randomId}`} className="absolute top-[30%] left-[30%]">
+      <div
+        onContextMenu={() => { setContextMenuLocation(windowId, true) }}
+        onMouseDownCapture={sendElementToTop}
+        data-another-window={true}
+        id={`window-${randomId}`}
+        className="absolute top-[30%] left-[30%]"
+      >
         <div className="border-2 border-gray-400 h-96 w-[700px] rounded-lg z-10 bg-gray-200">
           <div id={`w-${randomId}`} className="flex items-center p-2 bg-gray-300 rounded-t-lg">
             <div className="space-x-2 mx-2">
