@@ -54,12 +54,12 @@ class AbstractFilesController < ApplicationController
   def move_file
     return render json: {error: 'File not found'}, status: :not_found unless params.has_key?(:id)
     return render json: {error: 'File cannot be moved to this location'}, statue: :unprocessable_entity unless params.has_key?(:folder_id)
-    file = AbstractFile.find(params[:id])
+    file = current_user.abstract_files.find(params[:id])
     if params[:folder_id] === '0'
       file.folder = nil 
       file.path = "users/#{current_user.id}/#{file.name}"
     else 
-      folder = AbstractFile.find(params[:folder_id])
+      folder = current_user.folder_files.find(params[:folder_id])
       file.folder = folder
       file.path = "#{folder.path}/#{file.name}"
     end
