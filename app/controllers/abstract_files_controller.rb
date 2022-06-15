@@ -1,7 +1,7 @@
 class AbstractFilesController < ApplicationController
   
   before_action :authenticate_user!
-  before_action :user_authorized?, only: [:show, :destroy, :update]
+  before_action :user_authorized?, only: [:show, :destroy, :update, :move_file]
 
   def index
     desktop_files = current_user.abstract_files.filter do |file|
