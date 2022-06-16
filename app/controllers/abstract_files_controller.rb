@@ -84,6 +84,17 @@ class AbstractFilesController < ApplicationController
     end
   end
 
+  def get_proxied_share_files
+    return render json: {error: "Missing share_id parameter"}, status: :unprocessable_entity unless params.has_key?(:share_id)
+    root_proxied_file = current_user.abstract_files.where(public_share_url: params[:share_id]).first
+    return render json: {error: "Files not found"}, status: :not_found unless root_proxied_file 
+    if root_proxied_file.type == "FolderFile"
+      render json: { files: serialize_files(root_proxied_file.children_files) }, status: :ok 
+    else
+      render json: { files: serialize_files([root_proxied_file]) }, status: :ok
+    end
+  end
+
   private
 
   def abstract_file_params

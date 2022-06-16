@@ -8,6 +8,7 @@ import Header from '../components/Header'
 import NotFound from '@components/404'
 import Landing from '../components/shared/Landing'
 import ResetPassword from '@components/ResetPassword'
+import ShareView from '@components/ShareView'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,6 +21,7 @@ ReactDOM.render(
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
           <Route path="reset_password" element={<ResetPassword />} />
+          <Route path="share/:share_id" element={<ShareView />} />
         </Routes>
       </Header>
     </BrowserRouter>
