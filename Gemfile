@@ -16,6 +16,7 @@ gem 'omniauth'
 gem 'devise_token_auth'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'vite_rails'
+gem 'vite_ruby'
 gem 'rack-cors'
 gem "image_processing", ">= 1.2"
 gem 'nokogiri'
