@@ -114,7 +114,11 @@ class AbstractFilesController < ApplicationController
     end
   end
 
+  def serialize_file(file)
+    AbstractFileSerializer.new(file).serializable_hash
+  end
+
   def serialize_files(files)
-    files.map { |f| AbstractFileSerializer.new(f).serializable_hash }
+    files.map { |file| serialize_file(file) }
   end
 end

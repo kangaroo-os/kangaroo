@@ -32,7 +32,7 @@ export const useContextMenu = () => {
   const setContextMenuLocation = (locationId: string, isFolder: boolean) => {
     // If location was set earlier, then no longer update it.
     // Checking hidden to prevent bug where context menu is shown before switching to another target
-    if (subject.value.locationId && subject.value.hidden) return
+    if (subject.value.locationId === null && subject.value.hidden) return
     subject.next({ ...subject.value, isFolder: isFolder, locationId: locationId })
   }
 

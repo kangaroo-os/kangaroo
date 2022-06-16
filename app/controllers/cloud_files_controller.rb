@@ -18,7 +18,7 @@ class CloudFilesController < AbstractFilesController
 
     if file.save!
       file.users << current_user
-      render json: {file: serialize_files([file])}, status: :ok
+      render json: {file: serialize_file(file)}, status: :ok
     else
       render json: {error: "File not saved"}, status: :unprocessable_entity
     end

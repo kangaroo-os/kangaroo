@@ -19,7 +19,7 @@ export const UploadButton = ({ ...props }) => {
   }
 
   async function createFolderFunction() {
-    const res = await createFolder(getDefaultPath())
+    const res = await createFolder(getDesktopId())
     addFile(getDesktopId(), res.data.file)
   }
 

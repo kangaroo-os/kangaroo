@@ -13,7 +13,7 @@ export const Window = ({ windowId, children }) => {
   const shareRef = useRef<HTMLInputElement>()
   const { setContextMenuLocation } = useContextMenu()
   const [showCopied, setShowCopied] = useState(false)
-  const [isPublic, setIsPublic] = useState(desktop.fileMappings[windowId].publicly_accessible)
+  const [isPublic, setIsPublic] = useState(desktop.fileMappings[windowId].is_shareable)
   const [publicUrl, setPublicUrl] = useState(desktop.fileMappings[windowId].public_share_url || '')
 
   function handleCloseClick() {
