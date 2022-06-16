@@ -5,8 +5,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import Dropdown from './shared/Dropdown'
 import { logout as logoutUser } from '../api/auth'
 import { getUser, useUser } from '../states/userState'
+import { type } from 'os'
 
-export default function Header({ children }) {
+export default function Layout({ children }) {
   let navigate = useNavigate()
 
   const user = getUser()
@@ -35,8 +36,16 @@ export default function Header({ children }) {
     </div>
   )
 
+  const backgroundStyle = {
+    backgroundImage: `url("https://kangarooo.s3.amazonaws.com/kangaroo/background.png")`,
+    backgroundSize: 'cover',
+    position: 'fixed',
+    minHeight: '100vh',
+    minWidth: '100vw',
+  }
+
   return (
-    <div>
+    <div style={backgroundStyle}>
       <div className="bg-opacity-50 z-50 space-x-4 fixed top-0 shadow-lg bg-gray-100 w-full px-[10px] py-3 flex flex-initial flex-row-reverse items-center">
         {user ? (
           <Dropdown menuButton={MenuButton()} menuItems={menuItems} />

@@ -154,7 +154,6 @@ const Desktop = () => {
       ref={desktopRef}
       onDragOverCapture={onDragOver}
       onDragLeaveCapture={onDragLeave}
-      style={{ backgroundImage: `url("https://kangarooo.s3.amazonaws.com/kangaroo/background.png")`, backgroundSize: 'cover' }}
     >
       {!dropZoneDisabled && <DragAndDropUpload className="w-full h-full rounded-lg p-10 absolute cursor-default" uploadCallback={uploadFile} />}
       <div className="absolute m-5 right-[25px] top-[80px]">
