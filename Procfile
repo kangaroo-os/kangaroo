@@ -1,2 +1,2 @@
-vite: bin/vite dev
+vite: bin/vite build
 web: bin/rails s
