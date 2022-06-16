@@ -114,11 +114,22 @@ export const useDesktop = () => {
     subject.next(updatedSubject)
   }
 
+  function updateExistingFile(file: File) {
+    subject.next({
+      ...subject.value,
+      fileMappings: {
+        ...subject.value.fileMappings,
+        [file.id]: file,
+      },
+    })
+  } 
+
   return {
     desktop,
     addFile,
     setUploading,
     removeFile,
+    updateExistingFile,
     setWindowFiles,
     closeWindow,
     createWindow,

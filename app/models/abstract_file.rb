@@ -11,7 +11,7 @@ class AbstractFile < ApplicationRecord
   validates :public_share_url, uniqueness: true
   validate :ensure_consistent_shareable_states
   # Makes sure the path is unique. If it's not then it will add a number to the end of the name.
-  # before_validation :ensure_unique_path
+  before_validation :ensure_unique_path
 
   scope :cloud_files, -> { where(type: 'CloudFile') }
   scope :link_files, -> { where(type: 'LinkFile') }
@@ -40,17 +40,18 @@ class AbstractFile < ApplicationRecord
 
   def ensure_unique_path
     # eg. "/users/1/file.txt" => ["/users/1/file", ".txt"]
-    path_without_ext, ext = self.path.split(/(?=[?.!])/, 2)
+    path_without_ext, ext = self.path.split(/(\.[^\.]+)?$/, 2)
     name_without_ext = File.basename(self.path, ext || "")
 
-    if AbstractFile.where(path: self.path).exists?
+    if AbstractFile.where(path: self.path).where.not(id: self.id).exists?
       suffix = 1
-      until AbstractFile.where(path: path_without_ext + " #{suffix}" + (ext || "")).blank?
+      until AbstractFile.where(path: "#{path_without_ext} (#{suffix})#{ext}").empty?
         suffix += 1
       end
     end
-    self.name = name_without_ext + (suffix.blank? ? "" : " #{suffix}") + (ext || "")
-    self.path = path_without_ext + (suffix.blank? ? "" : " #{suffix}") + (ext || "")
+
+    self.name = name_without_ext + (suffix.blank? ? "" : " (#{suffix})") + ext
+    self.path = path_without_ext + (suffix.blank? ? "" : " (#{suffix})") + ext
   end
 
   def ensure_consistent_shareable_states

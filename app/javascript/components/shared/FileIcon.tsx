@@ -9,6 +9,7 @@ import { useDesktop } from '@states/desktopState'
 import { renameFileValidations } from '@helpers/validations'
 import { useError } from '@states/errorState'
 import { useContextMenu } from '@states/contextMenuState'
+import { addCloudFile } from '@api/cloud_files'
 export const FileIcon = ({
   file,
   getFileCallback,
@@ -20,7 +21,7 @@ export const FileIcon = ({
   selected: boolean
 }) => {
   const { setSelectedFiles, addSelectedFile, files, setEditingFile } = useFiles()
-  const { removeFile } = useDesktop()
+  const { updateExistingFile, removeFile } = useDesktop()
   const { setError } = useError()
   const { setContextMenuLocation } = useContextMenu()
 
@@ -66,7 +67,9 @@ export const FileIcon = ({
         file.path = file.path.slice(0, file.path.length - file.name.length) + renameRef.current.value
         file.name = renameRef.current.value
         setEditingFile(null)
-        renameFileAction(file.id, file.path)
+        renameFileAction(file.id, file.path).then((res) => {
+          updateExistingFile(res.data.file)
+        })
       }
     }
   }

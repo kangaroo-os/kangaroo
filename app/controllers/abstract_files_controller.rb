@@ -46,7 +46,7 @@ class AbstractFilesController < ApplicationController
         subfile.update!(path: "#{new_path}/#{subfile.name}")
       end
     end
-    render json: { message: 'File updated' }, status: :ok
+    render json: { file: serialize_file(file) }, status: :ok
   rescue ActiveRecord::RecordInvalid
     render json: { error: 'Validation failed' }, status: :unprocessable_entity
   end

@@ -113,8 +113,8 @@ function GridView({
       },
     } = over
 
-    // Don't do anything if file is dropped back at the same place
-    if (id === locationId) return
+    // Don't do anything if file is dropped back at the same place (loosely based on id)
+    if (id == locationId) return
     const [activeContainer, activeIndex] = getWindowIdAndFileIndex(id)
     const [overContainer, overIndex] = getWindowIdAndFileIndex(locationId)
 
