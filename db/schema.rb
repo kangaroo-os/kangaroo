@@ -25,10 +25,10 @@ ActiveRecord::Schema.define(version: 2022_06_15_113005) do
     t.string "type"
     t.bigint "owner_id"
     t.string "url"
+    t.boolean "is_shareable", default: false
     t.string "public_share_url"
     t.bigint "folder_id"
     t.boolean "is_root_shareable", default: false
-    t.boolean "is_shareable", default: false
     t.index ["folder_id"], name: "index_abstract_files_on_folder_id"
   end
 

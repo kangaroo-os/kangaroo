@@ -63,7 +63,7 @@ export const FileIcon = ({
       if (renameError) {
         setError(renameError)
       } else {
-        file.path = file.path.replace(new RegExp(file.name + '$'), renameRef.current.value)
+        file.path = file.path.slice(0, file.path.length - file.name.length) + renameRef.current.value
         file.name = renameRef.current.value
         setEditingFile(null)
         renameFileAction(file.id, file.path)
