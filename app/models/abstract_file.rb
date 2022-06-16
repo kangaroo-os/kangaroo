@@ -18,6 +18,7 @@ class AbstractFile < ApplicationRecord
   scope :folder_files, -> { where(type: 'FolderFile') }
 
   before_create :create_unique_share_url
+  before_update :if_parent_public_make_self_public
 
   def icon_url
     if cloud_file? && self.file.representable?
@@ -29,6 +30,15 @@ class AbstractFile < ApplicationRecord
   end
 
   private 
+
+  def if_parent_public_make_self_public
+    return if self.is_root_shareable
+    if self.folder != nil && self.folder.is_shareable
+      self.is_shareable = true
+    else
+      self.is_shareable = false
+    end
+  end
 
   def create_unique_share_url
     unique_share_url = SecureRandom.urlsafe_base64(25)
