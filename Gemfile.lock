@@ -306,7 +306,6 @@ DEPENDENCIES
   turbolinks (~> 5)
   tzinfo-data
   vite_rails
-  vite_ruby
   web-console (>= 3.3.0)
   webdrivers
 
