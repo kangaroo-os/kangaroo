@@ -160,7 +160,7 @@ const Desktop = () => {
         <UploadButton />
       </div>
       <div className="p-10 w-full h-full overflow-hidden">
-        {desktop.files && <GridView fileStore={desktop.files} selectedFiles={files.selectedFiles} fileCallback={fileCallback} />}
+        {desktop.windows && <GridView windows={desktop.windows} selectedFiles={files.selectedFiles} fileCallback={fileCallback} />}
       </div>
       {desktop.uploading && <div>Uploading...</div>}
       {/* Right click menu */}

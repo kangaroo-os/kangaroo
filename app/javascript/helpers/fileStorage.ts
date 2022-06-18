@@ -1,4 +1,5 @@
-import { File } from '@models/File'
+import { WindowContent } from '@models/Desktop'
+
 const store = {
   desktopPath: '',
 }
@@ -15,14 +16,14 @@ const getDesktopId = () => {
   return '0'
 }
 
-const getDesktopFiles = (fileStore: { [id: string]: File[] }) => {
-  return fileStore[getDesktopId()]
+const getDesktopFiles = (windows: WindowContent) => {
+  return windows[getDesktopId()]
 }
 
-const getWindows = (fileStore: { [id: string]: File[] }) => {
-  const windows = { ...fileStore }
-  delete windows[getDesktopId()]
-  return windows
+const getFolders = (windows: WindowContent) => {
+  const copiedWindows = { ...windows }
+  delete copiedWindows[getDesktopId()]
+  return copiedWindows
 }
 
-export { getDesktopFiles, getWindows, setDefaultPath, getDefaultPath, getDesktopId }
+export { getDesktopFiles, getFolders, setDefaultPath, getDefaultPath, getDesktopId }

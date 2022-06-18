@@ -2,16 +2,17 @@ import { getDefaultPath } from '@helpers/fileStorage'
 import { useState, useEffect } from 'react'
 import { BehaviorSubject } from 'rxjs'
 import { File } from '../models/File'
+import { WindowContent, FileMappings } from '../models/Desktop'
 
 export type DesktopState = {
-  files: { [id: string]: File[] }
-  fileMappings: { [id: string]: File }
+  windows: WindowContent
+  fileMappings: FileMappings
   selectedFiles: string[]
   uploading: boolean
 }
 
 let subject = new BehaviorSubject<DesktopState>({
-  files: {},
+  windows: {},
   fileMappings: {},
   selectedFiles: [],
   uploading: false,
@@ -24,6 +25,9 @@ export const getDesktop = () => {
   return subject.value
 }
 
+// Be careful when creating a function that returns desktop data
+// because component that takes in desktop wouldn't rerender unless
+// "desktop" changes in the first place.
 export const useDesktop = () => {
   const [desktop, setDesktop] = useState(subject.value)
 
@@ -42,9 +46,9 @@ export const useDesktop = () => {
   function addFile(windowId: string, file: File) {
     subject.next({
       ...subject.value,
-      files: {
-        ...subject.value.files,
-        [windowId]: [...(subject.value.files[windowId] || []), file],
+      windows: {
+        ...subject.value.windows,
+        [windowId]: [...(subject.value.windows[windowId] || []), file.id],
       },
       fileMappings: {
         ...subject.value.fileMappings,
@@ -59,9 +63,9 @@ export const useDesktop = () => {
 
   function removeFile(id: string) {
     let windowId = null
-    for (const folder in subject.value.files) {
-      if (subject.value.files[folder].map((file) => file.id).includes(id)) {
-        windowId = folder
+    for (const window in subject.value.windows) {
+      if (subject.value.windows[window].includes(id)) {
+        windowId = window
       }
     }
 
@@ -70,25 +74,26 @@ export const useDesktop = () => {
 
     subject.next({
       ...subject.value,
-      files: {
-        ...subject.value.files,
-        [windowId]: subject.value.files[windowId].filter((file) => file.id !== id),
+      windows: {
+        ...subject.value.windows,
+        [windowId]: subject.value.windows[windowId].filter((fileId) => fileId !== id),
       },
       fileMappings: deepCopyMapping,
     })
   }
 
   function setWindowFiles(windowId: string, files: File[]) {
-    const updatedFiles = {
-      ...subject.value.files,
-      [windowId]: files,
+    const map = new Map(files.map(file => [file.id, file]))
+    const updatedWindows = {
+      ...subject.value.windows,
+      [windowId]: files.map((file) => file.id),
     }
     subject.next({
       ...subject.value,
-      files: updatedFiles,
+      windows: updatedWindows,
       fileMappings: {
-        ...(Object.values(updatedFiles).flat()).reduce((acc, file) => {
-          acc[file.id] = file
+        ...(Object.values(updatedWindows).flat()).reduce((acc, id) => {
+          acc[id] = subject.value.fileMappings[id] || map.get(id)
           return acc
         }, {}),
       },
@@ -98,8 +103,8 @@ export const useDesktop = () => {
   function createWindow(windowId: string) {
     subject.next({
       ...subject.value,
-      files: {
-        ...subject.value.files,
+      windows: {
+        ...subject.value.windows,
         [windowId]: [],
       },
     })
@@ -110,7 +115,7 @@ export const useDesktop = () => {
     const updatedSubject = {
       ...subject.value,
     }
-    delete updatedSubject.files[windowId]
+    delete updatedSubject.windows[windowId]
     subject.next(updatedSubject)
   }
 
@@ -122,7 +127,11 @@ export const useDesktop = () => {
         [file.id]: file,
       },
     })
-  } 
+  }
+
+  function getFileFromId(id: string) {
+    return subject.value.fileMappings[id]
+  }
 
   return {
     desktop,
@@ -133,5 +142,6 @@ export const useDesktop = () => {
     setWindowFiles,
     closeWindow,
     createWindow,
+    getFileFromId,
   }
 }
