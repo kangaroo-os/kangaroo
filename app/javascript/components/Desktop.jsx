@@ -141,8 +141,7 @@ const Desktop = () => {
   }
 
   const targetIsTopLevel = (event) => {
-    // TODO: FIX THIS
-    return event.currentTarget.id === null
+    return event.currentTarget.id === 'desktop'
   }
 
   // <-- Drag zone detection ends -->

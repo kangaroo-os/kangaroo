@@ -138,7 +138,7 @@ function GridView({
       // TODO BACKEND: Change the order
       // setWindowFiles(activeContainer, arrayMove(windows[activeContainer], activeIndex, overIndex))
     } else {
-      moveFile(activeFile.id, `${overContainer}`)
+      moveFile(activeFile.id, overContainer)
       windows[activeContainer].splice(activeIndex, 1)
       windows[overContainer].splice(overIndex, 0, activeFile.id)
       setWindowFiles(activeContainer, windows[activeContainer].map(fileId => getFileFromId(fileId)))

@@ -69,6 +69,8 @@ export const useDesktop = () => {
       }
     }
 
+    if (subject.value.windows[id]) closeWindow(id)
+
     let deepCopyMapping = JSON.parse(JSON.stringify(subject.value.fileMappings))
     delete deepCopyMapping[id]
 
@@ -112,6 +114,7 @@ export const useDesktop = () => {
 
   function closeWindow(windowId: string) {
     if (windowId === getDefaultPath()) return
+    setWindowFiles(windowId, [])
     const updatedSubject = {
       ...subject.value,
     }

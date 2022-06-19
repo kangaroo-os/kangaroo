@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { fromEvent } from 'rxjs'
 import { useContextMenu } from '@states/contextMenuState'
 import FileContextMenu from './FileContextMenu'
-import DefaultContextMenu from './DefaultContextMenu'
+import WindowContextMenu from './WindowContextMenu'
 
 export const ContextMenu = () => {
   const { contextMenu, showContextMenu, hideContextMenu, getContextMenuLocation } = useContextMenu()
@@ -42,7 +42,7 @@ export const ContextMenu = () => {
       }`}
     >
       <ul className="space-y-2">
-        { isFolder ? <DefaultContextMenu /> : <FileContextMenu /> }
+        { isFolder ? <WindowContextMenu /> : <FileContextMenu /> }
       </ul>
     </div>
   )

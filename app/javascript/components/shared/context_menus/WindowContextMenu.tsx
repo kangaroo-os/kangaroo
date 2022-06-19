@@ -4,7 +4,7 @@ import { createFolder } from '@api/folder_files'
 import { useContextMenu } from '@states/contextMenuState'
 import { useDesktop } from '@states/desktopState'
 
-export const DefaultContextMenu = () => {
+export const WindowContextMenu = () => {
   const { getContextMenuLocation, hideContextMenu } = useContextMenu()
   const { addFile } = useDesktop()
 
@@ -25,4 +25,4 @@ export const DefaultContextMenu = () => {
   )
 }
 
-export default DefaultContextMenu
+export default WindowContextMenu

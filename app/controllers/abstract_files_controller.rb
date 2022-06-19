@@ -24,12 +24,19 @@ class AbstractFilesController < ApplicationController
 
   def destroy 
     file = AbstractFile.find(params[:id])
-    if file
+    return render json: {error: 'File not found'}, status: :not_found unless file.present?
+
+    ApplicationRecord.transaction do
+      if file.file_type == 'folder'
+        children = AbstractFile.where('path LIKE ?', "#{file.path}/%")
+        children.each(&:destroy!)
+      end
       file.destroy!
-      render json: { message: "File deleted" }, status: :ok
-    else
-      render json: {error: "File not found"}, status: :not_found
+    rescue ActiveRecord::RecordInvalid
+      return render json: { error: 'Could not delete file' }, status: :unprocessable_entity
     end
+
+    render json: { message: 'File deleted' }, status: :ok
   end
 
   def update
