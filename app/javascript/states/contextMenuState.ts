@@ -1,10 +1,12 @@
+import { getDesktopId } from '@helpers/fileStorage'
 import { useState, useEffect } from 'react'
 import { BehaviorSubject } from 'rxjs'
 
 let subject = new BehaviorSubject({
-  isFolder: false,
+  isFolder: true,
   locationId: null,
   hidden: true,
+  resettable: false,
   x: 0,
   y: 0,
 })
@@ -22,22 +24,21 @@ export const useContextMenu = () => {
   }, [])
 
   const hideContextMenu = () => {
-    subject.next({ isFolder: false, locationId: null, hidden: true, x: 0, y: 0 })
+    subject.next({ resettable: true, isFolder: true, locationId: null, hidden: true, x: 0, y: 0 })
   }
 
   const showContextMenu = (x: number, y: number) => {
-    subject.next({ ...subject.value, hidden: false, x: x, y: y })
+    subject.next({ ...subject.value, hidden: false, x: x, y: y, resettable: true })
   }
 
   const setContextMenuLocation = (locationId: string, isFolder: boolean) => {
     // If location was set earlier, then no longer update it.
-    // Checking hidden to prevent bug where context menu is shown before switching to another target
-    if (subject.value.locationId === null && subject.value.hidden) return
-    subject.next({ ...subject.value, isFolder: isFolder, locationId: locationId })
+    if (!subject.value.resettable) return
+    subject.next({ ...subject.value, isFolder: isFolder, locationId: locationId, resettable: false })
   }
 
   const getContextMenuLocation = () => {
-    return [subject.value.locationId, subject.value.isFolder]
+    return [subject.value.locationId || getDesktopId(), subject.value.isFolder]
   }
 
   return { contextMenu, hideContextMenu, showContextMenu, setContextMenuLocation, getContextMenuLocation }
