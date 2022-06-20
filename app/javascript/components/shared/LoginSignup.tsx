@@ -10,6 +10,7 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
   const [signup, setSignup] = useState(isSignup)
   const [errors, setErrors] = useState(undefined)
   const [forgotPassword, setForgotPassword] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
 
   const { setCurrentUser } = useUser()
 
@@ -33,9 +34,14 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
     e.preventDefault()
 
     let res: AxiosResponse
+    // Don't resend email if we have already sent an email in the same session
+    if (forgotPassword && emailSent) {
+      return
+    }
     if (forgotPassword) {
       try {
         res = await resetPassword(e.target.email.value)
+        setEmailSent(true)
       } catch (err) {
         setErrors(err.response.data.errors.full_messages[0])
       }
@@ -158,11 +164,14 @@ export default function LoginSignup({ isSignup }: { isSignup: boolean }) {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className={`${
+                  emailSent && forgotPassword ? 'cursor-not-allowed	bg-gray-500' : 'bg-indigo-600 hover:bg-indigo-700'
+                } w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
               >
                 {getButtonText()}
               </button>
             </div>
+            {forgotPassword && emailSent && <p className="text-red-500 text-xs">Email sent! Check your email for a password reset instructions.</p>}
           </form>
         </div>
       </div>
