@@ -1,6 +1,6 @@
 class AbstractFilesController < ApplicationController
   
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:get_proxied_share_files]
   before_action :user_authorized?, only: [:show, :destroy, :update, :make_publicly_accessible, :move_file]
 
   def index
@@ -93,12 +93,12 @@ class AbstractFilesController < ApplicationController
 
   def get_proxied_share_files
     return render json: {error: "Missing share_id parameter"}, status: :unprocessable_entity unless params.has_key?(:share_id)
-    root_proxied_file = current_user.abstract_files.where(public_share_url: params[:share_id]).first
+    root_proxied_file = AbstractFile.where(public_share_url: params[:share_id]).first
     return render json: {error: "Files not found"}, status: :not_found unless root_proxied_file 
     if root_proxied_file.type == "FolderFile"
       render json: { files: serialize_files(root_proxied_file.children_files) }, status: :ok 
     else
-      render json: { files: serialize_files([root_proxied_file]) }, status: :ok
+      send_data root_proxied_file.file.download, filename: root_proxied_file.name, content_type: root_proxied_file.file_type, :disposition => 'inline'
     end
   end
 
@@ -123,7 +123,12 @@ class AbstractFilesController < ApplicationController
   protected
 
   def user_authorized?
-    if params.has_key?(:id)
+    if params.has_key?(:share_id)
+      file = AbstractFile.find_by(public_share_url: params[:share_id])
+      if file && file.is_shareable
+        return true
+      end
+    elsif params.has_key?(:id)
       if current_user.abstract_file_ids.include?(params[:id].to_i)
         return true
       else
