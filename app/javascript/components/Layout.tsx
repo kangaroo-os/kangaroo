@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import Dropdown from './shared/Dropdown'
 import { logout as logoutUser } from '../api/auth'
 import { getUser, useUser } from '../states/userState'
-import { type } from 'os'
 
 export default function Layout({ children }) {
   let navigate = useNavigate()
@@ -37,7 +36,7 @@ export default function Layout({ children }) {
   )
 
   const backgroundStyle = {
-    backgroundImage: `url("https://kangarooo.s3.amazonaws.com/kangaroo/background.png")`,
+    backgroundImage: `${location.pathname == '/desktop' ? 'url("https://kangarooo.s3.amazonaws.com/kangaroo/background.png")' : ''}`,
     backgroundSize: 'cover',
     position: 'fixed',
     minHeight: '100vh',
