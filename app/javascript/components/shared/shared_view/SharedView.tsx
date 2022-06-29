@@ -57,7 +57,7 @@ export const SharedView = () => {
   return (
     <div className="m-24">
       <div className="shadow-lg w-full">
-        <SharedWindow windowId={rootFile?.name}>
+        <SharedWindow rootFile={rootFile}>
           {files.length > 0 ? (
             <>
               {files.map((file) => {

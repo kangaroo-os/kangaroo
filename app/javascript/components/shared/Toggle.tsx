@@ -1,12 +1,15 @@
 import React from 'react'
 import { useState } from 'react'
 
-export const Toggle = ({ onClick, enabled }: { onClick: (bool: boolean) => void; enabled: boolean }) => {
+export const Toggle = ({ onClick, enabled, enforce = false }: { onClick: (bool: boolean) => void; enabled: boolean; enforce?: boolean }) => {
   const [isEnabled, setIsEnabled] = useState(enabled)
 
   function handleClick() {
     onClick(!isEnabled)
-    setIsEnabled(!isEnabled)
+    if (!enforce) {
+      setIsEnabled(!isEnabled)
+      // TODO: force redirect to login page :)
+    }
   }
 
   return (
