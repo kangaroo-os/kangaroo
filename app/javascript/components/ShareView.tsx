@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import api from '@helpers/api'
 import FileIcon from './shared/FileIcon'
+import SharedWindow from './SharedWindow'
 
 export const ShareView = () => {
   let { share_id } = useParams()
@@ -15,9 +16,13 @@ export const ShareView = () => {
   }, [share_id])
 
   function renderFiles() {
-    return files.map((file) => {
-      return <FileIcon selected={false} key={file.id} file={file} getFileCallback={console.log} />
-    })
+    return (
+      <SharedWindow windowId={share_id}>
+        {files.map((file) => {
+          return <FileIcon selected={false} key={file.id} file={file} getFileCallback={console.log} />
+        })}
+      </SharedWindow>
+    )
   }
   return (
     <div className="m-24">
