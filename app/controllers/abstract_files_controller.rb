@@ -96,9 +96,9 @@ class AbstractFilesController < ApplicationController
     root_proxied_file = AbstractFile.where(public_share_url: params[:share_id], is_shareable: true).first
     return render json: {error: "Files not found"}, status: :not_found unless root_proxied_file 
     if root_proxied_file.type == "FolderFile"
-      render json: { files: serialize_files(root_proxied_file.children_files) }, status: :ok 
+      render json: { root_file: serialize_file(root_proxied_file), files: serialize_files(root_proxied_file.children_files) }, status: :ok 
     else
-      render json: { files: serialize_files([root_proxied_file]) }, status: :ok
+      render json: { url: root_proxied_file.url }, status: :ok
     end
   end
 

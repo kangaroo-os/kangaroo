@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   # abstract files
   put '/files/:id/move_file', to: 'abstract_files#move_file', format: false
   put '/files/:id/make_publicly_accessible', to: 'abstract_files#make_publicly_accessible', format: false
-  get '/files/proxied_files/:share_id', to: 'abstract_files#get_proxied_share_files', format: false
+  get '/shared_files/:share_id', to: 'abstract_files#get_proxied_share_files', format: false
   
   resources :files, :controller => :abstract_files, :as => :abstract_files
 

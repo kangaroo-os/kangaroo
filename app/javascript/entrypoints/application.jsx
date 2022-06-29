@@ -5,10 +5,9 @@ import Desktop from '@components/Desktop'
 import Login from '@components/Login'
 import Signup from '@components/Signup'
 import Layout from '../components/Layout'
-import NotFound from '@components/404'
 import Landing from '../components/shared/Landing'
 import ResetPassword from '@components/ResetPassword'
-import ShareView from '@components/ShareView'
+import SharedView from '@components/shared/shared_view/SharedView'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -21,7 +20,7 @@ ReactDOM.render(
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
           <Route path="reset_password" element={<ResetPassword />} />
-          <Route path="share/:share_id" element={<ShareView />} />
+          <Route path="share/:share_id" element={<SharedView />} />
         </Routes>
       </Layout>
     </BrowserRouter>

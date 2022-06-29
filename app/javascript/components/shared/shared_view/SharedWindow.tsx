@@ -16,7 +16,7 @@ export const SharedWindow = ({ windowId, children }) => {
             </div>
             <p className="ml-5">{windowId}</p>
           </div>
-          {children}
+          <div className="flex flex-row">{children}</div>
         </div>
       </div>
   )
