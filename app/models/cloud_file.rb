@@ -19,7 +19,7 @@ class CloudFile < AbstractFile
 
 
   def url 
-    self.file.service_url
+    "#{ENV["BASE_URL"]}/files/proxied_files/#{self.public_share_url}"
   end
 
   def create_in_s3
