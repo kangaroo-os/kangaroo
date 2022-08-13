@@ -1,6 +1,5 @@
 class AbstractFilesController < ApplicationController
-  
-  protect_from_forgery only: [:get_proxied_file]
+
   before_action :authenticate_user!, except: [:serialize_shared_files, :get_proxied_file]
   before_action :reject_unless_authorized, only: [:show, :destroy, :update, :make_publicly_accessible, :move_file]
 
@@ -111,7 +110,7 @@ class AbstractFilesController < ApplicationController
     if user_authorized?(user) || root_proxied_file.is_shareable
       send_data root_proxied_file.file.download, filename: root_proxied_file.name, content_type: root_proxied_file.file_type, :disposition => 'inline'
     else
-      render json: {}, status: :unauthorized
+      render json: { error: 'Unauthorized access' }, status: :unauthorized
     end
   end
 
