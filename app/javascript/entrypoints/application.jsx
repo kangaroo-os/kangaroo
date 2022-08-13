@@ -22,7 +22,6 @@ ReactDOM.render(
           <Route path="signup" element={<Signup />} />
           <Route path="reset_password" element={<ResetPassword />} />
           <Route path="pouch/:share_id" element={<SharedView />} />
-          {/* <Route path="joey/:share_id" element={<ProxiedFile />} /> */}
         </Routes>
       </Layout>
     </BrowserRouter>
