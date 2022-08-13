@@ -32,7 +32,7 @@ export const SharedWindow = ({ rootFile, children }) => {
             <input
               onClick={copyInputText}
               ref={shareRef}
-              value={`${location.host}/share/${rootFile?.public_share_url}`}
+              value={`${location.host}/pouch/${rootFile?.public_share_url}`}
               className="pl-7 k-input-sm cursor-pointer bg-gray-300 hover:bg-white hover:border-2 hover:border-blue-500"
               readOnly
             />

@@ -23,8 +23,8 @@ export const SharedView = () => {
 
   async function openFolder(id) {
     try {
-      const share_id = getViewableFileLink(id)
-      window.location.href = `/share/${share_id}`
+      const shareId = getViewableFileLink(id)
+      window.location.href = `/pouch/${shareId}`
     } catch (e) {
       console.error(e)
     }
@@ -32,8 +32,8 @@ export const SharedView = () => {
 
   async function downloadFile(id) {
     try {
-      const share_id = getViewableFileLink(id)
-      const result = await getSharedFile(share_id)
+      const shareId = getViewableFileLink(id)
+      const result = await getSharedFile(shareId)
       const { url } = result.data
       window.open(url)
     } catch (e) {

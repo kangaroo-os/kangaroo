@@ -8,6 +8,7 @@ import Layout from '../components/Layout'
 import Landing from '../components/shared/Landing'
 import ResetPassword from '@components/ResetPassword'
 import SharedView from '@components/shared/shared_view/SharedView'
+import ProxiedFile from '@components/shared/ProxiedFile'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,7 +21,8 @@ ReactDOM.render(
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
           <Route path="reset_password" element={<ResetPassword />} />
-          <Route path="share/:share_id" element={<SharedView />} />
+          <Route path="pouch/:share_id" element={<SharedView />} />
+          {/* <Route path="joey/:share_id" element={<ProxiedFile />} /> */}
         </Routes>
       </Layout>
     </BrowserRouter>

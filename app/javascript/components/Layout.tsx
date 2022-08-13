@@ -35,8 +35,13 @@ export default function Layout({ children }) {
     </div>
   )
 
+  const ColorBackgroundPaths = [
+    "desktop",
+    "share",
+  ]
+
   const backgroundStyle = {
-    backgroundImage: `${location.pathname == '/desktop' ? 'url("https://kangarooo.s3.amazonaws.com/kangaroo/background.png")' : ''}`,
+    backgroundImage: `${ ColorBackgroundPaths.includes(location.pathname.split('/')[1]) ? 'url("https://kangarooo.s3.amazonaws.com/kangaroo/background.png")' : ''}`,
     backgroundSize: 'cover',
     position: 'fixed',
     minHeight: '100vh',

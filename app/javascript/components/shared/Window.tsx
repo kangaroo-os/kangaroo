@@ -71,7 +71,7 @@ export const Window = ({ windowId, children }) => {
                 <input
                   onClick={copyInputText}
                   ref={shareRef}
-                  value={`${location.host}/share/${publicUrl}`}
+                  value={`${location.host}/pouch/${publicUrl}`}
                   className="pl-7 k-input-sm cursor-pointer bg-gray-300 hover:bg-white hover:border-2 hover:border-blue-500"
                   readOnly
                 />

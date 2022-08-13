@@ -64,6 +64,7 @@ const Desktop = () => {
     try {
       const result = await getFileUrl(id)
       const { url } = result.data
+      debugger
       window.open(url)
     } catch (e) {
       console.error(e)
