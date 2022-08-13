@@ -8,7 +8,6 @@ import Layout from '../components/Layout'
 import Landing from '../components/shared/Landing'
 import ResetPassword from '@components/ResetPassword'
 import SharedView from '@components/shared/shared_view/SharedView'
-import ProxiedFile from '@components/shared/ProxiedFile'
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,6 +1,6 @@
 import { File } from './File'
 
-export type WindContent = {
+export type WindowContent = {
   [id: string]: string[]
 }
 
