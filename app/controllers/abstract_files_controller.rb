@@ -1,7 +1,7 @@
 class AbstractFilesController < ApplicationController
-  
-  before_action :authenticate_user!, except: [:get_proxied_share_files]
-  before_action :user_authorized?, only: [:show, :destroy, :update, :make_publicly_accessible, :move_file]
+
+  before_action :authenticate_user!, except: [:serialize_shared_files, :get_proxied_file]
+  before_action :reject_unless_authorized, only: [:show, :destroy, :update, :make_publicly_accessible, :move_file]
 
   def index
     desktop_files = current_user.abstract_files.filter do |file|
@@ -91,14 +91,25 @@ class AbstractFilesController < ApplicationController
     end
   end
 
-  def get_proxied_share_files
+  def serialize_shared_files
     return render json: {error: "Missing share_id parameter"}, status: :unprocessable_entity unless params.has_key?(:share_id)
     root_proxied_file = AbstractFile.where(public_share_url: params[:share_id], is_shareable: true).first
     return render json: {error: "Files not found"}, status: :not_found unless root_proxied_file 
     if root_proxied_file.type == "FolderFile"
-      render json: { files: serialize_files(root_proxied_file.children_files) }, status: :ok 
+      render json: { root_file: serialize_file(root_proxied_file), files: serialize_files(root_proxied_file.children_files) }, status: :ok 
     else
+      render json: { url: root_proxied_file.url }, status: :ok
+    end
+  end
+
+  def get_proxied_file
+    root_proxied_file = AbstractFile.find_by(public_share_url: params[:share_id])
+    # return authenticate_user! unless root_proxied_file.is_shareable
+    user = User.find(session['warden.user.user.key'][0][0]) if session['warden.user.user.key'].present?
+    if user_authorized?(user) || root_proxied_file.is_shareable
       send_data root_proxied_file.file.download, filename: root_proxied_file.name, content_type: root_proxied_file.file_type, :disposition => 'inline'
+    else
+      render json: { error: 'Unauthorized access' }, status: :unauthorized
     end
   end
 
@@ -122,18 +133,19 @@ class AbstractFilesController < ApplicationController
 
   protected
 
-  def user_authorized?
+  def user_authorized?(user = current_user)
     if params.has_key?(:share_id)
       file = AbstractFile.find_by(public_share_url: params[:share_id])
-      if file && file.is_shareable
-        return true
-      end
+      return file && (file.is_shareable || user&.abstract_file_ids&.include?(params[:share_id].to_i))
     elsif params.has_key?(:id)
-      if current_user.abstract_file_ids.include?(params[:id].to_i)
-        return true
-      else
-        render json: { error: "You are not authorized to access this file."}, status: :unauthorized
-      end
+      return user.abstract_file_ids.include?(params[:id].to_i)
+    end
+    return false
+  end
+
+  def reject_unless_authorized
+    unless user_authorized?
+      render json: { error: "You are not authorized to access this file."}, status: :unauthorized
     end
   end
 

@@ -3,7 +3,7 @@ import { addCloudFile } from '../../api/cloud_files'
 import Dropdown from './Dropdown'
 import LinkDialogue from './LinkDialogue'
 import { useDesktop } from '../../states/desktopState'
-import { getDefaultPath, getDesktopId} from '@helpers/fileStorage'
+import { getDesktopId} from '@helpers/fileStorage'
 import { createFolder } from '@api/folder_files'
 
 export const UploadButton = ({ ...props }) => {
