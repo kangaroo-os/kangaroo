@@ -136,7 +136,7 @@ class AbstractFilesController < ApplicationController
   def user_authorized?(user = current_user)
     if params.has_key?(:share_id)
       file = AbstractFile.find_by(public_share_url: params[:share_id])
-      return file && (file.is_shareable || user&.abstract_file_ids&.include?(params[:share_id].to_i))
+      return file && (file.is_shareable || user&.abstract_file_ids&.include?(file.id))
     elsif params.has_key?(:id)
       return user.abstract_file_ids.include?(params[:id].to_i)
     end
