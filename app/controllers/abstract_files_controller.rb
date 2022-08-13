@@ -105,7 +105,12 @@ class AbstractFilesController < ApplicationController
   def get_proxied_file
     root_proxied_file = AbstractFile.find_by(public_share_url: params[:share_id])
     # return authenticate_user! unless root_proxied_file.is_shareable
-    user = User.find(session['warden.user.user.key'][0][0]) if session['warden.user.user.key'].present?
+    if session['warden.user.user.key'].present?
+      warden_key = session['warden.user.user.key']
+      user = User.find(warden_key[0][0])
+      user = nil unless warden_key[1] == user.encrypted_password[0, 29]
+    end
+
     if user_authorized?(user) || root_proxied_file.is_shareable
       send_data root_proxied_file.file.download, filename: root_proxied_file.name, content_type: root_proxied_file.file_type, :disposition => 'inline'
     else
