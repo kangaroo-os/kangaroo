@@ -41,7 +41,6 @@ export default function Layout({ children }) {
   ]
 
   const backgroundStyle = {
-    backgroundImage: `${ ColorBackgroundPaths.includes(location.pathname.split('/')[1]) ? 'url("https://kangarooo.s3.amazonaws.com/kangaroo/background.png")' : ''}`,
     backgroundSize: 'cover',
     position: 'fixed',
     minHeight: '100vh',
